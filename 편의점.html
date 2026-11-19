@@ -1,0 +1,2326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GS25 모디슈머 편의점 게임</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: #1e1e24;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      aspect-ratio: 4 / 3;
+      background-color: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+    }
+
+    .scene.active {
+      display: flex;
+    }
+
+    /* =========================================
+       [화면 0] 시작(타이틀) 화면
+       ========================================= */
+    #scene-title {
+      background-image: url('./타이틀.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 1;
+    }
+
+    .hotspot-btn {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.01);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      z-index: 50;
+      transition: background-color 0.15s ease;
+    }
+
+    .hotspot-btn:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.65);
+    }
+
+    #btn-area-start { left: 64.2%; top: 49.5%; width: 32.3%; height: 14.5%; }
+    #btn-area-howto { left: 64.2%; top: 66.2%; width: 32.3%; height: 14.5%; }
+
+    /* =========================================
+       [화면 1-1] 손님 주문 접수 화면
+       ========================================= */
+    #scene-order {
+      background-image: url('./편의점 배경.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #customer-img {
+      position: absolute;
+      bottom: -2%;
+      left: 22%;
+      height: 62%;
+      object-fit: contain;
+      z-index: 10;
+      transition: transform 0.45s ease, opacity 0.45s ease;
+    }
+
+    #customer-img.enter { transform: translateX(0); opacity: 1; }
+    #customer-img.exit-left { transform: translateX(-180px); opacity: 0; }
+
+    .speech-bubble-wrap {
+      position: absolute;
+      top: 12%;
+      right: 6%;
+      width: 46%;
+      z-index: 20;
+      animation: popUp 0.3s ease;
+    }
+
+    .speech-bubble {
+      position: relative;
+      background: #ffffff;
+      border: 4px solid #007cff;
+      border-radius: 24px;
+      padding: 22px 26px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      left: -24px;
+      bottom: 28px;
+      border-width: 12px 24px 12px 0;
+      border-style: solid;
+      border-color: transparent #007cff transparent transparent;
+    }
+
+    .speech-bubble::before {
+      content: '';
+      position: absolute;
+      left: -17px;
+      bottom: 30px;
+      border-width: 10px 20px 10px 0;
+      border-style: solid;
+      border-color: transparent #ffffff transparent transparent;
+      z-index: 1;
+    }
+
+    .mission-badge {
+      display: inline-block;
+      background-color: #e6f2ff;
+      color: #007cff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .mission-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #222222;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      word-break: keep-all;
+    }
+
+    .mission-budget {
+      display: inline-block;
+      background-color: #fff3cd;
+      color: #856404;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 6px 14px;
+      border-radius: 10px;
+      border: 1.5px solid #ffeeba;
+    }
+
+    .order-btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .order-btn {
+      padding: 12px 24px;
+      font-size: 1.08rem;
+      font-weight: 800;
+      border-radius: 16px;
+      border: 3px solid #1a1a1a;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #1a1a1a;
+      transition: transform 0.1s ease;
+    }
+
+    .order-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1a1a1a; }
+    .btn-accept { background-color: #007cff; color: #ffffff; }
+    .btn-reject { background-color: #ff5a5f; color: #ffffff; }
+    .btn-rank   { background-color: #ffbe0b; color: #1a1a1a; }
+
+    /* =========================================
+       [화면 1-2] 매대 재료 담기 화면
+       ========================================= */
+    #scene-shelf {
+      background-image: url('./매대.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .shelf-top-bar {
+      position: absolute;
+      top: 4.8%;
+      left: 11%;
+      right: 5%;
+      height: 5.5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 14px;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+      z-index: 20;
+    }
+
+    .budget-pill {
+      background-color: rgba(255, 255, 255, 0.95);
+      color: #0056b3;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 0.98rem;
+      text-shadow: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .budget-pill.over {
+      background-color: #ffe3e3;
+      color: #d90429;
+      border: 2px solid #ff5a5f;
+    }
+
+    .cat-tab-btn {
+      position: absolute;
+      left: 0.6%;
+      width: 7.7%;
+      height: 14.2%;
+      background: transparent;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #3a5a8c;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.15s ease;
+      z-index: 20;
+    }
+
+    .cat-tab-btn:hover { background-color: rgba(0, 124, 255, 0.12); }
+    .cat-tab-btn.active {
+      background-color: #007cff;
+      color: #ffffff;
+      box-shadow: inset 0 0 0 3px #ffffff, 0 4px 10px rgba(0, 124, 255, 0.4);
+    }
+
+    #tab-ramen { top: 19.2%; }
+    #tab-drink { top: 35.1%; }
+    #tab-etc   { top: 51.0%; }
+
+    .shelf-row {
+      position: absolute;
+      left: 11.5%;
+      width: 82%;
+      height: 18.5%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: end;
+      justify-items: center;
+      padding-bottom: 4px;
+      z-index: 15;
+    }
+
+    #shelf-row-1 { top: 14.5%; }
+    #shelf-row-2 { top: 36.5%; }
+    #shelf-row-3 { top: 58.8%; }
+
+    .product-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      width: 135px;
+    }
+
+    .product-item:hover { transform: translateY(-6px) scale(1.05); z-index: 25; }
+    .product-item:active { transform: scale(0.95); }
+
+    .product-item img {
+      height: 86px;
+      max-width: 115px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.22));
+    }
+
+    .product-label {
+      margin-top: 2px;
+      background-color: rgba(255, 255, 255, 0.94);
+      border: 1.5px solid #4a90e2;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #1a2b4c;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-price { color: #007cff; margin-left: 3px; }
+
+    .cart-dock {
+      position: absolute;
+      bottom: 2.2%;
+      left: 4%;
+      right: 13.5%;
+      height: 11.5%;
+      background-color: rgba(255, 255, 255, 0.92);
+      border: 3px solid #007cff;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      z-index: 25;
+    }
+
+    .cart-items-list { display: flex; align-items: center; gap: 10px; height: 100%; }
+
+    .cart-slot {
+      position: relative;
+      width: 62px;
+      height: 62px;
+      background-color: #eef5ff;
+      border: 2px dashed #9ec5fe;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cart-slot.filled {
+      border-style: solid;
+      border-color: #007cff;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+
+    .cart-slot img { width: 48px; height: 48px; object-fit: contain; }
+
+    .cart-remove-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      background-color: #ff5a5f;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 900;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1.5px solid #fff;
+    }
+
+    .cart-actions { display: flex; align-items: center; gap: 12px; }
+    .cart-count-text { font-size: 1rem; font-weight: 900; color: #0056b3; }
+
+    .btn-next-step {
+      padding: 10px 20px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border-radius: 14px;
+      border: 2.5px solid #1a1a1a;
+      background-color: #007cff;
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #1a1a1a;
+      transition: all 0.15s ease;
+    }
+
+    .btn-next-step:disabled {
+      background-color: #b0bec5;
+      border-color: #78909c;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.75;
+    }
+
+    /* =========================================
+       [화면 1-3] 조리하기 화면 (조리대.png)
+       ========================================= */
+    #scene-cook {
+      background-image: url('./조리대.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .cook-guide-bar {
+      position: absolute;
+      top: 4%;
+      left: 5%;
+      right: 5%;
+      background-color: rgba(255, 255, 255, 0.92);
+      border: 3px solid #007cff;
+      border-radius: 16px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 30;
+    }
+
+    .cook-guide-text {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #1a2b4c;
+    }
+
+    .appliances-area {
+      position: absolute;
+      top: 16%;
+      left: 6%;
+      right: 6%;
+      height: 36%;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      z-index: 15;
+    }
+
+    .appliance-box {
+      position: relative;
+      width: 28%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      border-radius: 18px;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .appliance-box:hover { transform: scale(1.03); }
+    .appliance-box.hint-target { filter: drop-shadow(0 0 14px #ffcc00); }
+
+    .hint-arrow {
+      position: absolute;
+      top: -38px;
+      font-size: 2.2rem;
+      color: #ff3b30;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      animation: bounceArrow 0.6s infinite alternate;
+      display: none;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .appliance-box.hint-target .hint-arrow { display: block; }
+
+    .appliance-img {
+      max-height: 78%;
+      max-width: 90%;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25));
+    }
+
+    .appliance-tag {
+      margin-top: 6px;
+      background-color: rgba(255, 255, 255, 0.95);
+      border: 2px solid #007cff;
+      color: #0056b3;
+      font-weight: 900;
+      font-size: 0.92rem;
+      padding: 3px 12px;
+      border-radius: 999px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .cooking-overlay-fx {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.78);
+      border-radius: 16px;
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: #d90429;
+      z-index: 25;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .cooking-overlay-fx.active { display: flex; }
+
+    .spin-food {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      animation: spinItem 1s linear infinite;
+    }
+
+    .water-stream {
+      width: 10px;
+      height: 45px;
+      background: linear-gradient(to bottom, #4facfe, #00f2fe);
+      border-radius: 6px;
+      animation: pulseWater 0.4s infinite alternate;
+      margin-bottom: 4px;
+    }
+
+    #mixed-drink-result {
+      position: absolute;
+      top: 18%;
+      right: -14%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2.5px solid #007cff;
+      border-radius: 14px;
+      padding: 6px 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 28;
+      animation: popUp 0.3s ease;
+    }
+
+    .mixed-cup-graphic {
+      width: 34px;
+      height: 44px;
+      border-radius: 4px 4px 10px 10px;
+      border: 2.5px solid #333;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cook-tray-dock {
+      position: absolute;
+      bottom: 8.2%;
+      left: 5.5%;
+      right: 5.5%;
+      height: 11.8%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      z-index: 25;
+    }
+
+    .cook-items-list {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cook-item-card {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      background-color: #ffffff;
+      border: 3px solid #90caf9;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .cook-item-card.selected {
+      border-color: #ff9800;
+      background-color: #fff8e1;
+      transform: translateY(-6px) scale(1.06);
+      box-shadow: 0 6px 12px rgba(255, 152, 0, 0.35);
+    }
+
+    .cook-item-card.done {
+      border-color: #2ecc71;
+      background-color: #eafaf1;
+    }
+
+    .cook-item-card.hint-target {
+      border-color: #ff3b30;
+      box-shadow: 0 0 14px #ffcc00;
+    }
+
+    .cook-item-card .hint-arrow { top: -32px; font-size: 1.6rem; }
+    .cook-item-card.hint-target .hint-arrow { display: block; }
+
+    .cook-item-card img { width: 46px; height: 46px; object-fit: contain; }
+
+    .status-badge {
+      position: absolute;
+      bottom: -8px;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 8px;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .badge-need { background-color: #ff5a5f; }
+    .badge-done { background-color: #27ae60; }
+    .badge-opt  { background-color: #007cff; }
+
+    /* =========================================
+       [화면 1-4] 식판 배치하기 화면 (요리 배치.png)
+       ========================================= */
+    #scene-plating {
+      background-image: url('./요리 배치.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .plating-top-bar {
+      position: absolute;
+      top: 2.2%;
+      left: 4%;
+      right: 4%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 40;
+    }
+
+    .plating-guide-pill {
+      background-color: rgba(255, 255, 255, 0.94);
+      border: 2.5px solid #007cff;
+      color: #1a2b4c;
+      font-weight: 800;
+      font-size: 0.98rem;
+      padding: 8px 18px;
+      border-radius: 999px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    #tray-drop-zone {
+      position: absolute;
+      top: 13.5%;
+      left: 7.5%;
+      width: 85%;
+      height: 52.5%;
+      border-radius: 28px;
+      z-index: 15;
+    }
+
+    .placed-food {
+      position: absolute;
+      width: 195px;
+      height: 195px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+      z-index: 25;
+      transition: transform 0.08s ease;
+    }
+
+    .placed-food:active {
+      cursor: grabbing;
+      transform: scale(1.06);
+      z-index: 35;
+    }
+
+    .placed-food img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.3));
+      pointer-events: none;
+    }
+
+    .placed-food.chopsticks-type {
+      width: 245px;
+      height: 120px;
+    }
+
+    #plating-dock-bar {
+      position: absolute;
+      bottom: 10.2%;
+      left: 5.5%;
+      width: 89%;
+      height: 13.5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 24px;
+      z-index: 20;
+    }
+
+    .dock-food-item {
+      position: relative;
+      width: 82px;
+      height: 82px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      transition: transform 0.15s ease;
+    }
+
+    .dock-food-item:hover {
+      transform: translateY(-6px) scale(1.06);
+    }
+
+    .dock-food-item img {
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.22));
+      pointer-events: none;
+    }
+
+    .dock-food-tag {
+      position: absolute;
+      bottom: -4px;
+      background-color: rgba(255, 255, 255, 0.95);
+      border: 1.5px solid #4a90e2;
+      border-radius: 8px;
+      padding: 1px 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #1a2b4c;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    #drag-ghost {
+      position: fixed;
+      width: 195px;
+      height: 195px;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.35));
+    }
+
+    #drag-ghost img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* =========================================
+       [화면 1-6] 손님 심사 페이지
+       ========================================= */
+    #scene-judge {
+      background-image: url('./편의점 배경.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #judge-customer-img {
+      position: absolute;
+      bottom: 0%;
+      left: 3%;
+      height: 62%;
+      object-fit: contain;
+      z-index: 20;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28));
+      animation: popUp 0.4s ease;
+    }
+
+    .judge-bubble-wrap {
+      position: absolute;
+      top: 4%;
+      left: 5%;
+      right: 5%;
+      z-index: 30;
+      animation: popUp 0.45s ease;
+    }
+
+    .judge-bubble {
+      position: relative;
+      background: #ffffff;
+      border: 4px solid #007cff;
+      border-radius: 24px;
+      padding: 18px 26px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .judge-bubble::after {
+      content: '';
+      position: absolute;
+      left: 14%;
+      bottom: -24px;
+      border-width: 24px 14px 0 14px;
+      border-style: solid;
+      border-color: #007cff transparent transparent transparent;
+    }
+
+    .judge-bubble::before {
+      content: '';
+      position: absolute;
+      left: calc(14% + 3px);
+      bottom: -17px;
+      border-width: 18px 11px 0 11px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+      z-index: 1;
+    }
+
+    .judge-score-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #007cff, #0056b3);
+      color: #ffffff;
+      padding: 12px 22px;
+      border-radius: 18px;
+      min-width: 135px;
+      box-shadow: 0 4px 10px rgba(0, 124, 255, 0.35);
+    }
+
+    .judge-score-label { font-size: 0.85rem; font-weight: 800; opacity: 0.9; }
+    .judge-score-num { font-size: 2.3rem; font-weight: 900; line-height: 1.1; }
+    .judge-review-content { flex: 1; text-align: left; }
+
+    .judge-mission-tag {
+      display: inline-block;
+      background-color: #e6f2ff;
+      color: #007cff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .judge-review-text {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #1a2b4c;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
+    .judge-detail-sub {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .judge-tray-panel {
+      position: absolute;
+      right: 4%;
+      bottom: 12%;
+      width: 55%;
+      aspect-ratio: 16 / 10;
+      background-image: url('./요리 배치.png');
+      background-size: 100% 135%;
+      background-position: center 18%;
+      border: 4px solid #007cff;
+      border-radius: 22px;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      z-index: 22;
+      animation: popUp 0.5s ease;
+    }
+
+    #judge-tray-clone {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #judge-tray-clone .placed-food {
+      width: 118px;
+      height: 118px;
+      cursor: default;
+    }
+
+    #judge-tray-clone .placed-food.chopsticks-type {
+      width: 145px;
+      height: 70px;
+    }
+
+    .judge-bottom-actions {
+      position: absolute;
+      right: 4%;
+      bottom: 2.5%;
+      display: flex;
+      gap: 10px;
+      z-index: 30;
+    }
+
+    /* =========================================
+       [화면 1-7] 최종 순위 및 투표 페이지
+       ========================================= */
+    #scene-ranking {
+      background: linear-gradient(180deg, #e8f3ff 0%, #f7fbff 100%);
+      padding: 18px 24px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #scene-ranking.active {
+      display: flex;
+    }
+
+    /* 상단 헤더 & 실제 출시 안내 배너 */
+    .rank-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff;
+      border: 3px solid #007cff;
+      border-radius: 18px;
+      padding: 10px 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .rank-title-area h2 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #0056b3;
+    }
+
+    .real-launch-notice {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #d90429;
+      background-color: #fff0f3;
+      border: 1.5px solid #ffccd5;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    /* 점수 순위 / 투표 순위 정렬 탭 */
+    .rank-sort-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .sort-tab-btn {
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border-radius: 12px;
+      border: 2px solid #007cff;
+      background-color: #ffffff;
+      color: #007cff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .sort-tab-btn.active {
+      background-color: #007cff;
+      color: #ffffff;
+    }
+
+    /* 내 조합 한줄평 등록 박스 */
+    .my-comment-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #fff9db;
+      border: 2.5px solid #fcc419;
+      border-radius: 14px;
+      padding: 8px 14px;
+    }
+
+    .my-comment-box input {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      border: 2px solid #ced4da;
+      border-radius: 10px;
+      outline: none;
+      user-select: text;
+    }
+
+    .my-comment-box input:focus {
+      border-color: #007cff;
+    }
+
+    .btn-post-comment {
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      background-color: #007cff;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-post-comment:disabled {
+      background-color: #adb5bd;
+      cursor: default;
+    }
+
+    /* 순위 리스트 스크롤 영역 */
+    .ranking-list-container {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+
+    .rank-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background-color: #ffffff;
+      border: 2.5px solid #d0e2ff;
+      border-radius: 16px;
+      padding: 10px 16px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .rank-card.is-mine {
+      border-color: #007cff;
+      background-color: #f0f7ff;
+    }
+
+    .rank-card.top-1 {
+      border-color: #ffbe0b;
+      box-shadow: 0 4px 12px rgba(255, 190, 11, 0.28);
+    }
+
+    .rank-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: #e9ecef;
+      color: #343a40;
+      font-size: 1.15rem;
+      font-weight: 900;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .rank-card.top-1 .rank-badge {
+      background: linear-gradient(135deg, #ffd43b, #f59f00);
+      color: #ffffff;
+      font-size: 1.25rem;
+    }
+
+    /* 미니 식판 프리뷰 이미지 */
+    .mini-tray-preview {
+      position: relative;
+      width: 132px;
+      height: 84px;
+      background-image: url('./요리 배치.png');
+      background-size: 100% 135%;
+      background-position: center 18%;
+      border: 2px solid #74c0fc;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .mini-tray-preview .placed-food {
+      width: 34px !important;
+      height: 34px !important;
+      cursor: default;
+    }
+
+    .mini-tray-preview .placed-food.chopsticks-type {
+      width: 42px !important;
+      height: 20px !important;
+    }
+
+    /* 조합 메뉴 & 한줄평 텍스트 영역 */
+    .rank-info {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .rank-menu-chips {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #0056b3;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rank-user-comment {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #212529;
+      margin-bottom: 4px;
+      word-break: keep-all;
+    }
+
+    .rank-meta {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #6c757d;
+    }
+
+    /* 우측 하트 투표 버튼 영역 */
+    .vote-action-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .btn-heart-vote {
+      width: 54px;
+      height: 46px;
+      border-radius: 14px;
+      border: 2.5px solid #ffccd5;
+      background-color: #fff5f7;
+      font-size: 1.45rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    .btn-heart-vote:hover {
+      transform: scale(1.08);
+      border-color: #ff4d6d;
+    }
+
+    .btn-heart-vote.voted {
+      background-color: #ff4d6d;
+      border-color: #c9184a;
+      color: #ffffff;
+    }
+
+    .vote-count-label {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #c9184a;
+    }
+
+    .rank-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .vote-status-hint {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #495057;
+    }
+
+    /* 공통 토스트 알림 */
+    #toast-msg {
+      position: absolute;
+      top: 46%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(20, 20, 30, 0.9);
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      z-index: 95;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #toast-msg.show { opacity: 1; }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.65);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background-color: #ffffff;
+      width: 78%;
+      max-width: 600px;
+      padding: 32px;
+      border-radius: 20px;
+      border: 4px solid #007cff;
+      text-align: center;
+    }
+
+    .modal-box h2 { font-size: 1.7rem; color: #007cff; margin-bottom: 20px; }
+
+    .howto-list {
+      text-align: left;
+      background-color: #f4f8fc;
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      line-height: 1.7;
+      font-size: 1.05rem;
+      color: #333;
+    }
+
+    .howto-list li { margin-bottom: 8px; list-style-position: inside; }
+
+    .btn-close {
+      padding: 12px 36px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: #007cff;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    @keyframes popUp {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes bounceArrow {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+    @keyframes spinItem {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulseWater {
+      from { opacity: 0.6; transform: scaleY(0.9); }
+      to { opacity: 1; transform: scaleY(1.1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    
+    <!-- [화면 0] 시작(타이틀) 화면 -->
+    <section id="scene-title" class="scene active">
+      <button id="btn-area-start" class="hotspot-btn" aria-label="게임 시작"></button>
+      <button id="btn-area-howto" class="hotspot-btn" aria-label="게임 방법"></button>
+    </section>
+
+    <!-- [팝업] 게임 방법 안내 창 -->
+    <div id="modal-howto" class="modal-overlay">
+      <div class="modal-box">
+        <h2>🏪 편의점 모디슈머 게임 방법</h2>
+        <ol class="howto-list">
+          <li><strong>주문 확인:</strong> 손님이 원하는 예산과 요구사항을 확인하고 수락하세요.</li>
+          <li><strong>재료 담기:</strong> 진열대에서 라면, 음료, 기타 재료를 최대 5개까지 담으세요.</li>
+          <li><strong>조리하기:</strong> 아래 재료를 먼저 클릭한 뒤, 알맞은 조리기구(온수대/전자레인지/믹싱컵)를 터치하세요!</li>
+          <li><strong>플레이팅:</strong> 완성된 음식과 나무 젓가락을 마우스로 끌어 식판 위에 자유롭게 배치하세요.</li>
+          <li><strong>심사 및 투표:</strong> 손님의 점수를 확인하고, 1플레이당 1번 하트를 눌러 1위 출시 후보에 투표하세요!</li>
+        </ol>
+        <button id="btn-modal-close" class="btn-close">확인</button>
+      </div>
+    </div>
+
+    <!-- [화면 1-1] 손님 주문 접수 화면 -->
+    <section id="scene-order" class="scene">
+      <img id="customer-img" class="enter" src="./손님 1 뒷모습.png" alt="손님 캐릭터">
+      <div id="bubble-container" class="speech-bubble-wrap">
+        <div class="speech-bubble">
+          <span id="mission-badge" class="mission-badge">미션 1</span>
+          <p id="mission-dialogue" class="mission-text">미션 내용이 여기에 표시됩니다.</p>
+          <div id="mission-budget" class="mission-budget">💰 제한 예산: 5,000원</div>
+        </div>
+        <div class="order-btn-group">
+          <button id="btn-accept-order" class="order-btn btn-accept">수락</button>
+          <button id="btn-reject-order" class="order-btn btn-reject">거절</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- [화면 1-2] 매대 재료 담기 화면 -->
+    <section id="scene-shelf" class="scene">
+      <div class="shelf-top-bar">
+        <span id="shelf-mission-summary">📋 미션 요약</span>
+        <div id="shelf-budget-pill" class="budget-pill">0원 / 5,000원</div>
+      </div>
+
+      <button id="tab-ramen" class="cat-tab-btn active">라면</button>
+      <button id="tab-drink" class="cat-tab-btn">음료</button>
+      <button id="tab-etc" class="cat-tab-btn">기타</button>
+
+      <div id="shelf-row-1" class="shelf-row"></div>
+      <div id="shelf-row-2" class="shelf-row"></div>
+      <div id="shelf-row-3" class="shelf-row"></div>
+
+      <div class="cart-dock">
+        <div id="cart-items-list" class="cart-items-list"></div>
+        <div class="cart-actions">
+          <span id="cart-count-text" class="cart-count-text">0 / 5개</span>
+          <button id="btn-go-cook" class="btn-next-step" disabled>조리하기 ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- [화면 1-3] 조리하기 화면 -->
+    <section id="scene-cook" class="scene">
+      <div class="cook-guide-bar">
+        <span id="cook-guide-text" class="cook-guide-text">👇 아래 트레이에서 조리할 재료를 먼저 클릭하세요!</span>
+        <span id="cook-progress-text" style="font-weight: 900; color: #007cff;">필수 조리: 0 / 0 완료</span>
+      </div>
+
+      <div class="appliances-area">
+        <div id="app-water" class="appliance-box">
+          <div class="hint-arrow">⬇️</div>
+          <img class="appliance-img" src="./온수대.png" alt="온수대">
+          <span class="appliance-tag">💧 온수대 (라면 물 붓기)</span>
+          <div id="fx-water" class="cooking-overlay-fx">
+            <div class="water-stream"></div>
+            <img id="water-food-img" src="" style="width:54px; height:54px; object-fit:contain;">
+            <span>뜨거운 물 붓는 중...</span>
+          </div>
+        </div>
+
+        <div id="app-microwave" class="appliance-box">
+          <div class="hint-arrow">⬇️</div>
+          <img class="appliance-img" src="./전자레인지.png" alt="전자레인지">
+          <span class="appliance-tag">♨️ 전자레인지 (3초 조리)</span>
+          <div id="fx-microwave" class="cooking-overlay-fx">
+            <img id="mw-food-img" class="spin-food" src="">
+            <span style="margin-top:6px;">전자레인지 회전 중... (3초)</span>
+          </div>
+        </div>
+
+        <div id="app-mix" class="appliance-box">
+          <div class="hint-arrow">⬇️</div>
+          <img class="appliance-img" src="./믹싱컵.png" alt="믹싱컵">
+          <span class="appliance-tag">🥤 믹싱컵 (음료 최대 2개)</span>
+          <div id="mixed-drink-result">
+            <div id="mixed-cup-color" class="mixed-cup-graphic"></div>
+            <span style="font-size:0.72rem; font-weight:900; color:#0056b3; margin-top:3px;">스페셜 믹스!</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cook-tray-dock">
+        <div id="cook-items-list" class="cook-items-list"></div>
+        <button id="btn-go-plating" class="btn-next-step" disabled>배치하기 ▶</button>
+      </div>
+    </section>
+
+    <!-- [화면 1-4] 요리 배치하기 화면 (요리 배치.png) -->
+    <section id="scene-plating" class="scene">
+      <div class="plating-top-bar">
+        <div class="plating-guide-pill">🍽️ 아래 하얀 바의 음식과 나무 젓가락을 마우스로 끌어 식판 위에 큼직하게 배치하세요!</div>
+        <button id="btn-finish-plating" class="btn-next-step" disabled>완성하기 ▶</button>
+      </div>
+
+      <div id="tray-drop-zone"></div>
+      <div id="plating-dock-bar"></div>
+    </section>
+
+    <!-- [화면 1-6] 손님 심사 페이지 -->
+    <section id="scene-judge" class="scene">
+      <div class="judge-bubble-wrap">
+        <div class="judge-bubble">
+          <div class="judge-score-box">
+            <span class="judge-score-label">종합 점수</span>
+            <span id="judge-score-num" class="judge-score-num">95점</span>
+          </div>
+          <div class="judge-review-content">
+            <span id="judge-mission-tag" class="judge-mission-tag">요청 #1 · 가성비 한 끼</span>
+            <p id="judge-review-text" class="judge-review-text">"와! 예산도 딱 맞추고 구성도 완벽해요!"</p>
+            <p id="judge-detail-sub" class="judge-detail-sub">결제 금액: 4,500원 / 제한 예산: 5,000원</p>
+          </div>
+        </div>
+      </div>
+
+      <img id="judge-customer-img" src="./손님 1 심사.png" alt="손님 심사 모습">
+
+      <div class="judge-tray-panel">
+        <div id="judge-tray-clone"></div>
+      </div>
+
+      <!-- 하단 버튼: 순위보기 버튼 추가 -->
+      <div class="judge-bottom-actions">
+        <button id="btn-go-ranking" class="order-btn btn-rank">🏆 순위 · 투표 보기</button>
+        <button id="btn-next-customer" class="order-btn btn-accept">다음 손님 받기 ▶</button>
+        <button id="btn-back-title" class="order-btn btn-reject">타이틀로</button>
+      </div>
+    </section>
+
+    <!-- [화면 1-7] 최종 순위 및 투표 페이지 -->
+    <section id="scene-ranking" class="scene">
+      <div class="rank-header">
+        <div class="rank-title-area">
+          <h2>🏆 GS25 모디슈머 꿀조합 순위 & 투표</h2>
+          <span class="real-launch-notice">✨ 안내: 하트 투표 1위를 차지한 꿀조합 메뉴는 실제 편의점 상품으로 출시될 수 있습니다!</span>
+        </div>
+        <div class="rank-sort-tabs">
+          <button id="sort-by-votes" class="sort-tab-btn active">❤️ 투표 순위</button>
+          <button id="sort-by-score" class="sort-tab-btn">⭐ 점수 순위</button>
+        </div>
+      </div>
+
+      <!-- 내가 만든 메뉴에 한줄평을 남기는 입력창 -->
+      <div class="my-comment-box">
+        <span style="font-weight: 900; color: #e67700; white-space: nowrap;">✍️ 내 메뉴 한줄평:</span>
+        <input type="text" id="my-recipe-comment-input" maxlength="45" placeholder="내가 만든 조합의 매력 포인트를 한줄평으로 남겨보세요! (최대 45자)">
+        <button id="btn-save-my-comment" class="btn-post-comment">한줄평 등록</button>
+      </div>
+
+      <!-- 식판 이미지 + 조합된 메뉴 + 제작자 한줄평 + 하트 투표 리스트 -->
+      <div id="ranking-list-container" class="ranking-list-container"></div>
+
+      <div class="rank-footer">
+        <span id="vote-status-hint" class="vote-status-hint">❤️ 하트는 한 번의 플레이당 1번만 투표할 수 있습니다! (남은 투표권: 1회)</span>
+        <div style="display: flex; gap: 10px;">
+          <button id="btn-rank-play-again" class="order-btn btn-accept">새 게임 플레이 ▶</button>
+          <button id="btn-rank-to-title" class="order-btn btn-reject">타이틀로</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast-msg">알림 메시지</div>
+
+  </div>
+
+  <!-- 마우스 드래그 시 커서를 따라다니는 고스트 요소 -->
+  <div id="drag-ghost"><img id="drag-ghost-img" src="" alt=""></div>
+
+  <script>
+    const CUSTOMERS = [
+      { id: 1, backImg: "./손님 1 뒷모습.png", judgeImg: "./손님 1 심사.png" },
+      { id: 2, backImg: "./손님 2 뒷모습.png", judgeImg: "./손님 2 심사.png" },
+      { id: 3, backImg: "./손님 3 뒷모습.png", judgeImg: "./손님 3 심사.png" }
+    ];
+
+    const MISSIONS = [
+      { id: 1, title: "가성비 한 끼", dialogue: "주머니가 가벼워서요... 5,000원 이하로 배부르고 든든한 한 끼 만들어 주세요!", budget: 5000 },
+      { id: 2, title: "극강의 매운맛", dialogue: "오늘 스트레스 폭발했어요! 속이 뻥 뚫리게 화끈하고 매운 조합으로 부탁해요!", budget: 7500 },
+      { id: 3, title: "편의점 바리스타", dialogue: "목이 너무 말라요~ 편의점 음료 두 가지를 섞어서 나만의 특별한 스페셜 음료를 만들어 주세요!", budget: 4500 },
+      { id: 4, title: "프리미엄 꿀조합", dialogue: "오늘은 돈 걱정 안 할래요! SNS에서 유행하는 토핑 듬뿍 올라간 풀코스 꿀조합을 보여주세요!", budget: 10000 },
+      { id: 5, title: "초스피드 간편식", dialogue: "학원에 늦어서 시간이 없어요! 전자레인지에 딱 한 번만 돌려 바로 먹을 수 있는 간편식 주세요!", budget: 6000 }
+    ];
+
+    const PRODUCTS = {
+      "라면": [
+        { id: "r1", name: "간짬뽕", file: "./간짬뽕.png", price: 1800, cookType: "water", requiredCook: true, tags: ["매움", "든든함"] },
+        { id: "r2", name: "까르보 불닭", file: "./까르보 불닭.png", price: 1800, cookType: "water", requiredCook: true, tags: ["매움", "꿀조합"] },
+        { id: "r3", name: "불닭볶음탕면", file: "./불닭볶음탕면.png", price: 1800, cookType: "water", requiredCook: true, tags: ["매움", "국물"] },
+        { id: "r4", name: "불닭볶음면", file: "./붉닭.png", price: 1700, cookType: "water", requiredCook: true, tags: ["매움", "꿀조합"] },
+        { id: "r5", name: "새우탕", file: "./새우탕.png", price: 1400, cookType: "water", requiredCook: true, tags: ["국물", "든든함"] },
+        { id: "r6", name: "신라면", file: "./신라면.png", price: 1400, cookType: "water", requiredCook: true, tags: ["매움", "국물"] },
+        { id: "r7", name: "왕뚜껑", file: "./왕뚜껑.png", price: 1500, cookType: "water", requiredCook: true, tags: ["든든함", "국물"] },
+        { id: "r8", name: "육개장", file: "./육개장.png", price: 1100, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
+        { id: "r9", name: "진라면", file: "./진라면.png", price: 1200, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
+        { id: "r10", name: "참깨라면", file: "./참깨라면.png", price: 1700, cookType: "water", requiredCook: true, tags: ["꿀조합", "국물"] }
+      ],
+      "음료": [
+        { id: "d1", name: "게토레이", file: "./게토레이.png", price: 1500, cookType: "mix", requiredCook: false, color: "#d4ff33", tags: ["시원함", "음료혼합"] },
+        { id: "d2", name: "딸기우유", file: "./딸기우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#ff9eb5", tags: ["달콤함", "음료혼합"] },
+        { id: "d3", name: "링티 제로", file: "./링티 제로.png", price: 2200, cookType: "mix", requiredCook: false, color: "#ffe082", tags: ["시원함", "음료혼합"] },
+        { id: "d4", name: "바나나우유", file: "./바나나우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#fff176", tags: ["달콤함", "음료혼합"] },
+        { id: "d5", name: "사이다", file: "./사이다.png", price: 1500, cookType: "mix", requiredCook: false, color: "#e0f7fa", tags: ["탄산", "음료혼합"] },
+        { id: "d6", name: "초코우유", file: "./초코우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#795548", tags: ["달콤함", "음료혼합"] },
+        { id: "d7", name: "콜라", file: "./콜라.png", price: 1600, cookType: "mix", requiredCook: false, color: "#3e1f14", tags: ["탄산", "음료혼합"] },
+        { id: "d8", name: "토레타", file: "./토레타.png", price: 1800, cookType: "mix", requiredCook: false, color: "#f8bbd0", tags: ["시원함", "음료혼합"] },
+        { id: "d9", name: "파워에이드", file: "./파워에이드.png", price: 1800, cookType: "mix", requiredCook: false, color: "#00b0ff", tags: ["시원함", "음료혼합"] },
+        { id: "d10", name: "흰우유", file: "./흰우유.png", price: 1300, cookType: "mix", requiredCook: false, color: "#ffffff", tags: ["중화", "음료혼합"] }
+      ],
+      "기타": [
+        { id: "e1", name: "계란마요김밥", file: "./계란마요김밥.png", price: 3200, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
+        { id: "e2", name: "기본김밥", file: "./기본김밥.png", price: 2800, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
+        { id: "e3", name: "얼음컵", file: "./얼음컵.png", price: 800, cookType: "ice", requiredCook: false, tags: ["얼음컵", "음료혼합"] },
+        { id: "e4", name: "포카칩", file: "./포카칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["꿀조합", "간식"] }
+      ]
+    };
+
+    // 기본 순위 보드 데이터 (다른 참가자들의 레시피 + 내 레시피가 추가됨)
+    let rankingEntries = [
+      {
+        id: "seed-1",
+        author: "편의점마스터",
+        isMine: false,
+        menus: ["까르보 불닭", "계란마요김밥", "바나나우유"],
+        comment: "매운 까르보 불닭 소스에 계란마요김밥 찍어 먹고 바나나우유로 마무리하면 극락!",
+        score: 98,
+        votes: 42,
+        trayHtml: `
+          <div class="placed-food" style="left:32%; top:48%; transform:translate(-50%,-50%);"><img src="./완성된 컵라면.png"></div>
+          <div class="placed-food" style="left:66%; top:35%; transform:translate(-50%,-50%);"><img src="./계란마요김밥.png"></div>
+          <div class="placed-food" style="left:68%; top:72%; transform:translate(-50%,-50%);"><img src="./바나나우유.png"></div>
+        `
+      },
+      {
+        id: "seed-2",
+        author: "새벽알바생",
+        isMine: false,
+        menus: ["사이다", "파워에이드", "얼음컵"],
+        comment: "파워에이드랑 사이다 1:1 비율에 얼음컵 부으면 시험기간 잠 확 깨는 블루레몬에이드 완성!",
+        score: 92,
+        votes: 35,
+        trayHtml: `
+          <div class="placed-food" style="left:30%; top:45%; transform:translate(-50%,-50%);"><img src="./파워에이드.png"></div>
+          <div class="placed-food" style="left:54%; top:45%; transform:translate(-50%,-50%);"><img src="./사이다.png"></div>
+          <div class="placed-food" style="left:76%; top:55%; transform:translate(-50%,-50%);"><img src="./얼음컵.png"></div>
+        `
+      },
+      {
+        id: "seed-3",
+        author: "가성비헌터",
+        isMine: false,
+        menus: ["육개장", "기본김밥", "흰우유"],
+        comment: "5,200원으로 든든하게 배 채우는 정석 근본 조합! 국물에 김밥 말아먹으면 최고예요.",
+        score: 95,
+        votes: 28,
+        trayHtml: `
+          <div class="placed-food" style="left:34%; top:50%; transform:translate(-50%,-50%);"><img src="./완성된 컵라면.png"></div>
+          <div class="placed-food" style="left:66%; top:58%; transform:translate(-50%,-50%);"><img src="./기본김밥.png"></div>
+          <div class="placed-food chopsticks-type" style="left:65%; top:24%; transform:translate(-50%,-50%);"><img src="./나무 젓가락.png"></div>
+        `
+      }
+    ];
+
+    let currentState = {
+      customer: null,
+      mission: null,
+      currentCategory: "라면",
+      cart: [],
+      selectedCookIdx: null,
+      mixedDrinks: [],
+      mistakeCount: 0,
+      isBusyCooking: false,
+      platingItems: [],
+      lastScore: 0,
+      myEntryId: null,
+      hasVotedThisPlay: false, // 이번 플레이에서 하트 투표 사용 여부
+      votedEntryId: null,
+      rankSortMode: "votes" // "votes" | "score"
+    };
+
+    const MAX_CART_SIZE = 5;
+
+    function goToScene(sceneId) {
+      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(sceneId);
+      if (target) target.classList.add('active');
+    }
+
+    function startGame() {
+      // 새 플레이 시작 시 이번 회차 투표권 초기화
+      currentState.hasVotedThisPlay = false;
+      currentState.votedEntryId = null;
+      currentState.myEntryId = null;
+
+      spawnRandomCustomer();
+      goToScene('scene-order');
+    }
+
+    function spawnRandomCustomer() {
+      const randomCust = CUSTOMERS[Math.floor(Math.random() * CUSTOMERS.length)];
+      const randomMission = MISSIONS[Math.floor(Math.random() * MISSIONS.length)];
+
+      currentState.customer = randomCust;
+      currentState.mission = randomMission;
+
+      const imgEl = document.getElementById('customer-img');
+      imgEl.src = randomCust.backImg;
+      imgEl.classList.remove('exit-left');
+      imgEl.classList.add('enter');
+
+      document.getElementById('mission-badge').textContent = `요청 #${randomMission.id} · ${randomMission.title}`;
+      document.getElementById('mission-dialogue').textContent = `"${randomMission.dialogue}"`;
+      document.getElementById('mission-budget').textContent = `💰 제한 예산: ${randomMission.budget.toLocaleString()}원`;
+
+      const bubbleWrap = document.getElementById('bubble-container');
+      bubbleWrap.style.display = 'block';
+      bubbleWrap.style.animation = 'none';
+      bubbleWrap.offsetHeight;
+      bubbleWrap.style.animation = 'popUp 0.3s ease';
+    }
+
+    function rejectOrder() {
+      const imgEl = document.getElementById('customer-img');
+      const bubbleWrap = document.getElementById('bubble-container');
+
+      bubbleWrap.style.display = 'none';
+      imgEl.classList.remove('enter');
+      imgEl.classList.add('exit-left');
+
+      setTimeout(() => spawnRandomCustomer(), 550);
+    }
+
+    function acceptOrder() {
+      currentState.cart = [];
+      currentState.currentCategory = "라면";
+      document.getElementById('shelf-mission-summary').textContent =
+        `📋 [${currentState.mission.title}] ${currentState.mission.dialogue}`;
+
+      selectCategory("라면");
+      renderCart();
+      goToScene('scene-shelf');
+    }
+
+    function selectCategory(category) {
+      currentState.currentCategory = category;
+      document.querySelectorAll('.cat-tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (category === "라면") document.getElementById('tab-ramen').classList.add('active');
+      if (category === "음료") document.getElementById('tab-drink').classList.add('active');
+      if (category === "기타") document.getElementById('tab-etc').classList.add('active');
+
+      renderShelfItems(category);
+    }
+
+    function renderShelfItems(category) {
+      const items = PRODUCTS[category] || [];
+      const row1 = document.getElementById('shelf-row-1');
+      const row2 = document.getElementById('shelf-row-2');
+      const row3 = document.getElementById('shelf-row-3');
+
+      row1.innerHTML = "";
+      row2.innerHTML = "";
+      row3.innerHTML = "";
+
+      items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'product-item';
+        card.innerHTML = `
+          <img src="${item.file}" alt="${item.name}">
+          <div class="product-label">${item.name}<span class="product-price">${item.price.toLocaleString()}원</span></div>
+        `;
+        card.onclick = () => addToCart(item);
+
+        if (index < 4) row1.appendChild(card);
+        else if (index < 7) row2.appendChild(card);
+        else row3.appendChild(card);
+      });
+    }
+
+    function addToCart(product) {
+      if (currentState.cart.length >= MAX_CART_SIZE) {
+        showToast("장바구니가 가득 찼습니다! (최대 5개)");
+        return;
+      }
+      currentState.cart.push({
+        ...product,
+        category: currentState.currentCategory,
+        isCooked: false
+      });
+      renderCart();
+    }
+
+    function removeFromCart(index) {
+      currentState.cart.splice(index, 1);
+      renderCart();
+    }
+
+    function renderCart() {
+      const listEl = document.getElementById('cart-items-list');
+      listEl.innerHTML = "";
+
+      for (let i = 0; i < MAX_CART_SIZE; i++) {
+        const slot = document.createElement('div');
+        const item = currentState.cart[i];
+
+        if (item) {
+          slot.className = 'cart-slot filled';
+          slot.innerHTML = `<img src="${item.file}" alt="${item.name}"><span class="cart-remove-badge">✕</span>`;
+          slot.onclick = () => removeFromCart(i);
+        } else {
+          slot.className = 'cart-slot';
+        }
+        listEl.appendChild(slot);
+      }
+
+      const count = currentState.cart.length;
+      document.getElementById('cart-count-text').textContent = `${count} / ${MAX_CART_SIZE}개`;
+      document.getElementById('btn-go-cook').disabled = (count === 0);
+
+      const totalPrice = currentState.cart.reduce((sum, item) => sum + item.price, 0);
+      const budget = currentState.mission ? currentState.mission.budget : 5000;
+      const budgetPill = document.getElementById('shelf-budget-pill');
+
+      budgetPill.textContent = `💰 ${totalPrice.toLocaleString()}원 / ${budget.toLocaleString()}원`;
+      if (totalPrice > budget) {
+        budgetPill.classList.add('over');
+        budgetPill.textContent += " (예산 초과!)";
+      } else {
+        budgetPill.classList.remove('over');
+      }
+    }
+
+    function goToCookScene() {
+      currentState.selectedCookIdx = null;
+      currentState.mixedDrinks = [];
+      currentState.mistakeCount = 0;
+      currentState.isBusyCooking = false;
+
+      document.getElementById('mixed-drink-result').style.display = 'none';
+      document.getElementById('fx-water').classList.remove('active');
+      document.getElementById('fx-microwave').classList.remove('active');
+      clearHints();
+
+      const hasBaristaMission = currentState.mission && currentState.mission.id === 3;
+      const drinkCount = currentState.cart.filter(i => i.cookType === "mix").length;
+
+      currentState.cart.forEach(item => {
+        item.isCooked = false;
+        if (hasBaristaMission && item.cookType === "mix" && drinkCount >= 2) {
+          item.requiredCook = true;
+        }
+      });
+
+      renderCookTray();
+      goToScene('scene-cook');
+    }
+
+    function renderCookTray() {
+      const listEl = document.getElementById('cook-items-list');
+      listEl.innerHTML = "";
+
+      let requiredTotal = 0;
+      let requiredDone = 0;
+
+      currentState.cart.forEach((item, index) => {
+        if (item.requiredCook) {
+          requiredTotal++;
+          if (item.isCooked) requiredDone++;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'cook-item-card';
+        card.id = `cook-card-${index}`;
+        if (currentState.selectedCookIdx === index) card.classList.add('selected');
+        if (item.isCooked) card.classList.add('done');
+
+        let badgeHtml = "";
+        if (item.isCooked) {
+          badgeHtml = `<span class="status-badge badge-done">조리완료</span>`;
+        } else if (item.requiredCook) {
+          badgeHtml = `<span class="status-badge badge-need">조리필수</span>`;
+        } else if (item.cookType === "mix") {
+          badgeHtml = `<span class="status-badge badge-opt">믹스가능</span>`;
+        }
+
+        card.innerHTML = `
+          <div class="hint-arrow">⬇️</div>
+          <img src="${item.file}" alt="${item.name}">
+          ${badgeHtml}
+        `;
+        card.onclick = () => selectCookItem(index);
+        listEl.appendChild(card);
+      });
+
+      document.getElementById('cook-progress-text').textContent = `필수 조리: ${requiredDone} / ${requiredTotal} 완료`;
+      const canProceed = (requiredDone === requiredTotal);
+      document.getElementById('btn-go-plating').disabled = !canProceed;
+
+      if (canProceed && requiredTotal > 0) {
+        document.getElementById('cook-guide-text').textContent = "✅ 모든 필수 조리가 끝났습니다! [배치하기 ▶]를 눌러주세요.";
+      }
+    }
+
+    function selectCookItem(index) {
+      if (currentState.isBusyCooking) return;
+      const item = currentState.cart[index];
+
+      if (item.isCooked) {
+        showToast("이미 조리가 완료된 재료입니다!");
+        recordMistake();
+        return;
+      }
+
+      currentState.selectedCookIdx = index;
+      clearHints();
+
+      const guideMap = {
+        water: `💧 [${item.name}] 선택됨! 위쪽 '온수대'를 눌러 뜨거운 물을 부으세요.`,
+        microwave: `♨️ [${item.name}] 선택됨! 위쪽 '전자레인지'를 눌러 3초간 데우세요.`,
+        mix: `🥤 [${item.name}] 선택됨! 위쪽 '믹싱컵'에 부어보세요. (최대 2개 혼합 가능)`,
+        ice: `🧊 [${item.name}]은 조리 없이 바로 식판에 배치할 수 있습니다.`,
+        topping: `🥔 [${item.name}]은 조리 없이 바로 식판에 배치할 수 있습니다.`
+      };
+      document.getElementById('cook-guide-text').textContent = guideMap[item.cookType];
+      renderCookTray();
+    }
+
+    function useAppliance(appType) {
+      if (currentState.isBusyCooking) return;
+
+      if (currentState.selectedCookIdx === null) {
+        showToast("먼저 아래 트레이에서 조리할 재료를 선택해주세요!");
+        recordMistake();
+        return;
+      }
+
+      const item = currentState.cart[currentState.selectedCookIdx];
+
+      if (item.cookType !== appType) {
+        const rightName = {
+          water: "온수대",
+          microwave: "전자레인지",
+          mix: "믹싱컵"
+        }[item.cookType] || "조리가 필요 없는 재료";
+
+        showToast(`앗! [${item.name}]은(는) '${rightName}'을(를) 이용해야 해요!`);
+        recordMistake();
+        return;
+      }
+
+      clearHints();
+      currentState.mistakeCount = 0;
+
+      if (appType === "water") {
+        currentState.isBusyCooking = true;
+        document.getElementById('water-food-img').src = item.file;
+        document.getElementById('fx-water').classList.add('active');
+
+        setTimeout(() => {
+          document.getElementById('fx-water').classList.remove('active');
+          item.isCooked = true;
+          currentState.selectedCookIdx = null;
+          currentState.isBusyCooking = false;
+          showToast(`💧 [${item.name}] 물 붓기 완료!`);
+          renderCookTray();
+        }, 1800);
+
+      } else if (appType === "microwave") {
+        currentState.isBusyCooking = true;
+        document.getElementById('mw-food-img').src = item.file;
+        document.getElementById('fx-microwave').classList.add('active');
+
+        setTimeout(() => {
+          document.getElementById('fx-microwave').classList.remove('active');
+          item.isCooked = true;
+          currentState.selectedCookIdx = null;
+          currentState.isBusyCooking = false;
+          showToast(`♨️ 땡! [${item.name}] 조리 완료!`);
+          renderCookTray();
+        }, 3000);
+
+      } else if (appType === "mix") {
+        if (currentState.mixedDrinks.length >= 2) {
+          showToast("믹싱컵에는 음료를 최대 2개까지만 섞을 수 있습니다!");
+          return;
+        }
+
+        currentState.mixedDrinks.push(item);
+        item.isCooked = true;
+        currentState.selectedCookIdx = null;
+
+        updateMixedDrinkIcon();
+        showToast(`🥤 믹싱컵에 [${item.name}] 추가 완료! (${currentState.mixedDrinks.length}/2)`);
+        renderCookTray();
+      }
+    }
+
+    function updateMixedDrinkIcon() {
+      const resultBox = document.getElementById('mixed-drink-result');
+      const cupColorEl = document.getElementById('mixed-cup-color');
+      resultBox.style.display = 'flex';
+
+      if (currentState.mixedDrinks.length === 1) {
+        const c1 = currentState.mixedDrinks[0].color || "#00b0ff";
+        cupColorEl.style.background = c1;
+      } else if (currentState.mixedDrinks.length >= 2) {
+        const c1 = currentState.mixedDrinks[0].color || "#00b0ff";
+        const c2 = currentState.mixedDrinks[1].color || "#ff9eb5";
+        cupColorEl.style.background = `linear-gradient(135deg, ${c1} 35%, ${c2} 65%)`;
+      }
+    }
+
+    function recordMistake() {
+      currentState.mistakeCount++;
+      if (currentState.mistakeCount >= 3) {
+        showSmartHintArrow();
+      }
+    }
+
+    function showSmartHintArrow() {
+      clearHints();
+      if (currentState.selectedCookIdx === null) {
+        const nextIdx = currentState.cart.findIndex(i => !i.isCooked && (i.requiredCook || i.cookType === "mix"));
+        if (nextIdx !== -1) {
+          const card = document.getElementById(`cook-card-${nextIdx}`);
+          if (card) card.classList.add('hint-target');
+          document.getElementById('cook-guide-text').textContent = "💡 힌트: 화살표가 가리키는 재료를 먼저 터치하세요!";
+        }
+      } else {
+        const item = currentState.cart[currentState.selectedCookIdx];
+        const targetApp = document.getElementById(`app-${item.cookType}`);
+        if (targetApp) {
+          targetApp.classList.add('hint-target');
+          document.getElementById('cook-guide-text').textContent = "💡 힌트: 화살표가 가리키는 기구를 터치해서 조리하세요!";
+        }
+      }
+    }
+
+    function clearHints() {
+      document.querySelectorAll('.hint-target').forEach(el => el.classList.remove('hint-target'));
+    }
+
+    // =========================================
+    // 5. 1-4 요리 배치하기 화면
+    // =========================================
+    function goToPlatingScene() {
+      currentState.platingItems = currentState.cart.map((item, idx) => {
+        const displayFile = (item.category === "라면") ? "./완성된 컵라면.png" : item.file;
+        return {
+          uid: `food-${idx}`,
+          name: item.name,
+          file: displayFile,
+          isChopsticks: false,
+          placed: false,
+          xPercent: 50,
+          yPercent: 50
+        };
+      });
+
+      currentState.platingItems.push({
+        uid: "item-chopsticks",
+        name: "나무 젓가락",
+        file: "./나무 젓가락.png",
+        isChopsticks: true,
+        placed: false,
+        xPercent: 50,
+        yPercent: 50
+      });
+
+      renderPlatingBoard();
+      goToScene('scene-plating');
+    }
+
+    function renderPlatingBoard() {
+      const dockBar = document.getElementById('plating-dock-bar');
+      const trayZone = document.getElementById('tray-drop-zone');
+
+      dockBar.innerHTML = "";
+      trayZone.innerHTML = "";
+
+      let placedFoodCount = 0;
+
+      currentState.platingItems.forEach((pItem) => {
+        if (!pItem.placed) {
+          const dockEl = document.createElement('div');
+          dockEl.className = 'dock-food-item';
+          dockEl.innerHTML = `
+            <img src="${pItem.file}" alt="${pItem.name}">
+            <span class="dock-food-tag">${pItem.name}</span>
+          `;
+          dockEl.addEventListener('mousedown', (e) => startDragItem(e, pItem));
+          dockBar.appendChild(dockEl);
+        } else {
+          if (!pItem.isChopsticks) placedFoodCount++;
+
+          const placedEl = document.createElement('div');
+          placedEl.className = 'placed-food';
+          if (pItem.isChopsticks) placedEl.classList.add('chopsticks-type');
+
+          placedEl.style.left = `${pItem.xPercent}%`;
+          placedEl.style.top = `${pItem.yPercent}%`;
+          placedEl.style.transform = 'translate(-50%, -50%)';
+          placedEl.innerHTML = `<img src="${pItem.file}" alt="${pItem.name}">`;
+
+          placedEl.addEventListener('mousedown', (e) => startDragItem(e, pItem));
+          trayZone.appendChild(placedEl);
+        }
+      });
+
+      document.getElementById('btn-finish-plating').disabled = (placedFoodCount === 0);
+    }
+
+    let draggingItem = null;
+
+    function startDragItem(e, pItem) {
+      e.preventDefault();
+      draggingItem = pItem;
+
+      const ghost = document.getElementById('drag-ghost');
+      const ghostImg = document.getElementById('drag-ghost-img');
+
+      ghostImg.src = pItem.file;
+      ghost.style.width = pItem.isChopsticks ? '245px' : '195px';
+      ghost.style.height = pItem.isChopsticks ? '120px' : '195px';
+      ghost.style.left = `${e.clientX}px`;
+      ghost.style.top = `${e.clientY}px`;
+      ghost.style.display = 'block';
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      if (!draggingItem) return;
+      const ghost = document.getElementById('drag-ghost');
+      ghost.style.left = `${e.clientX}px`;
+      ghost.style.top = `${e.clientY}px`;
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if (!draggingItem) return;
+
+      const ghost = document.getElementById('drag-ghost');
+      ghost.style.display = 'none';
+
+      const trayZone = document.getElementById('tray-drop-zone');
+      const rect = trayZone.getBoundingClientRect();
+
+      if (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      ) {
+        let xPct = ((e.clientX - rect.left) / rect.width) * 100;
+        let yPct = ((e.clientY - rect.top) / rect.height) * 100;
+
+        xPct = Math.max(12, Math.min(88, xPct));
+        yPct = Math.max(16, Math.min(84, yPct));
+
+        draggingItem.placed = true;
+        draggingItem.xPercent = xPct;
+        draggingItem.yPercent = yPct;
+      } else {
+        draggingItem.placed = false;
+      }
+
+      draggingItem = null;
+      renderPlatingBoard();
+    });
+
+    // =========================================
+    // 6. [완성하기 ▶] -> 1-6 손님 심사 페이지
+    // =========================================
+    function finishPlating() {
+      const cust = currentState.customer || CUSTOMERS[0];
+      document.getElementById('judge-customer-img').src = cust.judgeImg;
+
+      const sourceTray = document.getElementById('tray-drop-zone');
+      const judgeTrayClone = document.getElementById('judge-tray-clone');
+      judgeTrayClone.innerHTML = sourceTray.innerHTML;
+
+      const result = evaluateOrder();
+      currentState.lastScore = result.score;
+
+      document.getElementById('judge-score-num').textContent = `${result.score}점`;
+      document.getElementById('judge-mission-tag').textContent = `요청 #${currentState.mission.id} · ${currentState.mission.title}`;
+      document.getElementById('judge-review-text').textContent = `"${result.comment}"`;
+      document.getElementById('judge-detail-sub').textContent =
+        `결제 금액: ${result.totalPrice.toLocaleString()}원 / 제한 예산: ${currentState.mission.budget.toLocaleString()}원 ${result.hasChopsticks ? '· 🥢 젓가락 세팅 보너스!' : ''}`;
+
+      // 내 조합을 순위 보드에 자동 등록 (한줄평은 기본 문구로 등록 후 순위 화면에서 수정 가능)
+      registerMyEntryToRanking(sourceTray.innerHTML, result.score);
+
+      goToScene('scene-judge');
+    }
+
+    function evaluateOrder() {
+      let score = 70;
+      const mission = currentState.mission;
+      const cart = currentState.cart;
+      const totalPrice = cart.reduce((s, i) => s + i.price, 0);
+      const hasChopsticks = currentState.platingItems.some(p => p.isChopsticks && p.placed);
+
+      const isWithinBudget = totalPrice <= mission.budget;
+      if (isWithinBudget) score += 15;
+      else score -= 15;
+
+      let missionMatched = false;
+      if (mission.id === 1) {
+        const mealCount = cart.filter(i => i.category === "라면" || i.tags.includes("든든함")).length;
+        if (isWithinBudget && mealCount >= 2) missionMatched = true;
+      } else if (mission.id === 2) {
+        const spicyCount = cart.filter(i => i.tags.includes("매움")).length;
+        if (spicyCount >= 2) missionMatched = true;
+      } else if (mission.id === 3) {
+        if (currentState.mixedDrinks.length >= 2) missionMatched = true;
+      } else if (mission.id === 4) {
+        if (cart.length >= 4) missionMatched = true;
+      } else if (mission.id === 5) {
+        const mwCount = cart.filter(i => i.cookType === "microwave").length;
+        const ramenCount = cart.filter(i => i.category === "라면").length;
+        if (mwCount >= 1 && ramenCount === 0) missionMatched = true;
+      }
+
+      if (missionMatched) score += 15;
+      if (hasChopsticks) score += 5;
+
+      score = Math.max(20, Math.min(100, score));
+
+      let comment = "";
+      if (!isWithinBudget) {
+        comment = "맛있어 보이긴 하는데... 제 예산을 초과해서 지갑이 좀 아프네요 ㅠㅠ";
+      } else if (score >= 95) {
+        comment = "완벽 그 자체! 제가 딱 원하던 조합에 플레이팅 센스까지 최고예요!";
+      } else if (score >= 80) {
+        comment = "오~ 예산도 잘 맞추고 구성도 알차네요! 다음에도 또 부탁하고 싶어요!";
+      } else {
+        comment = "음... 제가 요청한 스타일이랑은 조금 다른 것 같지만 잘 먹을게요!";
+      }
+
+      return { score, comment, totalPrice, hasChopsticks };
+    }
+
+    // =========================================
+    // 7. 1-7 순위 및 투표 페이지 로직
+    // =========================================
+    function registerMyEntryToRanking(trayHtml, score) {
+      const menuNames = currentState.cart.map(i => i.name);
+      const newId = `my-${Date.now()}`;
+
+      // 이전 플레이의 isMine 표시 해제
+      rankingEntries.forEach(entry => { entry.isMine = false; });
+
+      rankingEntries.push({
+        id: newId,
+        author: "나 (도전자)",
+        isMine: true,
+        menus: menuNames,
+        comment: `${menuNames.join(' + ')} 환상의 꿀조합! 꼭 한 번 드셔보세요!`,
+        score: score,
+        votes: 1, // 기본 1표 부여
+        trayHtml: trayHtml
+      });
+
+      currentState.myEntryId = newId;
+      document.getElementById('my-recipe-comment-input').value = "";
+    }
+
+    function openRankingScene() {
+      updateVoteHintText();
+      renderRankingList();
+      goToScene('scene-ranking');
+    }
+
+    // 내가 만든 메뉴에 한줄평 등록/수정
+    function saveMyRecipeComment() {
+      const inputEl = document.getElementById('my-recipe-comment-input');
+      const text = inputEl.value.trim();
+      if (!text) {
+        showToast("한줄평 내용을 입력해주세요!");
+        return;
+      }
+
+      const myEntry = rankingEntries.find(e => e.id === currentState.myEntryId);
+      if (myEntry) {
+        myEntry.comment = text;
+        showToast("✅ 내 메뉴 한줄평이 등록되었습니다!");
+        renderRankingList();
+      }
+    }
+
+    // 하트 투표 처리 (한 번의 플레이에 딱 1번만 가능)
+    function voteForEntry(entryId) {
+      if (currentState.hasVotedThisPlay) {
+        showToast("이미 이번 플레이의 하트 투표권을 사용하셨습니다! (1플레이 1투표)");
+        return;
+      }
+
+      const target = rankingEntries.find(e => e.id === entryId);
+      if (!target) return;
+
+      target.votes += 1;
+      currentState.hasVotedThisPlay = true;
+      currentState.votedEntryId = entryId;
+
+      updateVoteHintText();
+      renderRankingList();
+      showToast(`❤️ [${target.author}]님의 꿀조합에 투표했습니다!`);
+    }
+
+    function updateVoteHintText() {
+      const hintEl = document.getElementById('vote-status-hint');
+      if (currentState.hasVotedThisPlay) {
+        hintEl.textContent = "✅ 이번 플레이의 하트 투표를 완료했습니다! (남은 투표권: 0회)";
+        hintEl.style.color = "#c9184a";
+      } else {
+        hintEl.textContent = "❤️ 하트는 한 번의 플레이당 1번만 투표할 수 있습니다! (남은 투표권: 1회)";
+        hintEl.style.color = "#495057";
+      }
+    }
+
+    function renderRankingList() {
+      const container = document.getElementById('ranking-list-container');
+      container.innerHTML = "";
+
+      // 정렬 기준에 따라 복사본 정렬
+      const sorted = [...rankingEntries].sort((a, b) => {
+        if (currentState.rankSortMode === "votes") {
+          return b.votes - a.votes || b.score - a.score;
+        } else {
+          return b.score - a.score || b.votes - a.votes;
+        }
+      });
+
+      sorted.forEach((entry, index) => {
+        const rankNum = index + 1;
+        const isVotedByMe = (currentState.votedEntryId === entry.id);
+
+        const card = document.createElement('div');
+        card.className = 'rank-card';
+        if (rankNum === 1) card.classList.add('top-1');
+        if (entry.isMine) card.classList.add('is-mine');
+
+        card.innerHTML = `
+          <div class="rank-badge">${rankNum === 1 ? '👑1' : rankNum}</div>
+          <div class="mini-tray-preview">${entry.trayHtml}</div>
+          <div class="rank-info">
+            <div class="rank-menu-chips">🍱 조합 메뉴: ${entry.menus.join(' · ')}</div>
+            <div class="rank-user-comment">"${entry.comment}"</div>
+            <div class="rank-meta">작성자: <strong>${entry.author}</strong> · 심사 점수: <strong>${entry.score}점</strong></div>
+          </div>
+          <div class="vote-action-box">
+            <button class="btn-heart-vote ${isVotedByMe ? 'voted' : ''}" title="하트 눌러 투표하기">
+              ${isVotedByMe ? '❤️' : '🤍'}
+            </button>
+            <span class="vote-count-label">${entry.votes}표</span>
+          </div>
+        `;
+
+        const heartBtn = card.querySelector('.btn-heart-vote');
+        heartBtn.addEventListener('click', () => voteForEntry(entry.id));
+
+        container.appendChild(card);
+      });
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast-msg');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function toggleHowToModal(isOpen) {
+      document.getElementById('modal-howto').classList.toggle('open', isOpen);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('btn-area-start').addEventListener('click', startGame);
+      document.getElementById('btn-area-howto').addEventListener('click', () => toggleHowToModal(true));
+      document.getElementById('btn-modal-close').addEventListener('click', () => toggleHowToModal(false));
+      document.getElementById('modal-howto').addEventListener('click', (e) => {
+        if (e.target.id === 'modal-howto') toggleHowToModal(false);
+      });
+
+      document.getElementById('btn-accept-order').addEventListener('click', acceptOrder);
+      document.getElementById('btn-reject-order').addEventListener('click', rejectOrder);
+
+      document.getElementById('tab-ramen').addEventListener('click', () => selectCategory('라면'));
+      document.getElementById('tab-drink').addEventListener('click', () => selectCategory('음료'));
+      document.getElementById('tab-etc').addEventListener('click', () => selectCategory('기타'));
+      document.getElementById('btn-go-cook').addEventListener('click', goToCookScene);
+
+      document.getElementById('app-water').addEventListener('click', () => useAppliance('water'));
+      document.getElementById('app-microwave').addEventListener('click', () => useAppliance('microwave'));
+      document.getElementById('app-mix').addEventListener('click', () => useAppliance('mix'));
+      document.getElementById('btn-go-plating').addEventListener('click', goToPlatingScene);
+      document.getElementById('btn-finish-plating').addEventListener('click', finishPlating);
+
+      // 심사 페이지 버튼들
+      document.getElementById('btn-go-ranking').addEventListener('click', openRankingScene);
+      document.getElementById('btn-next-customer').addEventListener('click', startGame);
+      document.getElementById('btn-back-title').addEventListener('click', () => goToScene('scene-title'));
+
+      // 순위·투표 페이지 버튼들
+      document.getElementById('sort-by-votes').addEventListener('click', () => {
+        currentState.rankSortMode = "votes";
+        document.getElementById('sort-by-votes').classList.add('active');
+        document.getElementById('sort-by-score').classList.remove('active');
+        renderRankingList();
+      });
+
+      document.getElementById('sort-by-score').addEventListener('click', () => {
+        currentState.rankSortMode = "score";
+        document.getElementById('sort-by-score').classList.add('active');
+        document.getElementById('sort-by-votes').classList.remove('active');
+        renderRankingList();
+      });
+
+      document.getElementById('btn-save-my-comment').addEventListener('click', saveMyRecipeComment);
+      document.getElementById('btn-rank-play-again').addEventListener('click', startGame);
+      document.getElementById('btn-rank-to-title').addEventListener('click', () => goToScene('scene-title'));
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.getElementById('scene-title').classList.contains('active')) {
+          startGame();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
