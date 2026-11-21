@@ -663,6 +663,10 @@
       z-index: 15;
     }
 
+    .dock-food-item, .placed-food {
+      touch-action: none;
+    }
+
     .placed-food {
       position: absolute;
       width: 195px;
@@ -928,7 +932,6 @@
       display: flex;
     }
 
-    /* 상단 헤더 & 실제 출시 안내 배너 */
     .rank-header {
       display: flex;
       justify-content: space-between;
@@ -958,7 +961,6 @@
       display: inline-block;
     }
 
-    /* 점수 순위 / 투표 순위 정렬 탭 */
     .rank-sort-tabs {
       display: flex;
       gap: 8px;
@@ -981,7 +983,6 @@
       color: #ffffff;
     }
 
-    /* 내 조합 한줄평 등록 박스 */
     .my-comment-box {
       display: flex;
       align-items: center;
@@ -1023,7 +1024,6 @@
       cursor: default;
     }
 
-    /* 순위 리스트 스크롤 영역 */
     .ranking-list-container {
       flex: 1;
       overflow-y: auto;
@@ -1074,7 +1074,6 @@
       font-size: 1.25rem;
     }
 
-    /* 미니 식판 프리뷰 이미지 */
     .mini-tray-preview {
       position: relative;
       width: 132px;
@@ -1099,7 +1098,6 @@
       height: 20px !important;
     }
 
-    /* 조합 메뉴 & 한줄평 텍스트 영역 */
     .rank-info {
       flex: 1;
       min-width: 0;
@@ -1130,7 +1128,6 @@
       color: #6c757d;
     }
 
-    /* 우측 하트 투표 버튼 영역 */
     .vote-action-box {
       display: flex;
       flex-direction: column;
@@ -1288,7 +1285,7 @@
           <li><strong>주문 확인:</strong> 손님이 원하는 예산과 요구사항을 확인하고 수락하세요.</li>
           <li><strong>재료 담기:</strong> 진열대에서 라면, 음료, 기타 재료를 최대 5개까지 담으세요.</li>
           <li><strong>조리하기:</strong> 아래 재료를 먼저 클릭한 뒤, 알맞은 조리기구(온수대/전자레인지/믹싱컵)를 터치하세요!</li>
-          <li><strong>플레이팅:</strong> 완성된 음식과 나무 젓가락을 마우스로 끌어 식판 위에 자유롭게 배치하세요.</li>
+          <li><strong>플레이팅:</strong> 완성된 음식과 나무 젓가락을 손가락(마우스)으로 끌어 식판 위에 자유롭게 배치하세요.</li>
           <li><strong>심사 및 투표:</strong> 손님의 점수를 확인하고, 1플레이당 1번 하트를 눌러 1위 출시 후보에 투표하세요!</li>
         </ol>
         <button id="btn-modal-close" class="btn-close">확인</button>
@@ -1384,7 +1381,7 @@
     <!-- [화면 1-4] 요리 배치하기 화면 (요리 배치.png) -->
     <section id="scene-plating" class="scene">
       <div class="plating-top-bar">
-        <div class="plating-guide-pill">🍽️ 아래 하얀 바의 음식과 나무 젓가락을 마우스로 끌어 식판 위에 큼직하게 배치하세요!</div>
+        <div class="plating-guide-pill">🍽️ 아래 하얀 바의 음식과 나무 젓가락을 손가락(마우스)으로 끌어 식판 위에 큼직하게 배치하세요!</div>
         <button id="btn-finish-plating" class="btn-next-step" disabled>완성하기 ▶</button>
       </div>
 
@@ -1414,7 +1411,6 @@
         <div id="judge-tray-clone"></div>
       </div>
 
-      <!-- 하단 버튼: 순위보기 버튼 추가 -->
       <div class="judge-bottom-actions">
         <button id="btn-go-ranking" class="order-btn btn-rank">🏆 순위 · 투표 보기</button>
         <button id="btn-next-customer" class="order-btn btn-accept">다음 손님 받기 ▶</button>
@@ -1435,14 +1431,12 @@
         </div>
       </div>
 
-      <!-- 내가 만든 메뉴에 한줄평을 남기는 입력창 -->
       <div class="my-comment-box">
         <span style="font-weight: 900; color: #e67700; white-space: nowrap;">✍️ 내 메뉴 한줄평:</span>
         <input type="text" id="my-recipe-comment-input" maxlength="45" placeholder="내가 만든 조합의 매력 포인트를 한줄평으로 남겨보세요! (최대 45자)">
         <button id="btn-save-my-comment" class="btn-post-comment">한줄평 등록</button>
       </div>
 
-      <!-- 식판 이미지 + 조합된 메뉴 + 제작자 한줄평 + 하트 투표 리스트 -->
       <div id="ranking-list-container" class="ranking-list-container"></div>
 
       <div class="rank-footer">
@@ -1458,7 +1452,7 @@
 
   </div>
 
-  <!-- 마우스 드래그 시 커서를 따라다니는 고스트 요소 -->
+  <!-- 드래그 시 커서/터치를 따라다니는 고스트 요소 -->
   <div id="drag-ghost"><img id="drag-ghost-img" src="" alt=""></div>
 
   <script>
@@ -1509,7 +1503,7 @@
       ]
     };
 
-    // 기본 순위 보드 데이터 (다른 참가자들의 레시피 + 내 레시피가 추가됨)
+    // 새 채점 기준에 맞춰 조정된 시드 데이터 점수 (91, 78, 84)
     let rankingEntries = [
       {
         id: "seed-1",
@@ -1517,7 +1511,7 @@
         isMine: false,
         menus: ["까르보 불닭", "계란마요김밥", "바나나우유"],
         comment: "매운 까르보 불닭 소스에 계란마요김밥 찍어 먹고 바나나우유로 마무리하면 극락!",
-        score: 98,
+        score: 91,
         votes: 42,
         trayHtml: `
           <div class="placed-food" style="left:32%; top:48%; transform:translate(-50%,-50%);"><img src="./완성된 컵라면.png"></div>
@@ -1531,7 +1525,7 @@
         isMine: false,
         menus: ["사이다", "파워에이드", "얼음컵"],
         comment: "파워에이드랑 사이다 1:1 비율에 얼음컵 부으면 시험기간 잠 확 깨는 블루레몬에이드 완성!",
-        score: 92,
+        score: 78,
         votes: 35,
         trayHtml: `
           <div class="placed-food" style="left:30%; top:45%; transform:translate(-50%,-50%);"><img src="./파워에이드.png"></div>
@@ -1545,7 +1539,7 @@
         isMine: false,
         menus: ["육개장", "기본김밥", "흰우유"],
         comment: "5,200원으로 든든하게 배 채우는 정석 근본 조합! 국물에 김밥 말아먹으면 최고예요.",
-        score: 95,
+        score: 84,
         votes: 28,
         trayHtml: `
           <div class="placed-food" style="left:34%; top:50%; transform:translate(-50%,-50%);"><img src="./완성된 컵라면.png"></div>
@@ -1567,9 +1561,9 @@
       platingItems: [],
       lastScore: 0,
       myEntryId: null,
-      hasVotedThisPlay: false, // 이번 플레이에서 하트 투표 사용 여부
+      hasVotedThisPlay: false,
       votedEntryId: null,
-      rankSortMode: "votes" // "votes" | "score"
+      rankSortMode: "votes"
     };
 
     const MAX_CART_SIZE = 5;
@@ -1581,7 +1575,6 @@
     }
 
     function startGame() {
-      // 새 플레이 시작 시 이번 회차 투표권 초기화
       currentState.hasVotedThisPlay = false;
       currentState.votedEntryId = null;
       currentState.myEntryId = null;
@@ -1934,7 +1927,7 @@
     }
 
     // =========================================
-    // 5. 1-4 요리 배치하기 화면
+    // 5. 1-4 요리 배치하기 화면 (모바일 터치 & 마우스 Pointer 드래그 대응)
     // =========================================
     function goToPlatingScene() {
       currentState.platingItems = currentState.cart.map((item, idx) => {
@@ -1981,7 +1974,7 @@
             <img src="${pItem.file}" alt="${pItem.name}">
             <span class="dock-food-tag">${pItem.name}</span>
           `;
-          dockEl.addEventListener('mousedown', (e) => startDragItem(e, pItem));
+          dockEl.addEventListener('pointerdown', (e) => startDragItem(e, pItem));
           dockBar.appendChild(dockEl);
         } else {
           if (!pItem.isChopsticks) placedFoodCount++;
@@ -1995,7 +1988,7 @@
           placedEl.style.transform = 'translate(-50%, -50%)';
           placedEl.innerHTML = `<img src="${pItem.file}" alt="${pItem.name}">`;
 
-          placedEl.addEventListener('mousedown', (e) => startDragItem(e, pItem));
+          placedEl.addEventListener('pointerdown', (e) => startDragItem(e, pItem));
           trayZone.appendChild(placedEl);
         }
       });
@@ -2020,14 +2013,14 @@
       ghost.style.display = 'block';
     }
 
-    window.addEventListener('mousemove', (e) => {
+    window.addEventListener('pointermove', (e) => {
       if (!draggingItem) return;
       const ghost = document.getElementById('drag-ghost');
       ghost.style.left = `${e.clientX}px`;
       ghost.style.top = `${e.clientY}px`;
     });
 
-    window.addEventListener('mouseup', (e) => {
+    window.addEventListener('pointerup', (e) => {
       if (!draggingItem) return;
 
       const ghost = document.getElementById('drag-ghost');
@@ -2059,8 +2052,14 @@
       renderPlatingBoard();
     });
 
+    window.addEventListener('pointercancel', () => {
+      draggingItem = null;
+      document.getElementById('drag-ghost').style.display = 'none';
+      renderPlatingBoard();
+    });
+
     // =========================================
-    // 6. [완성하기 ▶] -> 1-6 손님 심사 페이지
+    // 6. [완성하기 ▶] -> 1-6 손님 심사 페이지 (세분화된 채점 로직 적용)
     // =========================================
     function finishPlating() {
       const cust = currentState.customer || CUSTOMERS[0];
@@ -2079,54 +2078,75 @@
       document.getElementById('judge-detail-sub').textContent =
         `결제 금액: ${result.totalPrice.toLocaleString()}원 / 제한 예산: ${currentState.mission.budget.toLocaleString()}원 ${result.hasChopsticks ? '· 🥢 젓가락 세팅 보너스!' : ''}`;
 
-      // 내 조합을 순위 보드에 자동 등록 (한줄평은 기본 문구로 등록 후 순위 화면에서 수정 가능)
       registerMyEntryToRanking(sourceTray.innerHTML, result.score);
 
       goToScene('scene-judge');
     }
 
     function evaluateOrder() {
-      let score = 70;
       const mission = currentState.mission;
       const cart = currentState.cart;
       const totalPrice = cart.reduce((s, i) => s + i.price, 0);
       const hasChopsticks = currentState.platingItems.some(p => p.isChopsticks && p.placed);
+      const unplacedCount = currentState.platingItems.filter(p => !p.isChopsticks && !p.placed).length;
 
+      let score = 35;
+
+      // 예산 (초과 -15 / 이내 +15, 예산을 알차게 쓰면 추가 가점)
       const isWithinBudget = totalPrice <= mission.budget;
-      if (isWithinBudget) score += 15;
-      else score -= 15;
+      if (isWithinBudget) {
+        score += 15;
+        const usage = totalPrice / mission.budget;
+        if (usage >= 0.7) score += 10;
+        else if (usage >= 0.5) score += 5;
+      } else {
+        score -= 15;
+      }
 
+      // 미션 충족 (+25)
       let missionMatched = false;
       if (mission.id === 1) {
         const mealCount = cart.filter(i => i.category === "라면" || i.tags.includes("든든함")).length;
-        if (isWithinBudget && mealCount >= 2) missionMatched = true;
+        missionMatched = isWithinBudget && mealCount >= 2;
       } else if (mission.id === 2) {
-        const spicyCount = cart.filter(i => i.tags.includes("매움")).length;
-        if (spicyCount >= 2) missionMatched = true;
+        missionMatched = cart.filter(i => i.tags.includes("매움")).length >= 2;
       } else if (mission.id === 3) {
-        if (currentState.mixedDrinks.length >= 2) missionMatched = true;
+        missionMatched = currentState.mixedDrinks.length >= 2;
       } else if (mission.id === 4) {
-        if (cart.length >= 4) missionMatched = true;
+        missionMatched = cart.length >= 4 && totalPrice >= mission.budget * 0.7;
       } else if (mission.id === 5) {
         const mwCount = cart.filter(i => i.cookType === "microwave").length;
         const ramenCount = cart.filter(i => i.category === "라면").length;
-        if (mwCount >= 1 && ramenCount === 0) missionMatched = true;
+        missionMatched = mwCount === 1 && ramenCount === 0;
       }
+      if (missionMatched) score += 25;
 
-      if (missionMatched) score += 15;
+      // 구성 균형 (+10): 식사류 + 음료, 바리스타 미션은 음료 + 얼음컵
+      const hasMeal = cart.some(i => i.category === "라면" || i.cookType === "microwave");
+      const hasDrink = cart.some(i => i.category === "음료");
+      const hasIce = cart.some(i => i.cookType === "ice");
+      if (mission.id === 3 ? (hasDrink && hasIce) : (hasMeal && hasDrink)) score += 10;
+
       if (hasChopsticks) score += 5;
+
+      // 감점: 같은 상품 중복, 식판에 안 올린 음식
+      const dupCount = cart.length - new Set(cart.map(i => i.id)).size;
+      score -= dupCount * 5;
+      score -= unplacedCount * 5;
 
       score = Math.max(20, Math.min(100, score));
 
       let comment = "";
       if (!isWithinBudget) {
         comment = "맛있어 보이긴 하는데... 제 예산을 초과해서 지갑이 좀 아프네요 ㅠㅠ";
-      } else if (score >= 95) {
+      } else if (score >= 90) {
         comment = "완벽 그 자체! 제가 딱 원하던 조합에 플레이팅 센스까지 최고예요!";
-      } else if (score >= 80) {
+      } else if (score >= 70) {
         comment = "오~ 예산도 잘 맞추고 구성도 알차네요! 다음에도 또 부탁하고 싶어요!";
+      } else if (score >= 50) {
+        comment = "나쁘진 않은데, 제가 요청한 느낌과는 조금 달라요.";
       } else {
-        comment = "음... 제가 요청한 스타일이랑은 조금 다른 것 같지만 잘 먹을게요!";
+        comment = "아쉽지만... 이번 조합은 제 취향이 아니었어요 ㅠㅠ";
       }
 
       return { score, comment, totalPrice, hasChopsticks };
@@ -2139,7 +2159,6 @@
       const menuNames = currentState.cart.map(i => i.name);
       const newId = `my-${Date.now()}`;
 
-      // 이전 플레이의 isMine 표시 해제
       rankingEntries.forEach(entry => { entry.isMine = false; });
 
       rankingEntries.push({
@@ -2149,7 +2168,7 @@
         menus: menuNames,
         comment: `${menuNames.join(' + ')} 환상의 꿀조합! 꼭 한 번 드셔보세요!`,
         score: score,
-        votes: 1, // 기본 1표 부여
+        votes: 1,
         trayHtml: trayHtml
       });
 
@@ -2163,7 +2182,6 @@
       goToScene('scene-ranking');
     }
 
-    // 내가 만든 메뉴에 한줄평 등록/수정
     function saveMyRecipeComment() {
       const inputEl = document.getElementById('my-recipe-comment-input');
       const text = inputEl.value.trim();
@@ -2180,7 +2198,6 @@
       }
     }
 
-    // 하트 투표 처리 (한 번의 플레이에 딱 1번만 가능)
     function voteForEntry(entryId) {
       if (currentState.hasVotedThisPlay) {
         showToast("이미 이번 플레이의 하트 투표권을 사용하셨습니다! (1플레이 1투표)");
@@ -2214,7 +2231,6 @@
       const container = document.getElementById('ranking-list-container');
       container.innerHTML = "";
 
-      // 정렬 기준에 따라 복사본 정렬
       const sorted = [...rankingEntries].sort((a, b) => {
         if (currentState.rankSortMode === "votes") {
           return b.votes - a.votes || b.score - a.score;
@@ -2290,12 +2306,10 @@
       document.getElementById('btn-go-plating').addEventListener('click', goToPlatingScene);
       document.getElementById('btn-finish-plating').addEventListener('click', finishPlating);
 
-      // 심사 페이지 버튼들
       document.getElementById('btn-go-ranking').addEventListener('click', openRankingScene);
       document.getElementById('btn-next-customer').addEventListener('click', startGame);
       document.getElementById('btn-back-title').addEventListener('click', () => goToScene('scene-title'));
 
-      // 순위·투표 페이지 버튼들
       document.getElementById('sort-by-votes').addEventListener('click', () => {
         currentState.rankSortMode = "votes";
         document.getElementById('sort-by-votes').classList.add('active');
