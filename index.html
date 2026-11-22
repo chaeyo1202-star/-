@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GS25 모디슈머 편의점 게임</title>
+  <!-- Google Fonts: Jua(배달의민족 주아체) 및 일본어/중국어 둥근 폰트 로드 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=M+PLUS+Rounded+1c:wght@800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -46,33 +50,135 @@
     }
 
     /* =========================================
-       [화면 0] 시작(타이틀) 화면
+       [화면 0] 시작(타이틀) 화면 & 2000년대 플래시 게임풍 버튼 타이포그래피
        ========================================= */
     #scene-title {
-      background-image: url('./타이틀.png');
+      background-image: url('./편의점 배경_2.png');
       background-size: 100% 100%;
       background-position: center;
       background-repeat: no-repeat;
       z-index: 1;
     }
 
-    .hotspot-btn {
+    .title-casual-btn {
       position: absolute;
-      background: rgba(255, 255, 255, 0.01);
+      left: 67.6%;
+      width: 29.4%;
+      height: 13.6%;
+      background: transparent;
       border: none;
       border-radius: 999px;
       cursor: pointer;
       z-index: 50;
-      transition: background-color 0.15s ease;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 12px;
+      line-height: 1.1;
+
+      font-family: 'Jua', 'M PLUS Rounded 1c', 'ZCOOL KuaiLe', '배달의민족 주아', sans-serif;
+      font-size: clamp(1.35rem, 3.2vw, 2.15rem);
+      font-weight: 400;
+      letter-spacing: 1px;
+      white-space: nowrap;
+
+      color: #ffffff;
+      -webkit-text-stroke: 4px #0047ab;
+      paint-order: stroke fill;
+      text-shadow:
+        -2px -2px 0 #0047ab,
+         2px -2px 0 #0047ab,
+        -2px  2px 0 #0047ab,
+         2px  2px 0 #0047ab,
+         0px  3px 0 #003580,
+         3px  3px 0 #003580,
+         4px  5px 0 #002359,
+         0px  6px 8px rgba(0, 35, 89, 0.35);
+
+      transition: transform 0.12s ease, filter 0.12s ease;
     }
 
-    .hotspot-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 18px rgba(255, 255, 255, 0.65);
+    html[lang="en"] .title-casual-btn {
+      font-size: clamp(1.15rem, 2.55vw, 1.72rem);
+      letter-spacing: 0.5px;
+    }
+    html[lang="ja"] .title-casual-btn {
+      font-size: clamp(1.2rem, 2.7vw, 1.85rem);
     }
 
-    #btn-area-start { left: 64.2%; top: 49.5%; width: 32.3%; height: 14.5%; }
-    #btn-area-howto { left: 64.2%; top: 66.2%; width: 32.3%; height: 14.5%; }
+    .title-casual-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.06);
+    }
+
+    .title-casual-btn:active {
+      transform: translateY(2px) scale(0.98);
+    }
+
+    #btn-area-start { top: 69.5%; }
+    #btn-area-howto { top: 83.6%; }
+
+    #lang-bar {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      display: flex;
+      gap: 4px;
+      z-index: 60;
+    }
+
+    #lang-bar button {
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      border: 1.5px solid #007cff;
+      border-radius: 999px;
+      background: #fff;
+      color: #007cff;
+      cursor: pointer;
+    }
+
+    #lang-bar button.active {
+      background: #007cff;
+      color: #fff;
+    }
+
+    #btn-home {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 34px;
+      height: 34px;
+      border: 2.5px solid #007cff;
+      border-radius: 50%;
+      background: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 90;
+      display: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.72);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 2px 12px;
+      border-radius: 0 0 10px 10px;
+      z-index: 90;
+      display: none;
+    }
+
+    #hud.warn {
+      background: #d90429;
+    }
 
     /* =========================================
        [화면 1-1] 손님 주문 접수 화면
@@ -202,36 +308,62 @@
 
     .shelf-top-bar {
       position: absolute;
-      top: 4.8%;
-      left: 11%;
-      right: 5%;
-      height: 5.5%;
+      top: 4.2%;
+      left: 10.5%;
+      right: 4.5%;
+      height: 6.4%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 14px;
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 1rem;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+      gap: 12px;
       z-index: 20;
     }
 
+    /* 미션 요약 글자를 감싸는 기다란 흰색 네모칸 */
+    .mission-summary-box {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.96);
+      border: 2.5px solid #0056b3;
+      border-radius: 12px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    #shelf-mission-summary {
+      color: #1a2b4c;
+      font-weight: 800;
+      font-size: 0.92rem;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .budget-pill {
-      background-color: rgba(255, 255, 255, 0.95);
+      flex-shrink: 0;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.96);
+      border: 2.5px solid #0056b3;
       color: #0056b3;
-      padding: 4px 14px;
-      border-radius: 999px;
-      font-size: 0.98rem;
-      text-shadow: none;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      padding: 0 16px;
+      border-radius: 12px;
+      font-size: 0.94rem;
+      font-weight: 900;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
       transition: all 0.2s ease;
     }
 
     .budget-pill.over {
       background-color: #ffe3e3;
       color: #d90429;
-      border: 2px solid #ff5a5f;
+      border: 2.5px solid #ff5a5f;
     }
 
     .cat-tab-btn {
@@ -1273,8 +1405,12 @@
     
     <!-- [화면 0] 시작(타이틀) 화면 -->
     <section id="scene-title" class="scene active">
-      <button id="btn-area-start" class="hotspot-btn" aria-label="게임 시작"></button>
-      <button id="btn-area-howto" class="hotspot-btn" aria-label="게임 방법"></button>
+      <button id="btn-area-start" class="title-casual-btn" aria-label="게임 시작">게임 시작</button>
+      <button id="btn-area-howto" class="title-casual-btn" aria-label="게임 방법">게임 방법</button>
+      <div id="lang-bar">
+        <button data-lang="ko">KO</button><button data-lang="en">EN</button>
+        <button data-lang="ja">JA</button><button data-lang="zh">中文</button>
+      </div>
     </section>
 
     <!-- [팝업] 게임 방법 안내 창 -->
@@ -1311,7 +1447,9 @@
     <!-- [화면 1-2] 매대 재료 담기 화면 -->
     <section id="scene-shelf" class="scene">
       <div class="shelf-top-bar">
-        <span id="shelf-mission-summary">📋 미션 요약</span>
+        <div class="mission-summary-box">
+          <span id="shelf-mission-summary">📋 미션 요약</span>
+        </div>
         <div id="shelf-budget-pill" class="budget-pill">0원 / 5,000원</div>
       </div>
 
@@ -1378,7 +1516,7 @@
       </div>
     </section>
 
-    <!-- [화면 1-4] 요리 배치하기 화면 (요리 배치.png) -->
+    <!-- [화면 1-4] 요리 배치하기 화면 -->
     <section id="scene-plating" class="scene">
       <div class="plating-top-bar">
         <div class="plating-guide-pill">🍽️ 아래 하얀 바의 음식과 나무 젓가락을 손가락(마우스)으로 끌어 식판 위에 큼직하게 배치하세요!</div>
@@ -1448,6 +1586,8 @@
       </div>
     </section>
 
+    <button id="btn-home" aria-label="Home">🏠</button>
+    <div id="hud"></div>
     <div id="toast-msg">알림 메시지</div>
 
   </div>
@@ -1456,6 +1596,161 @@
   <div id="drag-ghost"><img id="drag-ghost-img" src="" alt=""></div>
 
   <script>
+    const LANGS = ['ko', 'en', 'ja', 'zh'];
+    let LANG = 'ko';
+    try { LANG = localStorage.getItem('modi-lang') || 'ko'; } catch (e) {}
+    if (!LANGS.includes(LANG)) LANG = 'ko';
+    const TOTAL_ROUNDS = 3;
+    const ROUND_TIME = 120;
+
+    const D = {
+      won: ["원", " KRW", "ウォン", "韩元"],
+      pts: ["점", " pts", "点", "分"],
+      round: ["라운드 {0}/{1}", "Round {0}/{1}", "ラウンド {0}/{1}", "第{0}/{1}轮"],
+      nextRound: ["다음 라운드 ▶", "Next Round ▶", "次のラウンド ▶", "下一轮 ▶"],
+      total: ["3라운드 합계 {0}점", "3-round total: {0}", "3ラウンド合計 {0}点", "三轮总分 {0}"],
+      budget: ["💰 제한 예산: {0}", "💰 Budget limit: {0}", "💰 予算上限: {0}", "💰 预算上限: {0}"],
+      over: [" (예산 초과!)", " (Over budget!)", " (予算オーバー!)", " (超出预算!)"],
+      cnt: ["{0} / {1}개", "{0} / {1} items", "{0} / {1}個", "{0} / {1}个"],
+      full: ["장바구니가 가득 찼습니다! (최대 5개)", "Cart is full! (max 5)", "カゴがいっぱい!(最大5個)", "购物篮已满!(最多5个)"],
+      already: ["이미 조리가 완료된 재료입니다!", "Already cooked!", "もう調理済みです!", "已经做好了!"],
+      selFirst: ["먼저 아래 트레이에서 조리할 재료를 선택해주세요!", "Pick an item from the tray first!", "先にトレイから食材を選んでください!", "请先在下方托盘选择食材!"],
+      sel: ["[{0}] 선택됨! 위쪽 {1}을(를) 누르세요.", "[{0}] selected! Tap {1} above.", "[{0}]を選択!上の{1}をタップ。", "已选[{0}]!点击上方{1}。"],
+      noCook: ["[{0}]은(는) 조리 없이 바로 식판에 배치할 수 있습니다.", "[{0}] needs no cooking. Place it on the tray.", "[{0}]は調理不要。そのままトレイへ。", "[{0}]无需烹饪,可直接摆盘。"],
+      wrong: ["앗! [{0}]은(는) {1}을(를) 이용해야 해요!", "Oops! [{0}] needs {1}!", "あっ![{0}]は{1}を使ってね!", "哎呀![{0}]要用{1}!"],
+      aWater: ["온수대", "Hot Water", "お湯", "热水台"],
+      aMw: ["전자레인지", "Microwave", "電子レンジ", "微波炉"],
+      aMix: ["믹싱컵", "Mixing Cup", "ミキシングカップ", "混合杯"],
+      cooked: ["[{0}] 조리 완료!", "[{0}] done!", "[{0}]完成!", "[{0}]完成!"],
+      mixMax: ["믹싱컵에는 음료를 최대 2개까지만 섞을 수 있습니다!", "Mixing cup holds 2 drinks max!", "ミキシングカップは最大2本まで!", "混合杯最多放2种饮料!"],
+      mixAdd: ["믹싱컵에 [{0}] 추가! ({1}/2)", "Added [{0}] to the cup! ({1}/2)", "[{0}]を追加!({1}/2)", "已加入[{0}]!({1}/2)"],
+      hint: ["💡 힌트: 화살표가 가리키는 곳을 터치하세요!", "💡 Hint: tap where the arrow points!", "💡 ヒント:矢印の場所をタップ!", "💡 提示:点击箭头所指处!"],
+      allDone: ["✅ 필수 조리 완료! [배치하기 ▶]를 눌러주세요.", "✅ All cooked! Tap [Plate ▶].", "✅ 調理完了![盛り付け ▶]を押してね。", "✅ 烹饪完成!点击[摆盘 ▶]。"],
+      cookGuide: ["👇 아래 트레이에서 조리할 재료를 먼저 클릭하세요!", "👇 Pick an item from the tray below first!", "👇 まず下のトレイから食材を選んでね!", "👇 请先点击下方托盘中的食材!"],
+      prog: ["필수 조리: {0} / {1} 완료", "Required: {0} / {1} done", "必須調理: {0} / {1} 完了", "必做烹饪: {0} / {1} 完成"],
+      bDone: ["조리완료", "Done", "完了", "完成"],
+      bNeed: ["조리필수", "Cook!", "要調理", "需烹饪"],
+      bOpt: ["믹스가능", "Mixable", "ミックス可", "可混合"],
+      cEmpty: ["한줄평 내용을 입력해주세요!", "Please enter a comment!", "コメントを入力してください!", "请输入评语!"],
+      cSaved: ["✅ 한줄평이 등록되었습니다!", "✅ Comment saved!", "✅ コメントを登録しました!", "✅ 评语已保存!"],
+      voteUsed: ["이미 이번 플레이의 투표권을 사용했습니다!", "You already used your vote this play!", "今回の投票権は使用済みです!", "本局的投票已用完!"],
+      voted: ["❤️ [{0}]님의 꿀조합에 투표했습니다!", "❤️ Voted for [{0}]!", "❤️ [{0}]に投票しました!", "❤️ 已投给[{0}]!"],
+      voteH0: ["❤️ 하트는 한 번의 플레이당 1번만 투표할 수 있습니다! (남은 투표권: 1회)", "❤️ One heart vote per play! (1 left)", "❤️ 投票は1プレイにつき1回!(残り1回)", "❤️ 每局只能投1次票!(剩余1次)"],
+      voteH1: ["✅ 이번 플레이의 하트 투표를 완료했습니다! (남은 투표권: 0회)", "✅ Vote cast! (0 left)", "✅ 投票完了!(残り0回)", "✅ 已投票!(剩余0次)"],
+      timeUp: ["⏰ 시간 종료!", "⏰ Time's up!", "⏰ 時間切れ!", "⏰ 时间到!"],
+      cTime: ["앗, 시간이 다 됐어요... 기다리다 지쳤어요 ㅠㅠ", "Time ran out... I waited too long!", "時間切れ…待ちくたびれました…", "时间到了…我等得太久了…"],
+      c0: ["맛있어 보이긴 하는데... 제 예산을 초과해서 지갑이 좀 아프네요 ㅠㅠ", "Looks tasty, but it blew my budget...", "おいしそうだけど…予算オーバーです…", "看起来不错,但超出预算了…"],
+      c90: ["완벽 그 자체! 제가 딱 원하던 조합에 플레이팅 센스까지 최고예요!", "Perfect! Exactly what I wanted, and great plating!", "完璧!理想の組み合わせで盛り付けも最高!", "完美!正是我想要的搭配,摆盘也棒极了!"],
+      c70: ["오~ 예산도 잘 맞추고 구성도 알차네요! 다음에도 또 부탁하고 싶어요!", "Nice! On budget and well put together!", "おお〜予算も内容もバッチリ!またお願いしたい!", "不错!预算合适,搭配也很丰富!"],
+      c50: ["나쁘진 않은데, 제가 요청한 느낌과는 조금 달라요.", "Not bad, but not quite what I asked for.", "悪くないけど、頼んだ感じとは少し違います。", "还行,但和我想要的有点不一样。"],
+      c20: ["아쉽지만... 이번 조합은 제 취향이 아니었어요 ㅠㅠ", "Sorry... not my taste this time.", "残念…今回は好みじゃなかったです。", "可惜…这次不合我的口味。"],
+      paid: ["결제 금액: {0} / 제한 예산: {1}", "Paid: {0} / Budget: {1}", "お会計: {0} / 予算: {1}", "结账: {0} / 预算: {1}"],
+      bonus: [" · 🥢 젓가락 세팅 보너스!", " · 🥢 Chopsticks bonus!", " · 🥢 お箸ボーナス!", " · 🥢 筷子加分!"],
+      me: ["나 (도전자)", "Me (Challenger)", "私(挑戦者)", "我(挑战者)"],
+      defC: ["{0} 환상의 꿀조합! 꼭 한 번 드셔보세요!", "{0}: a dream combo! You must try it!", "{0} 夢の組み合わせ!ぜひ一度どうぞ!", "{0} 梦幻搭配!一定要试试!"],
+      rMenu: ["🍱 조합 메뉴: {0}", "🍱 Combo: {0}", "🍱 組み合わせ: {0}", "🍱 搭配: {0}"],
+      rMeta: ["작성자: <strong>{0}</strong> · 심사 점수: <strong>{1}점</strong>", "By <strong>{0}</strong> · Score: <strong>{1}</strong>", "作成者: <strong>{0}</strong> · スコア: <strong>{1}点</strong>", "作者:<strong>{0}</strong> · 评分:<strong>{1}分</strong>"],
+      votes: ["{0}표", "{0} votes", "{0}票", "{0}票"]
+    };
+
+    function t(key, ...args) {
+      const row = D[key];
+      let s = row ? (row[LANGS.indexOf(LANG)] || row[0]) : key;
+      args.forEach((a, i) => { s = s.replace(`{${i}}`, a); });
+      return s;
+    }
+    const won = n => n.toLocaleString() + t('won');
+    const applianceNames = () => ({ water: t('aWater'), microwave: t('aMw'), mix: t('aMix') });
+
+    const ST = {
+      '#btn-area-start': ["Start Game", "ゲーム開始", "开始游戏"],
+      '#btn-area-howto': ["How to Play", "遊び方", "游戏玩法"],
+      '#modal-howto h2': ["🏪 Modisumer Convenience Store Guide", "🏪 モディスーマー コンビニゲームの遊び方", "🏪 便利店创意搭配玩法"],
+      '.howto-list li:nth-child(1)': ["<strong>Order:</strong> Check the customer's budget and request, then accept.", "<strong>注文確認:</strong>お客様の予算と要望を確認して受けましょう。", "<strong>确认订单:</strong>查看顾客的预算和要求后接单。"],
+      '.howto-list li:nth-child(2)': ["<strong>Shop:</strong> Pick up to 5 ramen, drinks, or extras from the shelves.", "<strong>材料選び:</strong>棚からラーメン・ドリンク・その他を最大5個選びます。", "<strong>选材料:</strong>从货架选择面、饮料、其他食材,最多5个。"],
+      '.howto-list li:nth-child(3)': ["<strong>Cook:</strong> Tap an item first, then the right appliance (hot water / microwave / mixing cup)!", "<strong>調理:</strong>先に食材をタップし、合う調理器具(お湯/電子レンジ/ミキサー)をタップ!", "<strong>烹饪:</strong>先点食材,再点合适的器具(热水台/微波炉/混合杯)!"],
+      '.howto-list li:nth-child(4)': ["<strong>Plate:</strong> Drag your dishes and chopsticks onto the tray with your finger or mouse.", "<strong>盛り付け:</strong>料理と割り箸を指やマウスでトレイにドラッグして配置。", "<strong>摆盘:</strong>用手指或鼠标把料理和筷子拖到托盘上。"],
+      '.howto-list li:nth-child(5)': ["<strong>Judge &amp; Vote:</strong> Clear 3 rounds, then cast one heart vote for your favorite combo!", "<strong>審査と投票:</strong>3ラウンドをクリアして、ハートで1票を投じよう!", "<strong>评分与投票:</strong>通关3轮后,给最爱的搭配投出1张爱心票!"],
+      '#btn-modal-close': ["OK", "OK", "确定"],
+      '#btn-accept-order': ["Accept", "受ける", "接单"],
+      '#btn-reject-order': ["Decline", "断る", "拒绝"],
+      '#app-water .appliance-tag': ["💧 Hot Water (add water)", "💧 お湯 (注ぐ)", "💧 热水台(倒水)"],
+      '#app-microwave .appliance-tag': ["♨️ Microwave (3 sec)", "♨️ 電子レンジ (3秒)", "♨️ 微波炉(3秒)"],
+      '#app-mix .appliance-tag': ["🥤 Mixing Cup (max 2)", "🥤 ミキシングカップ (最大2本)", "🥤 混合杯(最多2种)"],
+      '#fx-water span': ["Pouring hot water...", "お湯を注いでいます...", "正在倒热水..."],
+      '#fx-microwave span': ["Microwaving... (3 sec)", "加熱中... (3秒)", "微波中...(3秒)"],
+      '#mixed-drink-result span': ["Special Mix!", "スペシャルミックス!", "特调混合!"],
+      '#btn-go-cook': ["Cook ▶", "調理する ▶", "去烹饪 ▶"],
+      '#btn-go-plating': ["Plate ▶", "盛り付け ▶", "去摆盘 ▶"],
+      '#btn-finish-plating': ["Finish ▶", "完成 ▶", "完成 ▶"],
+      '#tab-ramen': ["Ramen", "ラーメン", "方便面"],
+      '#tab-drink': ["Drinks", "ドリンク", "饮料"],
+      '#tab-etc': ["Etc.", "その他", "其他"],
+      '.plating-guide-pill': ["🍽️ Drag dishes and chopsticks from the white bar onto the tray!", "🍽️ 下の白いバーから料理と割り箸をトレイにドラッグ!", "🍽️ 把下方白条里的料理和筷子拖到托盘上!"],
+      '.judge-score-label': ["Total Score", "総合点", "综合得分"],
+      '#btn-go-ranking': ["🏆 Ranking & Vote", "🏆 ランキング・投票", "🏆 排名·投票"],
+      '#btn-back-title, #btn-rank-to-title': ["Title", "タイトルへ", "返回标题"],
+      '.rank-title-area h2': ["🏆 GS25 Modisumer Combo Ranking & Vote", "🏆 GS25 モディスーマー ランキング&投票", "🏆 GS25 创意搭配排名与投票"],
+      '.real-launch-notice': ["✨ The #1 voted combo may launch as a real product!", "✨ 投票1位の組み合わせは実際に商品化されるかも!", "✨ 得票第一的搭配有机会成为真实商品!"],
+      '#sort-by-votes': ["❤️ By Votes", "❤️ 投票順", "❤️ 按票数"],
+      '#sort-by-score': ["⭐ By Score", "⭐ スコア順", "⭐ 按评分"],
+      '.my-comment-box > span': ["✍️ My comment:", "✍️ ひとこと:", "✍️ 我的评语:"],
+      '#btn-save-my-comment': ["Post", "登録", "提交"],
+      '#btn-rank-play-again': ["Play Again ▶", "もう一度 ▶", "再玩一次 ▶"]
+    };
+    const PH = ["Tell us what makes your combo great! (max 45)", "組み合わせの魅力をひとことで!(最大45字)", "写下你的搭配亮点!(最多45字)"];
+
+    const PN = {
+      "간짬뽕": ["Dry Jjamppong", "カンチャンポン", "干炒码面"], "까르보 불닭": ["Carbo Buldak", "カルボブルダック", "卡邦火鸡面"],
+      "불닭볶음탕면": ["Buldak Stew Ramen", "ブルダック炒めタン麺", "火鸡炖汤面"], "불닭볶음면": ["Buldak Ramen", "ブルダック炒め麺", "火鸡面"],
+      "새우탕": ["Shrimp Tang", "セウタン", "鲜虾汤面"], "신라면": ["Shin Ramyun", "辛ラーメン", "辛拉面"],
+      "왕뚜껑": ["Wangttukkeong", "ワンットゥッケン", "王盖面"], "육개장": ["Yukgaejang", "ユッケジャン", "辣牛肉汤面"],
+      "진라면": ["Jin Ramyun", "ジンラーメン", "真拉面"], "참깨라면": ["Sesame Ramyun", "ごまラーメン", "芝麻拉面"],
+      "게토레이": ["Gatorade", "ゲータレード", "佳得乐"], "딸기우유": ["Strawberry Milk", "いちごミルク", "草莓牛奶"],
+      "링티 제로": ["Ringtea Zero", "リンティー ゼロ", "Ringtea 零度"], "바나나우유": ["Banana Milk", "バナナ牛乳", "香蕉牛奶"],
+      "사이다": ["Cider (Soda)", "サイダー", "汽水"], "초코우유": ["Choco Milk", "チョコ牛乳", "巧克力牛奶"],
+      "콜라": ["Cola", "コーラ", "可乐"], "토레타": ["Toreta", "トレタ", "Toreta运动饮料"],
+      "파워에이드": ["Powerade", "パワーエイド", "劲能"], "흰우유": ["Plain Milk", "牛乳", "牛奶"],
+      "계란마요김밥": ["Egg Mayo Gimbap", "卵マヨキンパ", "鸡蛋蛋黄酱紫菜包饭"], "기본김밥": ["Classic Gimbap", "基本キンパ", "经典紫菜包饭"],
+      "얼음컵": ["Ice Cup", "氷カップ", "冰杯"], "포카칩": ["Poca Chip", "ポカチップ", "Poca薯片"],
+      "나무 젓가락": ["Chopsticks", "割り箸", "木筷子"]
+    };
+    const pn = ko => (PN[ko] && PN[ko][LANGS.indexOf(LANG) - 1]) || ko;
+
+    const MISSION_TR = {
+      1: [["Budget Meal", "I'm broke... please make me a filling meal under 5,000 won!"], ["コスパ重視の一食", "お金がなくて… 5,000ウォン以下でお腹いっぱいになる一食をお願い!"], ["高性价比一餐", "我钱不多…请做一份5000韩元以内、吃饱吃好的套餐!"]],
+      2: [["Extreme Spicy", "I'm so stressed! Give me something fiery that clears my head!"], ["激辛チャレンジ", "ストレス爆発!スカッとする激辛の組み合わせをお願い!"], ["超级辣", "压力爆棚!来份又辣又爽的搭配吧!"]],
+      3: [["Convenience Barista", "I'm thirsty~ mix two drinks into my own special drink!"], ["コンビニバリスタ", "のどが渇いた〜!ドリンク2種を混ぜて特別なドリンクを作って!"], ["便利店咖啡师", "好渴~请把两种饮料混合成特调饮品!"]],
+      4: [["Premium Combo", "Money's no object today! Show me a full course with trendy toppings!"], ["プレミアム組み合わせ", "今日はお金を気にしない!流行りのトッピング満載のフルコースを!"], ["高级搭配", "今天不差钱!来一份网红配料满满的全套组合!"]],
+      5: [["Speedy Meal", "I'm late for class! Give me something I can microwave just once!"], ["超スピード軽食", "塾に遅れる!電子レンジ1回で食べられる軽食をください!"], ["极速简餐", "补习要迟到了!给我只需微波一次的简餐!"]],
+      6: [["Spicy & Sweet", "Two or more spicy ramens plus one sweet drink, under 7,000 won!"], ["ピリ辛×甘々", "辛いラーメン2個以上と甘いドリンク1つ!7,000ウォン以下でお願い!"], ["又辣又甜", "两份以上辣面加一杯甜饮,7000韩元以内!"]],
+      7: [["Full Course", "Ramen, gimbap, and a mixed special drink, all under 12,000 won!"], ["フルコース一膳", "ラーメン、キンパ、ミックスドリンクまで!12,000ウォン以下で!"], ["全套餐", "面、紫菜包饭,再加混合特调饮料!12000韩元以内!"]]
+    };
+    const mTr = m => (LANG === 'ko' ? null : MISSION_TR[m.id][LANGS.indexOf(LANG) - 1]);
+    const mTitle = m => (mTr(m) ? mTr(m)[0] : m.title);
+    const mText = m => (mTr(m) ? mTr(m)[1] : m.dialogue);
+
+    function applyLang() {
+      document.documentElement.lang = LANG;
+      const idx = LANGS.indexOf(LANG) - 1;
+      Object.entries(ST).forEach(([sel, tr]) => document.querySelectorAll(sel).forEach(el => {
+        if (el.dataset.ko === undefined) el.dataset.ko = el.innerHTML;
+        el.innerHTML = LANG === 'ko' ? el.dataset.ko : tr[idx];
+      }));
+      const inp = document.getElementById('my-recipe-comment-input');
+      if (inp.dataset.ko === undefined) inp.dataset.ko = inp.placeholder;
+      inp.placeholder = LANG === 'ko' ? inp.dataset.ko : PH[idx];
+      document.getElementById('btn-next-customer').textContent = t('nextRound');
+      document.querySelectorAll('#lang-bar button').forEach(b => b.classList.toggle('active', b.dataset.lang === LANG));
+      updateHud();
+    }
+
+    function setLang(l) {
+      LANG = l;
+      try { localStorage.setItem('modi-lang', l); } catch (e) {}
+      applyLang();
+    }
+
     const CUSTOMERS = [
       { id: 1, backImg: "./손님 1 뒷모습.png", judgeImg: "./손님 1 심사.png" },
       { id: 2, backImg: "./손님 2 뒷모습.png", judgeImg: "./손님 2 심사.png" },
@@ -1463,11 +1758,11 @@
     ];
 
     const MISSIONS = [
-      { id: 1, title: "가성비 한 끼", dialogue: "주머니가 가벼워서요... 5,000원 이하로 배부르고 든든한 한 끼 만들어 주세요!", budget: 5000 },
-      { id: 2, title: "극강의 매운맛", dialogue: "오늘 스트레스 폭발했어요! 속이 뻥 뚫리게 화끈하고 매운 조합으로 부탁해요!", budget: 7500 },
-      { id: 3, title: "편의점 바리스타", dialogue: "목이 너무 말라요~ 편의점 음료 두 가지를 섞어서 나만의 특별한 스페셜 음료를 만들어 주세요!", budget: 4500 },
-      { id: 4, title: "프리미엄 꿀조합", dialogue: "오늘은 돈 걱정 안 할래요! SNS에서 유행하는 토핑 듬뿍 올라간 풀코스 꿀조합을 보여주세요!", budget: 10000 },
-      { id: 5, title: "초스피드 간편식", dialogue: "학원에 늦어서 시간이 없어요! 전자레인지에 딱 한 번만 돌려 바로 먹을 수 있는 간편식 주세요!", budget: 6000 }
+      { id: 1, title: "가성비 한 끼", dialogue: "5,000원 이하로 배부르고 든든한 한 끼 만들어 주세요!", budget: 5000 },
+      { id: 2, title: "극강의 매운맛", dialogue: "속이 뻥 뚫리게 화끈하고 매운 조합으로 부탁해요!", budget: 7500 },
+      { id: 3, title: "편의점 바리스타", dialogue: "편의점 음료 두 가지를 섞어서 나만의 특별한 스페셜 음료를 만들어 주세요!", budget: 4500 },
+      { id: 4, title: "프리미엄 꿀조합", dialogue: "SNS에서 유행하는 토핑 듬뿍 올라간 풀코스 꿀조합을 보여주세요!", budget: 10000 },
+      { id: 5, title: "초스피드 간편식", dialogue: "전자레인지에 딱 한 번만 돌려 바로 먹을 수 있는 간편식 주세요!", budget: 6000 }
     ];
 
     const PRODUCTS = {
@@ -1503,7 +1798,18 @@
       ]
     };
 
-    // 새 채점 기준에 맞춰 조정된 시드 데이터 점수 (91, 78, 84)
+    Object.values(PRODUCTS).flat().forEach(p => {
+      p.ko = p.name;
+      Object.defineProperty(p, 'name', { get() { return pn(p.ko); }, enumerable: true });
+    });
+
+    MISSIONS.push(
+      { id: 6, title: "매콤달콤 밸런스", dialogue: "매운 라면 두 개 이상에 달콤한 음료 하나! 7,000원 이하로 매콤달콤 조합을 부탁해요!", budget: 7000 },
+      { id: 7, title: "풀코스 한 상", dialogue: "라면, 김밥, 그리고 음료 두 개를 섞은 스페셜 음료까지 한 상 가득! 12,000원 이하로 부탁해요!", budget: 12000 }
+    );
+    const LEVEL = { 1: 1, 5: 1, 2: 2, 3: 2, 4: 3, 6: 3, 7: 3 };
+    MISSIONS.forEach(m => { m.level = LEVEL[m.id]; });
+
     let rankingEntries = [
       {
         id: "seed-1",
@@ -1550,6 +1856,10 @@
     ];
 
     let currentState = {
+      round: 1,
+      roundScores: [],
+      best: null,
+      timeLeft: ROUND_TIME,
       customer: null,
       mission: null,
       currentCategory: "라면",
@@ -1568,13 +1878,55 @@
 
     const MAX_CART_SIZE = 5;
 
+    let timerId = null;
+    function startTimer() {
+      stopTimer();
+      currentState.timeLeft = ROUND_TIME;
+      timerId = setInterval(() => {
+        currentState.timeLeft--;
+        updateHud();
+        if (currentState.timeLeft <= 0) timeUp();
+      }, 1000);
+      updateHud();
+    }
+    function stopTimer() { clearInterval(timerId); timerId = null; }
+
+    function updateHud() {
+      const hud = document.getElementById('hud');
+      const scene = document.querySelector('.scene.active');
+      hud.style.display = (scene && ['scene-order', 'scene-shelf', 'scene-cook', 'scene-plating'].includes(scene.id)) ? 'block' : 'none';
+      const tl = timerId ? currentState.timeLeft : ROUND_TIME;
+      hud.textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ⏱ ${Math.floor(tl / 60)}:${String(tl % 60).padStart(2, '0')}`;
+      hud.classList.toggle('warn', timerId !== null && tl <= 20);
+    }
+
+    function timeUp() {
+      stopTimer();
+      draggingItem = null;
+      document.getElementById('drag-ghost').style.display = 'none';
+      showToast(t('timeUp'));
+      finishPlating(true);
+    }
+
+    function nextRound() {
+      currentState.round++;
+      spawnRandomCustomer();
+      goToScene('scene-order');
+    }
+
     function goToScene(sceneId) {
       document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(sceneId);
       if (target) target.classList.add('active');
+      document.getElementById('btn-home').style.display = (sceneId === 'scene-title') ? 'none' : 'block';
+      if (sceneId === 'scene-title') stopTimer();
+      updateHud();
     }
 
     function startGame() {
+      currentState.round = 1;
+      currentState.roundScores = [];
+      currentState.best = null;
       currentState.hasVotedThisPlay = false;
       currentState.votedEntryId = null;
       currentState.myEntryId = null;
@@ -1585,7 +1937,8 @@
 
     function spawnRandomCustomer() {
       const randomCust = CUSTOMERS[Math.floor(Math.random() * CUSTOMERS.length)];
-      const randomMission = MISSIONS[Math.floor(Math.random() * MISSIONS.length)];
+      const pool = MISSIONS.filter(m => m.level === currentState.round);
+      const randomMission = pool[Math.floor(Math.random() * pool.length)];
 
       currentState.customer = randomCust;
       currentState.mission = randomMission;
@@ -1595,9 +1948,9 @@
       imgEl.classList.remove('exit-left');
       imgEl.classList.add('enter');
 
-      document.getElementById('mission-badge').textContent = `요청 #${randomMission.id} · ${randomMission.title}`;
-      document.getElementById('mission-dialogue').textContent = `"${randomMission.dialogue}"`;
-      document.getElementById('mission-budget').textContent = `💰 제한 예산: ${randomMission.budget.toLocaleString()}원`;
+      document.getElementById('mission-badge').textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ${mTitle(randomMission)}`;
+      document.getElementById('mission-dialogue').textContent = `"${mText(randomMission)}"`;
+      document.getElementById('mission-budget').textContent = t('budget', won(randomMission.budget));
 
       const bubbleWrap = document.getElementById('bubble-container');
       bubbleWrap.style.display = 'block';
@@ -1621,7 +1974,10 @@
       currentState.cart = [];
       currentState.currentCategory = "라면";
       document.getElementById('shelf-mission-summary').textContent =
-        `📋 [${currentState.mission.title}] ${currentState.mission.dialogue}`;
+        `📋 [${mTitle(currentState.mission)}] ${mText(currentState.mission)}`;
+      document.getElementById('tray-drop-zone').innerHTML = '';
+      currentState.platingItems = [];
+      startTimer();
 
       selectCategory("라면");
       renderCart();
@@ -1653,7 +2009,7 @@
         card.className = 'product-item';
         card.innerHTML = `
           <img src="${item.file}" alt="${item.name}">
-          <div class="product-label">${item.name}<span class="product-price">${item.price.toLocaleString()}원</span></div>
+          <div class="product-label">${item.name}<span class="product-price">${won(item.price)}</span></div>
         `;
         card.onclick = () => addToCart(item);
 
@@ -1665,7 +2021,7 @@
 
     function addToCart(product) {
       if (currentState.cart.length >= MAX_CART_SIZE) {
-        showToast("장바구니가 가득 찼습니다! (최대 5개)");
+        showToast(t('full'));
         return;
       }
       currentState.cart.push({
@@ -1700,17 +2056,17 @@
       }
 
       const count = currentState.cart.length;
-      document.getElementById('cart-count-text').textContent = `${count} / ${MAX_CART_SIZE}개`;
+      document.getElementById('cart-count-text').textContent = t('cnt', count, MAX_CART_SIZE);
       document.getElementById('btn-go-cook').disabled = (count === 0);
 
       const totalPrice = currentState.cart.reduce((sum, item) => sum + item.price, 0);
       const budget = currentState.mission ? currentState.mission.budget : 5000;
       const budgetPill = document.getElementById('shelf-budget-pill');
 
-      budgetPill.textContent = `💰 ${totalPrice.toLocaleString()}원 / ${budget.toLocaleString()}원`;
+      budgetPill.textContent = `💰 ${won(totalPrice)} / ${won(budget)}`;
       if (totalPrice > budget) {
         budgetPill.classList.add('over');
-        budgetPill.textContent += " (예산 초과!)";
+        budgetPill.textContent += t('over');
       } else {
         budgetPill.classList.remove('over');
       }
@@ -1727,7 +2083,7 @@
       document.getElementById('fx-microwave').classList.remove('active');
       clearHints();
 
-      const hasBaristaMission = currentState.mission && currentState.mission.id === 3;
+      const hasBaristaMission = currentState.mission && [3, 7].includes(currentState.mission.id);
       const drinkCount = currentState.cart.filter(i => i.cookType === "mix").length;
 
       currentState.cart.forEach(item => {
@@ -1737,6 +2093,7 @@
         }
       });
 
+      document.getElementById('cook-guide-text').textContent = t('cookGuide');
       renderCookTray();
       goToScene('scene-cook');
     }
@@ -1762,11 +2119,11 @@
 
         let badgeHtml = "";
         if (item.isCooked) {
-          badgeHtml = `<span class="status-badge badge-done">조리완료</span>`;
+          badgeHtml = `<span class="status-badge badge-done">${t('bDone')}</span>`;
         } else if (item.requiredCook) {
-          badgeHtml = `<span class="status-badge badge-need">조리필수</span>`;
+          badgeHtml = `<span class="status-badge badge-need">${t('bNeed')}</span>`;
         } else if (item.cookType === "mix") {
-          badgeHtml = `<span class="status-badge badge-opt">믹스가능</span>`;
+          badgeHtml = `<span class="status-badge badge-opt">${t('bOpt')}</span>`;
         }
 
         card.innerHTML = `
@@ -1778,12 +2135,12 @@
         listEl.appendChild(card);
       });
 
-      document.getElementById('cook-progress-text').textContent = `필수 조리: ${requiredDone} / ${requiredTotal} 완료`;
+      document.getElementById('cook-progress-text').textContent = t('prog', requiredDone, requiredTotal);
       const canProceed = (requiredDone === requiredTotal);
       document.getElementById('btn-go-plating').disabled = !canProceed;
 
       if (canProceed && requiredTotal > 0) {
-        document.getElementById('cook-guide-text').textContent = "✅ 모든 필수 조리가 끝났습니다! [배치하기 ▶]를 눌러주세요.";
+        document.getElementById('cook-guide-text').textContent = t('allDone');
       }
     }
 
@@ -1792,7 +2149,7 @@
       const item = currentState.cart[index];
 
       if (item.isCooked) {
-        showToast("이미 조리가 완료된 재료입니다!");
+        showToast(t('already'));
         recordMistake();
         return;
       }
@@ -1800,14 +2157,8 @@
       currentState.selectedCookIdx = index;
       clearHints();
 
-      const guideMap = {
-        water: `💧 [${item.name}] 선택됨! 위쪽 '온수대'를 눌러 뜨거운 물을 부으세요.`,
-        microwave: `♨️ [${item.name}] 선택됨! 위쪽 '전자레인지'를 눌러 3초간 데우세요.`,
-        mix: `🥤 [${item.name}] 선택됨! 위쪽 '믹싱컵'에 부어보세요. (최대 2개 혼합 가능)`,
-        ice: `🧊 [${item.name}]은 조리 없이 바로 식판에 배치할 수 있습니다.`,
-        topping: `🥔 [${item.name}]은 조리 없이 바로 식판에 배치할 수 있습니다.`
-      };
-      document.getElementById('cook-guide-text').textContent = guideMap[item.cookType];
+      const an = applianceNames();
+      document.getElementById('cook-guide-text').textContent = an[item.cookType] ? t('sel', item.name, an[item.cookType]) : t('noCook', item.name);
       renderCookTray();
     }
 
@@ -1815,7 +2166,7 @@
       if (currentState.isBusyCooking) return;
 
       if (currentState.selectedCookIdx === null) {
-        showToast("먼저 아래 트레이에서 조리할 재료를 선택해주세요!");
+        showToast(t('selFirst'));
         recordMistake();
         return;
       }
@@ -1823,13 +2174,8 @@
       const item = currentState.cart[currentState.selectedCookIdx];
 
       if (item.cookType !== appType) {
-        const rightName = {
-          water: "온수대",
-          microwave: "전자레인지",
-          mix: "믹싱컵"
-        }[item.cookType] || "조리가 필요 없는 재료";
-
-        showToast(`앗! [${item.name}]은(는) '${rightName}'을(를) 이용해야 해요!`);
+        const an = applianceNames();
+        showToast(an[item.cookType] ? t('wrong', item.name, an[item.cookType]) : t('noCook', item.name));
         recordMistake();
         return;
       }
@@ -1847,7 +2193,7 @@
           item.isCooked = true;
           currentState.selectedCookIdx = null;
           currentState.isBusyCooking = false;
-          showToast(`💧 [${item.name}] 물 붓기 완료!`);
+          showToast(t('cooked', item.name));
           renderCookTray();
         }, 1800);
 
@@ -1861,13 +2207,13 @@
           item.isCooked = true;
           currentState.selectedCookIdx = null;
           currentState.isBusyCooking = false;
-          showToast(`♨️ 땡! [${item.name}] 조리 완료!`);
+          showToast(t('cooked', item.name));
           renderCookTray();
         }, 3000);
 
       } else if (appType === "mix") {
         if (currentState.mixedDrinks.length >= 2) {
-          showToast("믹싱컵에는 음료를 최대 2개까지만 섞을 수 있습니다!");
+          showToast(t('mixMax'));
           return;
         }
 
@@ -1876,7 +2222,7 @@
         currentState.selectedCookIdx = null;
 
         updateMixedDrinkIcon();
-        showToast(`🥤 믹싱컵에 [${item.name}] 추가 완료! (${currentState.mixedDrinks.length}/2)`);
+        showToast(t('mixAdd', item.name, currentState.mixedDrinks.length));
         renderCookTray();
       }
     }
@@ -1910,14 +2256,14 @@
         if (nextIdx !== -1) {
           const card = document.getElementById(`cook-card-${nextIdx}`);
           if (card) card.classList.add('hint-target');
-          document.getElementById('cook-guide-text').textContent = "💡 힌트: 화살표가 가리키는 재료를 먼저 터치하세요!";
+          document.getElementById('cook-guide-text').textContent = t('hint');
         }
       } else {
         const item = currentState.cart[currentState.selectedCookIdx];
         const targetApp = document.getElementById(`app-${item.cookType}`);
         if (targetApp) {
           targetApp.classList.add('hint-target');
-          document.getElementById('cook-guide-text').textContent = "💡 힌트: 화살표가 가리키는 기구를 터치해서 조리하세요!";
+          document.getElementById('cook-guide-text').textContent = t('hint');
         }
       }
     }
@@ -1926,15 +2272,12 @@
       document.querySelectorAll('.hint-target').forEach(el => el.classList.remove('hint-target'));
     }
 
-    // =========================================
-    // 5. 1-4 요리 배치하기 화면 (모바일 터치 & 마우스 Pointer 드래그 대응)
-    // =========================================
     function goToPlatingScene() {
       currentState.platingItems = currentState.cart.map((item, idx) => {
         const displayFile = (item.category === "라면") ? "./완성된 컵라면.png" : item.file;
         return {
           uid: `food-${idx}`,
-          name: item.name,
+          name: item.ko || item.name,
           file: displayFile,
           isChopsticks: false,
           placed: false,
@@ -1971,8 +2314,8 @@
           const dockEl = document.createElement('div');
           dockEl.className = 'dock-food-item';
           dockEl.innerHTML = `
-            <img src="${pItem.file}" alt="${pItem.name}">
-            <span class="dock-food-tag">${pItem.name}</span>
+            <img src="${pItem.file}" alt="${pn(pItem.name)}">
+            <span class="dock-food-tag">${pn(pItem.name)}</span>
           `;
           dockEl.addEventListener('pointerdown', (e) => startDragItem(e, pItem));
           dockBar.appendChild(dockEl);
@@ -1986,7 +2329,7 @@
           placedEl.style.left = `${pItem.xPercent}%`;
           placedEl.style.top = `${pItem.yPercent}%`;
           placedEl.style.transform = 'translate(-50%, -50%)';
-          placedEl.innerHTML = `<img src="${pItem.file}" alt="${pItem.name}">`;
+          placedEl.innerHTML = `<img src="${pItem.file}" alt="${pn(pItem.name)}">`;
 
           placedEl.addEventListener('pointerdown', (e) => startDragItem(e, pItem));
           trayZone.appendChild(placedEl);
@@ -2058,28 +2401,45 @@
       renderPlatingBoard();
     });
 
-    // =========================================
-    // 6. [완성하기 ▶] -> 1-6 손님 심사 페이지 (세분화된 채점 로직 적용)
-    // =========================================
-    function finishPlating() {
+    function finishPlating(timedOut) {
+      stopTimer();
       const cust = currentState.customer || CUSTOMERS[0];
       document.getElementById('judge-customer-img').src = cust.judgeImg;
 
       const sourceTray = document.getElementById('tray-drop-zone');
-      const judgeTrayClone = document.getElementById('judge-tray-clone');
-      judgeTrayClone.innerHTML = sourceTray.innerHTML;
+      document.getElementById('judge-tray-clone').innerHTML = sourceTray.innerHTML;
 
-      const result = evaluateOrder();
+      const cartTotal = currentState.cart.reduce((s, i) => s + i.price, 0);
+      const result = timedOut === true
+        ? { score: 20, comment: t('cTime'), totalPrice: cartTotal, hasChopsticks: false }
+        : evaluateOrder();
       currentState.lastScore = result.score;
+      currentState.roundScores.push(result.score);
 
-      document.getElementById('judge-score-num').textContent = `${result.score}점`;
-      document.getElementById('judge-mission-tag').textContent = `요청 #${currentState.mission.id} · ${currentState.mission.title}`;
+      const m = currentState.mission;
+      const last = currentState.round === TOTAL_ROUNDS;
+      let sub = t('paid', won(result.totalPrice), won(m.budget)) + (result.hasChopsticks ? t('bonus') : '');
+      if (last) sub += ' · ' + t('total', currentState.roundScores.reduce((a, b) => a + b, 0));
+
+      document.getElementById('judge-score-num').textContent = `${result.score}${t('pts')}`;
+      document.getElementById('judge-mission-tag').textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ${mTitle(m)}`;
       document.getElementById('judge-review-text').textContent = `"${result.comment}"`;
-      document.getElementById('judge-detail-sub').textContent =
-        `결제 금액: ${result.totalPrice.toLocaleString()}원 / 제한 예산: ${currentState.mission.budget.toLocaleString()}원 ${result.hasChopsticks ? '· 🥢 젓가락 세팅 보너스!' : ''}`;
+      document.getElementById('judge-detail-sub').textContent = sub;
 
-      registerMyEntryToRanking(sourceTray.innerHTML, result.score);
+      if (!currentState.best || result.score >= currentState.best.score) {
+        currentState.best = {
+          score: result.score,
+          trayHtml: sourceTray.innerHTML,
+          menus: currentState.cart.map(i => i.ko || i.name)
+        };
+      }
+      if (last) {
+        const b = currentState.best;
+        registerMyEntryToRanking(b.trayHtml, b.score, b.menus);
+      }
 
+      document.getElementById('btn-go-ranking').style.display = last ? '' : 'none';
+      document.getElementById('btn-next-customer').style.display = last ? 'none' : '';
       goToScene('scene-judge');
     }
 
@@ -2092,7 +2452,6 @@
 
       let score = 35;
 
-      // 예산 (초과 -15 / 이내 +15, 예산을 알차게 쓰면 추가 가점)
       const isWithinBudget = totalPrice <= mission.budget;
       if (isWithinBudget) {
         score += 15;
@@ -2103,7 +2462,6 @@
         score -= 15;
       }
 
-      // 미션 충족 (+25)
       let missionMatched = false;
       if (mission.id === 1) {
         const mealCount = cart.filter(i => i.category === "라면" || i.tags.includes("든든함")).length;
@@ -2118,10 +2476,13 @@
         const mwCount = cart.filter(i => i.cookType === "microwave").length;
         const ramenCount = cart.filter(i => i.category === "라면").length;
         missionMatched = mwCount === 1 && ramenCount === 0;
+      } else if (mission.id === 6) {
+        missionMatched = isWithinBudget && cart.filter(i => i.tags.includes("매움")).length >= 2 && cart.some(i => i.tags.includes("달콤함"));
+      } else if (mission.id === 7) {
+        missionMatched = isWithinBudget && cart.some(i => i.category === "라면") && cart.some(i => i.cookType === "microwave") && currentState.mixedDrinks.length >= 2;
       }
       if (missionMatched) score += 25;
 
-      // 구성 균형 (+10): 식사류 + 음료, 바리스타 미션은 음료 + 얼음컵
       const hasMeal = cart.some(i => i.category === "라면" || i.cookType === "microwave");
       const hasDrink = cart.some(i => i.category === "음료");
       const hasIce = cart.some(i => i.cookType === "ice");
@@ -2129,49 +2490,30 @@
 
       if (hasChopsticks) score += 5;
 
-      // 감점: 같은 상품 중복, 식판에 안 올린 음식
       const dupCount = cart.length - new Set(cart.map(i => i.id)).size;
       score -= dupCount * 5;
       score -= unplacedCount * 5;
 
       score = Math.max(20, Math.min(100, score));
 
-      let comment = "";
-      if (!isWithinBudget) {
-        comment = "맛있어 보이긴 하는데... 제 예산을 초과해서 지갑이 좀 아프네요 ㅠㅠ";
-      } else if (score >= 90) {
-        comment = "완벽 그 자체! 제가 딱 원하던 조합에 플레이팅 센스까지 최고예요!";
-      } else if (score >= 70) {
-        comment = "오~ 예산도 잘 맞추고 구성도 알차네요! 다음에도 또 부탁하고 싶어요!";
-      } else if (score >= 50) {
-        comment = "나쁘진 않은데, 제가 요청한 느낌과는 조금 달라요.";
-      } else {
-        comment = "아쉽지만... 이번 조합은 제 취향이 아니었어요 ㅠㅠ";
-      }
+      const comment = !isWithinBudget ? t('c0') : score >= 90 ? t('c90') : score >= 70 ? t('c70') : score >= 50 ? t('c50') : t('c20');
 
       return { score, comment, totalPrice, hasChopsticks };
     }
 
-    // =========================================
-    // 7. 1-7 순위 및 투표 페이지 로직
-    // =========================================
-    function registerMyEntryToRanking(trayHtml, score) {
-      const menuNames = currentState.cart.map(i => i.name);
+    function registerMyEntryToRanking(trayHtml, score, menus) {
       const newId = `my-${Date.now()}`;
-
       rankingEntries.forEach(entry => { entry.isMine = false; });
-
       rankingEntries.push({
         id: newId,
-        author: "나 (도전자)",
+        author: t('me'),
         isMine: true,
-        menus: menuNames,
-        comment: `${menuNames.join(' + ')} 환상의 꿀조합! 꼭 한 번 드셔보세요!`,
-        score: score,
+        menus,
+        comment: t('defC', menus.map(pn).join(' + ')),
+        score,
         votes: 1,
-        trayHtml: trayHtml
+        trayHtml
       });
-
       currentState.myEntryId = newId;
       document.getElementById('my-recipe-comment-input').value = "";
     }
@@ -2186,21 +2528,21 @@
       const inputEl = document.getElementById('my-recipe-comment-input');
       const text = inputEl.value.trim();
       if (!text) {
-        showToast("한줄평 내용을 입력해주세요!");
+        showToast(t('cEmpty'));
         return;
       }
 
       const myEntry = rankingEntries.find(e => e.id === currentState.myEntryId);
       if (myEntry) {
         myEntry.comment = text;
-        showToast("✅ 내 메뉴 한줄평이 등록되었습니다!");
+        showToast(t('cSaved'));
         renderRankingList();
       }
     }
 
     function voteForEntry(entryId) {
       if (currentState.hasVotedThisPlay) {
-        showToast("이미 이번 플레이의 하트 투표권을 사용하셨습니다! (1플레이 1투표)");
+        showToast(t('voteUsed'));
         return;
       }
 
@@ -2213,16 +2555,16 @@
 
       updateVoteHintText();
       renderRankingList();
-      showToast(`❤️ [${target.author}]님의 꿀조합에 투표했습니다!`);
+      showToast(t('voted', target.author));
     }
 
     function updateVoteHintText() {
       const hintEl = document.getElementById('vote-status-hint');
       if (currentState.hasVotedThisPlay) {
-        hintEl.textContent = "✅ 이번 플레이의 하트 투표를 완료했습니다! (남은 투표권: 0회)";
+        hintEl.textContent = t('voteH1');
         hintEl.style.color = "#c9184a";
       } else {
-        hintEl.textContent = "❤️ 하트는 한 번의 플레이당 1번만 투표할 수 있습니다! (남은 투표권: 1회)";
+        hintEl.textContent = t('voteH0');
         hintEl.style.color = "#495057";
       }
     }
@@ -2252,15 +2594,15 @@
           <div class="rank-badge">${rankNum === 1 ? '👑1' : rankNum}</div>
           <div class="mini-tray-preview">${entry.trayHtml}</div>
           <div class="rank-info">
-            <div class="rank-menu-chips">🍱 조합 메뉴: ${entry.menus.join(' · ')}</div>
+            <div class="rank-menu-chips">${t('rMenu', entry.menus.map(pn).join(' · '))}</div>
             <div class="rank-user-comment">"${entry.comment}"</div>
-            <div class="rank-meta">작성자: <strong>${entry.author}</strong> · 심사 점수: <strong>${entry.score}점</strong></div>
+            <div class="rank-meta">${t('rMeta', entry.author, entry.score)}</div>
           </div>
           <div class="vote-action-box">
             <button class="btn-heart-vote ${isVotedByMe ? 'voted' : ''}" title="하트 눌러 투표하기">
               ${isVotedByMe ? '❤️' : '🤍'}
             </button>
-            <span class="vote-count-label">${entry.votes}표</span>
+            <span class="vote-count-label">${t('votes', entry.votes)}</span>
           </div>
         `;
 
@@ -2304,10 +2646,10 @@
       document.getElementById('app-microwave').addEventListener('click', () => useAppliance('microwave'));
       document.getElementById('app-mix').addEventListener('click', () => useAppliance('mix'));
       document.getElementById('btn-go-plating').addEventListener('click', goToPlatingScene);
-      document.getElementById('btn-finish-plating').addEventListener('click', finishPlating);
+      document.getElementById('btn-finish-plating').addEventListener('click', () => finishPlating(false));
 
       document.getElementById('btn-go-ranking').addEventListener('click', openRankingScene);
-      document.getElementById('btn-next-customer').addEventListener('click', startGame);
+      document.getElementById('btn-next-customer').addEventListener('click', nextRound);
       document.getElementById('btn-back-title').addEventListener('click', () => goToScene('scene-title'));
 
       document.getElementById('sort-by-votes').addEventListener('click', () => {
@@ -2327,6 +2669,15 @@
       document.getElementById('btn-save-my-comment').addEventListener('click', saveMyRecipeComment);
       document.getElementById('btn-rank-play-again').addEventListener('click', startGame);
       document.getElementById('btn-rank-to-title').addEventListener('click', () => goToScene('scene-title'));
+
+      document.getElementById('btn-home').addEventListener('click', () => {
+        draggingItem = null;
+        document.getElementById('drag-ghost').style.display = 'none';
+        goToScene('scene-title');
+      });
+
+      document.querySelectorAll('#lang-bar button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+      applyLang();
 
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && document.getElementById('scene-title').classList.contains('active')) {
