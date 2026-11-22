@@ -396,11 +396,11 @@
 
     .shelf-row {
       position: absolute;
-      left: 11.5%;
-      width: 82%;
+      left: 11%;
+      width: 83%;
       height: 18.5%;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       align-items: end;
       justify-items: center;
       padding-bottom: 4px;
@@ -418,15 +418,15 @@
       align-items: center;
       cursor: pointer;
       transition: transform 0.15s ease;
-      width: 135px;
+      width: 112px;
     }
 
     .product-item:hover { transform: translateY(-6px) scale(1.05); z-index: 25; }
     .product-item:active { transform: scale(0.95); }
 
     .product-item img {
-      height: 86px;
-      max-width: 115px;
+      height: 78px;
+      max-width: 96px;
       object-fit: contain;
       filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.22));
     }
@@ -436,8 +436,8 @@
       background-color: rgba(255, 255, 255, 0.94);
       border: 1.5px solid #4a90e2;
       border-radius: 8px;
-      padding: 2px 8px;
-      font-size: 0.78rem;
+      padding: 2px 5px;
+      font-size: 0.7rem;
       font-weight: 800;
       color: #1a2b4c;
       white-space: nowrap;
@@ -1702,26 +1702,38 @@
       "불닭볶음탕면": ["Buldak Stew Ramen", "ブルダック炒めタン麺", "火鸡炖汤面"], "불닭볶음면": ["Buldak Ramen", "ブルダック炒め麺", "火鸡面"],
       "새우탕": ["Shrimp Tang", "セウタン", "鲜虾汤面"], "신라면": ["Shin Ramyun", "辛ラーメン", "辛拉面"],
       "왕뚜껑": ["Wangttukkeong", "ワンットゥッケン", "王盖面"], "육개장": ["Yukgaejang", "ユッケジャン", "辣牛肉汤面"],
+      "육개장 사발면 작은": ["Small Yukgaejang", "ユッケジャン(小)", "辣牛肉汤面(小)"],
       "진라면": ["Jin Ramyun", "ジンラーメン", "真拉面"], "참깨라면": ["Sesame Ramyun", "ごまラーメン", "芝麻拉面"],
       "게토레이": ["Gatorade", "ゲータレード", "佳得乐"], "딸기우유": ["Strawberry Milk", "いちごミルク", "草莓牛奶"],
       "링티 제로": ["Ringtea Zero", "リンティー ゼロ", "Ringtea 零度"], "바나나우유": ["Banana Milk", "バナナ牛乳", "香蕉牛奶"],
       "사이다": ["Cider (Soda)", "サイダー", "汽水"], "초코우유": ["Choco Milk", "チョコ牛乳", "巧克力牛奶"],
       "콜라": ["Cola", "コーラ", "可乐"], "토레타": ["Toreta", "トレタ", "Toreta运动饮料"],
       "파워에이드": ["Powerade", "パワーエイド", "劲能"], "흰우유": ["Plain Milk", "牛乳", "牛奶"],
+      "닥터 페퍼": ["Dr Pepper", "ドクターペッパー", "胡椒博士"], "펩시 제로 라임": ["Pepsi Zero Lime", "ペプシゼロライム", "百事零度青柠"],
       "계란마요김밥": ["Egg Mayo Gimbap", "卵マヨキンパ", "鸡蛋蛋黄酱紫菜包饭"], "기본김밥": ["Classic Gimbap", "基本キンパ", "经典紫菜包饭"],
+      "날치알 묵은지 참치김밥": ["Tuna Kimchi Gimbap", "とびこ古漬けツナキンパ", "飞鱼籽泡菜金枪鱼紫菜包饭"],
+      "매콤 닭가슴살 닭꼬치": ["Spicy Chicken Skewer", "ピリ辛鶏むね串", "香辣鸡胸肉串"],
+      "맥스봉": ["Maxbon Sausage", "マックスボン", "Maxbon香肠"], "정통 프랑크": ["Classic Frank", "本格フランク", "经典法兰克香肠"],
+      "치즈 후랑크": ["Cheese Frank", "チーズフランク", "芝士法兰克香肠"],
+      "군고구마빠": ["Sweet Potato Bar", "焼き芋バー", "烤红薯棒"], "그릭요거트": ["Greek Yogurt", "グリークヨーグルト", "希腊酸奶"],
+      "바프 허니버터 아몬드": ["Honey Butter Almond", "ハニーバターアーモンド", "蜂蜜黄油扁桃仁"],
+      "빼빼로 아몬드": ["Almond Pepero", "アーモンドペペロ", "扁桃仁百奇"], "빼빼로 오리지널": ["Original Pepero", "オリジナルペペロ", "原味百奇"],
+      "우유크림모찌롤": ["Milk Cream Mochi Roll", "ミルククリームもちロール", "牛奶奶油麻薯卷"],
+      "허니버터칩": ["Honey Butter Chip", "ハニーバターチップ", "蜂蜜黄油薯片"],
+      "호빵맨 고구마 케이크": ["Anpanman Sweet Potato Cake", "アンパンマンさつまいもケーキ", "面包超人红薯蛋糕"],
       "얼음컵": ["Ice Cup", "氷カップ", "冰杯"], "포카칩": ["Poca Chip", "ポカチップ", "Poca薯片"],
       "나무 젓가락": ["Chopsticks", "割り箸", "木筷子"]
     };
     const pn = ko => (PN[ko] && PN[ko][LANGS.indexOf(LANG) - 1]) || ko;
 
     const MISSION_TR = {
-      1: [["Budget Meal", "I'm broke... please make me a filling meal under 5,000 won!"], ["コスパ重視の一食", "お金がなくて… 5,000ウォン以下でお腹いっぱいになる一食をお願い!"], ["高性价比一餐", "我钱不多…请做一份5000韩元以内、吃饱吃好的套餐!"]],
-      2: [["Extreme Spicy", "I'm so stressed! Give me something fiery that clears my head!"], ["激辛チャレンジ", "ストレス爆発!スカッとする激辛の組み合わせをお願い!"], ["超级辣", "压力爆棚!来份又辣又爽的搭配吧!"]],
-      3: [["Convenience Barista", "I'm thirsty~ mix two drinks into my own special drink!"], ["コンビニバリスタ", "のどが渇いた〜!ドリンク2種を混ぜて特別なドリンクを作って!"], ["便利店咖啡师", "好渴~请把两种饮料混合成特调饮品!"]],
-      4: [["Premium Combo", "Money's no object today! Show me a full course with trendy toppings!"], ["プレミアム組み合わせ", "今日はお金を気にしない!流行りのトッピング満載のフルコースを!"], ["高级搭配", "今天不差钱!来一份网红配料满满的全套组合!"]],
-      5: [["Speedy Meal", "I'm late for class! Give me something I can microwave just once!"], ["超スピード軽食", "塾に遅れる!電子レンジ1回で食べられる軽食をください!"], ["极速简餐", "补习要迟到了!给我只需微波一次的简餐!"]],
-      6: [["Spicy & Sweet", "Two or more spicy ramens plus one sweet drink, under 7,000 won!"], ["ピリ辛×甘々", "辛いラーメン2個以上と甘いドリンク1つ!7,000ウォン以下でお願い!"], ["又辣又甜", "两份以上辣面加一杯甜饮,7000韩元以内!"]],
-      7: [["Full Course", "Ramen, gimbap, and a mixed special drink, all under 12,000 won!"], ["フルコース一膳", "ラーメン、キンパ、ミックスドリンクまで!12,000ウォン以下で!"], ["全套餐", "面、紫菜包饭,再加混合特调饮料!12000韩元以内!"]]
+      1: [["Budget Meal", "A filling meal under 5,000 won, please!"], ["コスパ一食", "5,000ウォン以下でお腹いっぱいに!"], ["高性价比", "5000韩元内吃饱吃好!"]],
+      2: [["Extreme Spicy", "Stressed! Make it fiery and spicy!"], ["激辛", "ストレス発散!激辛でお願い!"], ["超级辣", "压力大!来点又辣又爽的!"]],
+      3: [["Barista", "Mix two drinks into a special one!"], ["バリスタ", "ドリンク2種を混ぜて特別な一杯を!"], ["咖啡师", "两种饮料混成特调!"]],
+      4: [["Premium Combo", "Money's no object! Full course with toppings!"], ["プレミアム", "お金は気にしない!トッピング満載で!"], ["高级搭配", "不差钱!配料满满的全套!"]],
+      5: [["Speedy Meal", "I'm late! Something with one microwave run!"], ["超スピード", "遅刻!レンジ1回の軽食を!"], ["极速简餐", "要迟到了!微波一次的简餐!"]],
+      6: [["Spicy & Sweet", "2+ spicy ramens + 1 sweet drink, ≤7,000 won!"], ["ピリ辛×甘々", "辛ラーメン2個+甘い飲料、7,000ウォン以下!"], ["又辣又甜", "两份以上辣面+甜饮,7000韩元内!"]],
+      7: [["Full Course", "Ramen, gimbap, mixed drink, under 12,000 won!"], ["フルコース", "ラーメン+キンパ+ミックス、12,000ウォン以下!"], ["全套餐", "面、紫菜包饭、混合饮料,12000韩元内!"]]
     };
     const mTr = m => (LANG === 'ko' ? null : MISSION_TR[m.id][LANGS.indexOf(LANG) - 1]);
     const mTitle = m => (mTr(m) ? mTr(m)[0] : m.title);
@@ -1755,11 +1767,11 @@
     ];
 
     const MISSIONS = [
-      { id: 1, title: "가성비 한 끼", dialogue: "주머니가 가벼워서요... 5,000원 이하로 배부르고 든든한 한 끼 만들어 주세요!", budget: 5000 },
-      { id: 2, title: "극강의 매운맛", dialogue: "오늘 스트레스 폭발했어요! 속이 뻥 뚫리게 화끈하고 매운 조합으로 부탁해요!", budget: 7500 },
-      { id: 3, title: "편의점 바리스타", dialogue: "목이 너무 말라요~ 편의점 음료 두 가지를 섞어서 나만의 특별한 스페셜 음료를 만들어 주세요!", budget: 4500 },
-      { id: 4, title: "프리미엄 꿀조합", dialogue: "오늘은 돈 걱정 안 할래요! SNS에서 유행하는 토핑 듬뿍 올라간 풀코스 꿀조합을 보여주세요!", budget: 10000 },
-      { id: 5, title: "초스피드 간편식", dialogue: "학원에 늦어서 시간이 없어요! 전자레인지에 딱 한 번만 돌려 바로 먹을 수 있는 간편식 주세요!", budget: 6000 }
+      { id: 1, title: "가성비 한 끼", dialogue: "5,000원 이하로 든든한 한 끼 부탁해요!", budget: 5000 },
+      { id: 2, title: "극강 매운맛", dialogue: "스트레스 풀리게 화끈한 매운 조합으로!", budget: 7500 },
+      { id: 3, title: "편의점 바리스타", dialogue: "음료 두 개를 섞은 스페셜 음료 주세요!", budget: 4500 },
+      { id: 4, title: "프리미엄 조합", dialogue: "돈 걱정 없어요! 토핑 듬뿍 풀코스로!", budget: 10000 },
+      { id: 5, title: "초스피드 식사", dialogue: "늦었어요! 전자레인지 한 번에 되는 간편식!", budget: 6000 }
     ];
 
     const PRODUCTS = {
@@ -1772,26 +1784,42 @@
         { id: "r6", name: "신라면", file: "./신라면.png", price: 1400, cookType: "water", requiredCook: true, tags: ["매움", "국물"] },
         { id: "r7", name: "왕뚜껑", file: "./왕뚜껑.png", price: 1500, cookType: "water", requiredCook: true, tags: ["든든함", "국물"] },
         { id: "r8", name: "육개장", file: "./육개장.png", price: 1100, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
-        { id: "r9", name: "진라면", file: "./진라면.png", price: 1200, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
-        { id: "r10", name: "참깨라면", file: "./참깨라면.png", price: 1700, cookType: "water", requiredCook: true, tags: ["꿀조합", "국물"] }
+        { id: "r9", name: "육개장 사발면 작은", file: "./육개장 사발면 작은.png", price: 1000, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
+        { id: "r10", name: "진라면", file: "./진라면.png", price: 1200, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
+        { id: "r11", name: "참깨라면", file: "./참깨라면.png", price: 1700, cookType: "water", requiredCook: true, tags: ["꿀조합", "국물"] }
       ],
       "음료": [
         { id: "d1", name: "게토레이", file: "./게토레이.png", price: 1500, cookType: "mix", requiredCook: false, color: "#d4ff33", tags: ["시원함", "음료혼합"] },
-        { id: "d2", name: "딸기우유", file: "./딸기우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#ff9eb5", tags: ["달콤함", "음료혼합"] },
-        { id: "d3", name: "링티 제로", file: "./링티 제로.png", price: 2200, cookType: "mix", requiredCook: false, color: "#ffe082", tags: ["시원함", "음료혼합"] },
-        { id: "d4", name: "바나나우유", file: "./바나나우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#fff176", tags: ["달콤함", "음료혼합"] },
-        { id: "d5", name: "사이다", file: "./사이다.png", price: 1500, cookType: "mix", requiredCook: false, color: "#e0f7fa", tags: ["탄산", "음료혼합"] },
-        { id: "d6", name: "초코우유", file: "./초코우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#795548", tags: ["달콤함", "음료혼합"] },
-        { id: "d7", name: "콜라", file: "./콜라.png", price: 1600, cookType: "mix", requiredCook: false, color: "#3e1f14", tags: ["탄산", "음료혼합"] },
-        { id: "d8", name: "토레타", file: "./토레타.png", price: 1800, cookType: "mix", requiredCook: false, color: "#f8bbd0", tags: ["시원함", "음료혼합"] },
-        { id: "d9", name: "파워에이드", file: "./파워에이드.png", price: 1800, cookType: "mix", requiredCook: false, color: "#00b0ff", tags: ["시원함", "음료혼합"] },
-        { id: "d10", name: "흰우유", file: "./흰우유.png", price: 1300, cookType: "mix", requiredCook: false, color: "#ffffff", tags: ["중화", "음료혼합"] }
+        { id: "d2", name: "닥터 페퍼", file: "./닥터 페퍼.png", price: 1600, cookType: "mix", requiredCook: false, color: "#5e1924", tags: ["탄산", "음료혼합"] },
+        { id: "d3", name: "딸기우유", file: "./딸기우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#ff9eb5", tags: ["달콤함", "음료혼합"] },
+        { id: "d4", name: "링티 제로", file: "./링티 제로.png", price: 2200, cookType: "mix", requiredCook: false, color: "#ffe082", tags: ["시원함", "음료혼합"] },
+        { id: "d5", name: "바나나우유", file: "./바나나우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#fff176", tags: ["달콤함", "음료혼합"] },
+        { id: "d6", name: "사이다", file: "./사이다.png", price: 1500, cookType: "mix", requiredCook: false, color: "#e0f7fa", tags: ["탄산", "음료혼합"] },
+        { id: "d7", name: "초코우유", file: "./초코우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#795548", tags: ["달콤함", "음료혼합"] },
+        { id: "d8", name: "콜라", file: "./콜라.png", price: 1600, cookType: "mix", requiredCook: false, color: "#3e1f14", tags: ["탄산", "음료혼합"] },
+        { id: "d9", name: "토레타", file: "./토레타.png", price: 1800, cookType: "mix", requiredCook: false, color: "#f8bbd0", tags: ["시원함", "음료혼합"] },
+        { id: "d10", name: "파워에이드", file: "./파워에이드.png", price: 1800, cookType: "mix", requiredCook: false, color: "#00b0ff", tags: ["시원함", "음료혼합"] },
+        { id: "d11", name: "펩시 제로 라임", file: "./펩시 제로 라임.png", price: 1600, cookType: "mix", requiredCook: false, color: "#4caf50", tags: ["탄산", "음료혼합"] },
+        { id: "d12", name: "흰우유", file: "./흰우유.png", price: 1300, cookType: "mix", requiredCook: false, color: "#ffffff", tags: ["중화", "음료혼합"] }
       ],
       "기타": [
         { id: "e1", name: "계란마요김밥", file: "./계란마요김밥.png", price: 3200, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
         { id: "e2", name: "기본김밥", file: "./기본김밥.png", price: 2800, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
-        { id: "e3", name: "얼음컵", file: "./얼음컵.png", price: 800, cookType: "ice", requiredCook: false, tags: ["얼음컵", "음료혼합"] },
-        { id: "e4", name: "포카칩", file: "./포카칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["꿀조합", "간식"] }
+        { id: "e3", name: "날치알 묵은지 참치김밥", file: "./날치알 묵은지 참치김밥.png", price: 3500, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
+        { id: "e4", name: "매콤 닭가슴살 닭꼬치", file: "./매콤 닭가슴살 닭꼬치.png", price: 2500, cookType: "microwave", requiredCook: true, tags: ["매움", "든든함", "전자레인지"] },
+        { id: "e5", name: "맥스봉", file: "./맥스봉.png", price: 1800, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
+        { id: "e6", name: "정통 프랑크", file: "./정통 프랑크.png", price: 2200, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
+        { id: "e7", name: "치즈 후랑크", file: "./치즈 후랑크.png", price: 2300, cookType: "microwave", requiredCook: true, tags: ["꿀조합", "든든함", "전자레인지"] },
+        { id: "e8", name: "얼음컵", file: "./얼음컵.png", price: 800, cookType: "ice", requiredCook: false, tags: ["얼음컵", "음료혼합"] },
+        { id: "e9", name: "군고구마빠", file: "./군고구마빠.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e10", name: "그릭요거트", file: "./그릭요거트.png", price: 2400, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e11", name: "바프 허니버터 아몬드", file: "./바프 허니버터 아몬드.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e12", name: "빼빼로 아몬드", file: "./빼빼로 아몬드.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e13", name: "빼빼로 오리지널", file: "./빼빼로 오리지널.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e14", name: "우유크림모찌롤", file: "./우유크림모찌롤.png", price: 3600, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
+        { id: "e15", name: "포카칩", file: "./포카칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["꿀조합", "간식"] },
+        { id: "e16", name: "허니버터칩", file: "./허니버터칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
+        { id: "e17", name: "호빵맨 고구마 케이크", file: "./호빵맨 고구마 케이크.png", price: 2000, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] }
       ]
     };
 
@@ -1801,8 +1829,8 @@
     });
 
     MISSIONS.push(
-      { id: 6, title: "매콤달콤 밸런스", dialogue: "매운 라면 두 개 이상에 달콤한 음료 하나! 7,000원 이하로 매콤달콤 조합을 부탁해요!", budget: 7000 },
-      { id: 7, title: "풀코스 한 상", dialogue: "라면, 김밥, 그리고 음료 두 개를 섞은 스페셜 음료까지 한 상 가득! 12,000원 이하로 부탁해요!", budget: 12000 }
+      { id: 6, title: "매콤달콤", dialogue: "매운 라면 2개 이상 + 달콤한 음료, 7,000원 이하!", budget: 7000 },
+      { id: 7, title: "풀코스", dialogue: "라면·김밥·믹스음료까지, 12,000원 이하!", budget: 12000 }
     );
     const LEVEL = { 1: 1, 5: 1, 2: 2, 3: 2, 4: 3, 6: 3, 7: 3 };
     MISSIONS.forEach(m => { m.level = LEVEL[m.id]; });
@@ -2001,6 +2029,8 @@
       row2.innerHTML = "";
       row3.innerHTML = "";
 
+      const perRow = Math.ceil(items.length / 3);
+
       items.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'product-item';
@@ -2010,8 +2040,8 @@
         `;
         card.onclick = () => addToCart(item);
 
-        if (index < 4) row1.appendChild(card);
-        else if (index < 7) row2.appendChild(card);
+        if (index < perRow) row1.appendChild(card);
+        else if (index < perRow * 2) row2.appendChild(card);
         else row3.appendChild(card);
       });
     }
