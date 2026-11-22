@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GS25 모디슈머 편의점 게임</title>
-  <!-- Google Fonts: Jua(배달의민족 주아체) 및 일본어/중국어 둥근 폰트 로드 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=M+PLUS+Rounded+1c:wght@800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
@@ -62,9 +61,9 @@
 
     .title-casual-btn {
       position: absolute;
-      left: 67.6%;
-      width: 29.4%;
-      height: 13.6%;
+      left: 68.2%;
+      width: 30.3%;
+      height: 13.5%;
       background: transparent;
       border: none;
       border-radius: 999px;
@@ -117,8 +116,8 @@
       transform: translateY(2px) scale(0.98);
     }
 
-    #btn-area-start { top: 69.5%; }
-    #btn-area-howto { top: 83.6%; }
+    #btn-area-start { top: 65.5%; }
+    #btn-area-howto { top: 79.8%; }
 
     #lang-bar {
       position: absolute;
@@ -319,7 +318,6 @@
       z-index: 20;
     }
 
-    /* 미션 요약 글자를 감싸는 기다란 흰색 네모칸 */
     .mission-summary-box {
       flex: 1;
       min-width: 0;
@@ -1586,13 +1584,12 @@
       </div>
     </section>
 
-    <button id="btn-home" aria-label="Home">홈</button>
+    <button id="btn-home" aria-label="Home">🏠</button>
     <div id="hud"></div>
     <div id="toast-msg">알림 메시지</div>
 
   </div>
 
-  <!-- 드래그 시 커서/터치를 따라다니는 고스트 요소 -->
   <div id="drag-ghost"><img id="drag-ghost-img" src="" alt=""></div>
 
   <script>
@@ -1758,11 +1755,11 @@
     ];
 
     const MISSIONS = [
-      { id: 1, title: "가성비 한 끼", dialogue: "5,000원 이하로 배부르고 든든한 한 끼 만들어 주세요!", budget: 5000 },
-      { id: 2, title: "극강의 매운맛", dialogue: "속이 뻥 뚫리게 화끈하고 매운 조합으로 부탁해요!", budget: 7500 },
-      { id: 3, title: "편의점 바리스타", dialogue: "편의점 음료 두 가지를 섞어서 나만의 특별한 스페셜 음료를 만들어 주세요!", budget: 4500 },
-      { id: 4, title: "프리미엄 꿀조합", dialogue: "SNS에서 유행하는 토핑 듬뿍 올라간 풀코스 꿀조합을 보여주세요!", budget: 10000 },
-      { id: 5, title: "초스피드 간편식", dialogue: "전자레인지에 딱 한 번만 돌려 바로 먹을 수 있는 간편식 주세요!", budget: 6000 }
+      { id: 1, title: "가성비 한 끼", dialogue: "주머니가 가벼워서요... 5,000원 이하로 배부르고 든든한 한 끼 만들어 주세요!", budget: 5000 },
+      { id: 2, title: "극강의 매운맛", dialogue: "오늘 스트레스 폭발했어요! 속이 뻥 뚫리게 화끈하고 매운 조합으로 부탁해요!", budget: 7500 },
+      { id: 3, title: "편의점 바리스타", dialogue: "목이 너무 말라요~ 편의점 음료 두 가지를 섞어서 나만의 특별한 스페셜 음료를 만들어 주세요!", budget: 4500 },
+      { id: 4, title: "프리미엄 꿀조합", dialogue: "오늘은 돈 걱정 안 할래요! SNS에서 유행하는 토핑 듬뿍 올라간 풀코스 꿀조합을 보여주세요!", budget: 10000 },
+      { id: 5, title: "초스피드 간편식", dialogue: "학원에 늦어서 시간이 없어요! 전자레인지에 딱 한 번만 돌려 바로 먹을 수 있는 간편식 주세요!", budget: 6000 }
     ];
 
     const PRODUCTS = {
