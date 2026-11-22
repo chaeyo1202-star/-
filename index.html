@@ -396,11 +396,11 @@
 
     .shelf-row {
       position: absolute;
-      left: 11%;
-      width: 83%;
+      left: 11.5%;
+      width: 82%;
       height: 18.5%;
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       align-items: end;
       justify-items: center;
       padding-bottom: 4px;
@@ -418,15 +418,15 @@
       align-items: center;
       cursor: pointer;
       transition: transform 0.15s ease;
-      width: 112px;
+      width: 135px;
     }
 
     .product-item:hover { transform: translateY(-6px) scale(1.05); z-index: 25; }
     .product-item:active { transform: scale(0.95); }
 
     .product-item img {
-      height: 78px;
-      max-width: 96px;
+      height: 86px;
+      max-width: 115px;
       object-fit: contain;
       filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.22));
     }
@@ -436,12 +436,57 @@
       background-color: rgba(255, 255, 255, 0.94);
       border: 1.5px solid #4a90e2;
       border-radius: 8px;
-      padding: 2px 5px;
-      font-size: 0.7rem;
+      padding: 2px 8px;
+      font-size: 0.78rem;
       font-weight: 800;
       color: #1a2b4c;
       white-space: nowrap;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .page-nav {
+      position: absolute;
+      right: 4.5%;
+      top: 10.8%;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      z-index: 30;
+    }
+
+    .page-nav.show { display: flex; }
+
+    .page-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2.5px solid #0056b3;
+      background-color: #ffffff;
+      color: #0056b3;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .page-btn:disabled {
+      background-color: #dde3ea;
+      border-color: #b0bec5;
+      color: #90a4ae;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .page-indicator {
+      min-width: 44px;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.96);
+      border: 2px solid #0056b3;
+      border-radius: 10px;
+      padding: 3px 8px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #0056b3;
     }
 
     .product-price { color: #007cff; margin-left: 3px; }
@@ -1459,6 +1504,12 @@
       <div id="shelf-row-2" class="shelf-row"></div>
       <div id="shelf-row-3" class="shelf-row"></div>
 
+      <div id="page-nav" class="page-nav">
+        <button id="btn-page-prev" class="page-btn">◀</button>
+        <span id="page-indicator" class="page-indicator">1 / 2</span>
+        <button id="btn-page-next" class="page-btn">▶</button>
+      </div>
+
       <div class="cart-dock">
         <div id="cart-items-list" class="cart-items-list"></div>
         <div class="cart-actions">
@@ -2009,8 +2060,12 @@
       goToScene('scene-shelf');
     }
 
+    const PAGE_SIZE = 12;
+    let shelfPage = 0;
+
     function selectCategory(category) {
       currentState.currentCategory = category;
+      shelfPage = 0;
       document.querySelectorAll('.cat-tab-btn').forEach(btn => btn.classList.remove('active'));
       if (category === "라면") document.getElementById('tab-ramen').classList.add('active');
       if (category === "음료") document.getElementById('tab-drink').classList.add('active');
@@ -2020,7 +2075,12 @@
     }
 
     function renderShelfItems(category) {
-      const items = PRODUCTS[category] || [];
+      const all = PRODUCTS[category] || [];
+      const totalPages = Math.ceil(all.length / PAGE_SIZE);
+      if (shelfPage >= totalPages) shelfPage = totalPages - 1;
+      if (shelfPage < 0) shelfPage = 0;
+
+      const items = all.slice(shelfPage * PAGE_SIZE, (shelfPage + 1) * PAGE_SIZE);
       const row1 = document.getElementById('shelf-row-1');
       const row2 = document.getElementById('shelf-row-2');
       const row3 = document.getElementById('shelf-row-3');
@@ -2044,6 +2104,12 @@
         else if (index < perRow * 2) row2.appendChild(card);
         else row3.appendChild(card);
       });
+
+      const nav = document.getElementById('page-nav');
+      nav.classList.toggle('show', totalPages > 1);
+      document.getElementById('page-indicator').textContent = `${shelfPage + 1} / ${totalPages}`;
+      document.getElementById('btn-page-prev').disabled = (shelfPage === 0);
+      document.getElementById('btn-page-next').disabled = (shelfPage >= totalPages - 1);
     }
 
     function addToCart(product) {
@@ -2668,6 +2734,15 @@
       document.getElementById('tab-drink').addEventListener('click', () => selectCategory('음료'));
       document.getElementById('tab-etc').addEventListener('click', () => selectCategory('기타'));
       document.getElementById('btn-go-cook').addEventListener('click', goToCookScene);
+
+      document.getElementById('btn-page-prev').addEventListener('click', () => {
+        shelfPage--;
+        renderShelfItems(currentState.currentCategory);
+      });
+      document.getElementById('btn-page-next').addEventListener('click', () => {
+        shelfPage++;
+        renderShelfItems(currentState.currentCategory);
+      });
 
       document.getElementById('app-water').addEventListener('click', () => useAppliance('water'));
       document.getElementById('app-microwave').addEventListener('click', () => useAppliance('microwave'));
