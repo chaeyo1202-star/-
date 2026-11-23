@@ -49,7 +49,7 @@
     }
 
     /* =========================================
-       [화면 0] 시작(타이틀) 화면 & 버튼 중앙 정렬 완료
+       [화면 0] 시작(타이틀) 화면
        ========================================= */
     #scene-title {
       background-image: url('./편의점 배경_2.png');
@@ -153,34 +153,42 @@
       border: 2.5px solid #007cff;
       border-radius: 50%;
       background: #fff;
-      font-size: 1rem;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: #007cff;
       cursor: pointer;
       z-index: 90;
       display: none;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     }
 
+    /* 타이머 크기 확대 */
     #hud {
       position: absolute;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.72);
-      color: #fff;
-      font-weight: 800;
-      font-size: 0.8rem;
-      padding: 2px 12px;
-      border-radius: 0 0 10px 10px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 1.15rem;
+      padding: 6px 22px;
+      border-radius: 0 0 16px 16px;
+      border: 2.5px solid #007cff;
+      border-top: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
       z-index: 90;
       display: none;
     }
 
     #hud.warn {
       background: #d90429;
+      border-color: #ffccd5;
     }
 
     /* =========================================
-       [화면 1-1] 손님 주문 접수 화면
+       [화면 1-1] 알바생 미션 제안 화면
        ========================================= */
     #scene-order {
       background-image: url('./편의점 배경.png');
@@ -189,24 +197,11 @@
       background-repeat: no-repeat;
     }
 
-    #customer-img {
-      position: absolute;
-      bottom: -2%;
-      left: 22%;
-      height: 62%;
-      object-fit: contain;
-      z-index: 10;
-      transition: transform 0.45s ease, opacity 0.45s ease;
-    }
-
-    #customer-img.enter { transform: translateX(0); opacity: 1; }
-    #customer-img.exit-left { transform: translateX(-180px); opacity: 0; }
-
     .speech-bubble-wrap {
       position: absolute;
-      top: 12%;
-      right: 6%;
-      width: 46%;
+      top: 13%;
+      left: 38%;
+      width: 54%;
       z-index: 20;
       animation: popUp 0.3s ease;
     }
@@ -224,7 +219,7 @@
       content: '';
       position: absolute;
       left: -24px;
-      bottom: 28px;
+      top: 38%;
       border-width: 12px 24px 12px 0;
       border-style: solid;
       border-color: transparent #007cff transparent transparent;
@@ -234,7 +229,7 @@
       content: '';
       position: absolute;
       left: -17px;
-      bottom: 30px;
+      top: calc(38% + 2px);
       border-width: 10px 20px 10px 0;
       border-style: solid;
       border-color: transparent #ffffff transparent transparent;
@@ -253,7 +248,7 @@
     }
 
     .mission-text {
-      font-size: 1.2rem;
+      font-size: 1.18rem;
       font-weight: 700;
       color: #222222;
       line-height: 1.5;
@@ -307,10 +302,10 @@
 
     .shelf-top-bar {
       position: absolute;
-      top: 4.2%;
-      left: 10.5%;
+      top: 5.5%;
+      left: 9.5%;
       right: 4.5%;
-      height: 6.4%;
+      height: 6.2%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -366,50 +361,56 @@
 
     .cat-tab-btn {
       position: absolute;
-      left: 0.6%;
-      width: 7.7%;
-      height: 14.2%;
+      left: 1.5%;
+      width: 6.7%;
+      height: 11.4%;
       background: transparent;
       border: none;
       border-radius: 14px;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 900;
-      color: #3a5a8c;
+      color: #1a365d;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
+      text-align: center;
+      line-height: 1.15;
+      word-break: keep-all;
       transition: all 0.15s ease;
       z-index: 20;
     }
 
-    .cat-tab-btn:hover { background-color: rgba(0, 124, 255, 0.12); }
+    .cat-tab-btn:hover { background-color: rgba(0, 124, 255, 0.14); }
     .cat-tab-btn.active {
       background-color: #007cff;
       color: #ffffff;
-      box-shadow: inset 0 0 0 3px #ffffff, 0 4px 10px rgba(0, 124, 255, 0.4);
+      box-shadow: inset 0 0 0 2.5px #ffffff, 0 3px 8px rgba(0, 124, 255, 0.4);
     }
 
-    #tab-ramen { top: 19.2%; }
-    #tab-drink { top: 35.1%; }
-    #tab-etc   { top: 51.0%; }
+    #tab-ramen   { top: 14.2%; }
+    #tab-drink   { top: 25.6%; }
+    #tab-snack   { top: 37.0%; }
+    #tab-dessert { top: 48.4%; }
+    #tab-gimbap  { top: 59.8%; }
+    #tab-etc     { top: 71.2%; }
 
     .shelf-row {
       position: absolute;
-      left: 11.5%;
-      width: 82%;
-      height: 18.5%;
+      left: 10.5%;
+      width: 83%;
+      height: 19.5%;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       align-items: end;
       justify-items: center;
-      padding-bottom: 4px;
+      padding-bottom: 6px;
       z-index: 15;
     }
 
-    #shelf-row-1 { top: 14.5%; }
-    #shelf-row-2 { top: 36.5%; }
-    #shelf-row-3 { top: 58.8%; }
+    #shelf-row-1 { top: 15.8%; }
+    #shelf-row-2 { top: 38.2%; }
+    #shelf-row-3 { top: 61.2%; }
 
     .product-item {
       position: relative;
@@ -447,7 +448,7 @@
     .page-nav {
       position: absolute;
       right: 4.5%;
-      top: 10.8%;
+      top: 12.2%;
       display: none;
       align-items: center;
       gap: 6px;
@@ -493,11 +494,11 @@
 
     .cart-dock {
       position: absolute;
-      bottom: 2.2%;
-      left: 4%;
-      right: 13.5%;
-      height: 11.5%;
-      background-color: rgba(255, 255, 255, 0.92);
+      bottom: 2.0%;
+      left: 9.5%;
+      right: 15.5%;
+      height: 11.2%;
+      background-color: rgba(255, 255, 255, 0.94);
       border: 3px solid #007cff;
       border-radius: 18px;
       display: flex;
@@ -573,7 +574,7 @@
     }
 
     /* =========================================
-       [화면 1-3] 조리하기 화면 (조리대.png)
+       [화면 1-3] 조리하기 화면
        ========================================= */
     #scene-cook {
       background-image: url('./조리대.png');
@@ -584,7 +585,7 @@
 
     .cook-guide-bar {
       position: absolute;
-      top: 4%;
+      top: 5.5%;
       left: 5%;
       right: 5%;
       background-color: rgba(255, 255, 255, 0.92);
@@ -606,7 +607,7 @@
 
     .appliances-area {
       position: absolute;
-      top: 16%;
+      top: 17%;
       left: 6%;
       right: 6%;
       height: 36%;
@@ -797,7 +798,7 @@
     .badge-opt  { background-color: #007cff; }
 
     /* =========================================
-       [화면 1-4] 식판 배치하기 화면 (요리 배치.png)
+       [화면 1-4] 식판 배치하기 화면
        ========================================= */
     #scene-plating {
       background-image: url('./요리 배치.png');
@@ -808,7 +809,7 @@
 
     .plating-top-bar {
       position: absolute;
-      top: 2.2%;
+      top: 5.5%;
       left: 4%;
       right: 4%;
       display: flex;
@@ -830,10 +831,10 @@
 
     #tray-drop-zone {
       position: absolute;
-      top: 13.5%;
+      top: 15.5%;
       left: 7.5%;
       width: 85%;
-      height: 52.5%;
+      height: 51.5%;
       border-radius: 28px;
       z-index: 15;
     }
@@ -871,6 +872,116 @@
     .placed-food.chopsticks-type {
       width: 245px;
       height: 120px;
+    }
+
+    /* 믹싱컵 결과물 스페셜 믹스 비주얼 카드 (배치·심사·랭킹 공용) */
+    .mixed-drink-card-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.96);
+      border: 3px solid #007cff;
+      border-radius: 18px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.25);
+      pointer-events: none;
+    }
+
+    .mixed-drink-card-visual .cup-straw {
+      width: 7px;
+      height: 18px;
+      background: #ff5a5f;
+      border: 2px solid #333;
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      transform: rotate(14deg);
+      margin-bottom: -2px;
+      margin-left: 16px;
+    }
+
+    .mixed-drink-card-visual .cup-body {
+      width: 64px;
+      height: 82px;
+      border-radius: 6px 6px 18px 18px;
+      border: 3.5px solid #333;
+      box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .mixed-drink-card-visual .cup-label {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #0056b3;
+      white-space: nowrap;
+    }
+
+    /* 하단 흰색 바(독) 안에서의 믹스 음료 축소 크기 */
+    .dock-food-item .mixed-drink-card-visual {
+      padding: 4px 8px;
+      border-width: 2px;
+      border-radius: 10px;
+    }
+    .dock-food-item .mixed-drink-card-visual .cup-straw {
+      width: 4px;
+      height: 8px;
+      border-width: 1.5px;
+      margin-bottom: -1px;
+      margin-left: 8px;
+    }
+    .dock-food-item .mixed-drink-card-visual .cup-body {
+      width: 26px;
+      height: 34px;
+      border-width: 2px;
+      border-radius: 3px 3px 8px 8px;
+    }
+    .dock-food-item .mixed-drink-card-visual .cup-label {
+      display: none;
+    }
+
+    /* 심사 화면(중간 식판)에서의 믹스 음료 크기 */
+    #judge-tray-clone .mixed-drink-card-visual {
+      padding: 6px 10px;
+      border-width: 2px;
+      border-radius: 12px;
+    }
+    #judge-tray-clone .mixed-drink-card-visual .cup-straw {
+      width: 4px;
+      height: 10px;
+      border-width: 1.5px;
+      margin-left: 10px;
+    }
+    #judge-tray-clone .mixed-drink-card-visual .cup-body {
+      width: 32px;
+      height: 42px;
+      border-width: 2px;
+    }
+    #judge-tray-clone .mixed-drink-card-visual .cup-label {
+      font-size: 0.62rem;
+      margin-top: 3px;
+    }
+
+    /* 랭킹 화면(미니 식판)에서의 믹스 음료 크기 */
+    .mini-tray-preview .mixed-drink-card-visual {
+      padding: 2px 4px;
+      border-width: 1.5px;
+      border-radius: 6px;
+    }
+    .mini-tray-preview .mixed-drink-card-visual .cup-straw {
+      width: 3px;
+      height: 5px;
+      border-width: 1px;
+      margin-bottom: -1px;
+      margin-left: 4px;
+    }
+    .mini-tray-preview .mixed-drink-card-visual .cup-body {
+      width: 14px;
+      height: 18px;
+      border-width: 1.5px;
+      border-radius: 2px 2px 5px 5px;
+    }
+    .mini-tray-preview .mixed-drink-card-visual .cup-label {
+      display: none;
     }
 
     #plating-dock-bar {
@@ -932,6 +1043,8 @@
       pointer-events: none;
       z-index: 9999;
       display: none;
+      justify-content: center;
+      align-items: center;
       transform: translate(-50%, -50%);
       filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.35));
     }
@@ -943,7 +1056,7 @@
     }
 
     /* =========================================
-       [화면 1-6] 손님 심사 페이지
+       [화면 1-6] 알바생 배경 심사 페이지
        ========================================= */
     #scene-judge {
       background-image: url('./편의점 배경.png');
@@ -952,58 +1065,41 @@
       background-repeat: no-repeat;
     }
 
-    #judge-customer-img {
+    .judge-bottom-card {
       position: absolute;
-      bottom: 0%;
-      left: 3%;
-      height: 62%;
-      object-fit: contain;
-      z-index: 20;
-      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28));
+      left: 4%;
+      right: 4%;
+      bottom: 11.5%;
+      height: 44%;
+      background: rgba(255, 255, 255, 0.96);
+      border: 4px solid #007cff;
+      border-radius: 24px;
+      padding: 16px 20px;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 18px;
+      z-index: 25;
       animation: popUp 0.4s ease;
     }
 
-    .judge-bubble-wrap {
-      position: absolute;
-      top: 4%;
-      left: 5%;
-      right: 5%;
-      z-index: 30;
-      animation: popUp 0.45s ease;
+    .judge-left-panel {
+      flex: 1.05;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background-color: #f4f9ff;
+      border: 2.5px solid #b6d4fe;
+      border-radius: 18px;
+      padding: 14px 18px;
+      text-align: left;
     }
 
-    .judge-bubble {
-      position: relative;
-      background: #ffffff;
-      border: 4px solid #007cff;
-      border-radius: 24px;
-      padding: 18px 26px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    .judge-score-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .judge-bubble::after {
-      content: '';
-      position: absolute;
-      left: 14%;
-      bottom: -24px;
-      border-width: 24px 14px 0 14px;
-      border-style: solid;
-      border-color: #007cff transparent transparent transparent;
-    }
-
-    .judge-bubble::before {
-      content: '';
-      position: absolute;
-      left: calc(14% + 3px);
-      bottom: -17px;
-      border-width: 18px 11px 0 11px;
-      border-style: solid;
-      border-color: #ffffff transparent transparent transparent;
-      z-index: 1;
+      gap: 12px;
     }
 
     .judge-score-box {
@@ -1013,15 +1109,14 @@
       justify-content: center;
       background: linear-gradient(135deg, #007cff, #0056b3);
       color: #ffffff;
-      padding: 12px 22px;
-      border-radius: 18px;
-      min-width: 135px;
-      box-shadow: 0 4px 10px rgba(0, 124, 255, 0.35);
+      padding: 8px 16px;
+      border-radius: 14px;
+      min-width: 105px;
+      box-shadow: 0 3px 8px rgba(0, 124, 255, 0.3);
     }
 
-    .judge-score-label { font-size: 0.85rem; font-weight: 800; opacity: 0.9; }
-    .judge-score-num { font-size: 2.3rem; font-weight: 900; line-height: 1.1; }
-    .judge-review-content { flex: 1; text-align: left; }
+    .judge-score-label { font-size: 0.78rem; font-weight: 800; opacity: 0.92; }
+    .judge-score-num { font-size: 1.9rem; font-weight: 900; line-height: 1.1; }
 
     .judge-mission-tag {
       display: inline-block;
@@ -1029,41 +1124,40 @@
       color: #007cff;
       font-size: 0.85rem;
       font-weight: 800;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: 999px;
-      margin-bottom: 6px;
+      border: 1.5px solid #9ec5fe;
     }
 
     .judge-review-text {
-      font-size: 1.18rem;
+      font-size: 1.12rem;
       font-weight: 800;
       color: #1a2b4c;
       line-height: 1.45;
       word-break: keep-all;
+      margin: 8px 0;
     }
 
     .judge-detail-sub {
-      margin-top: 6px;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: #555;
+      color: #495057;
+      background-color: #ffffff;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1.5px solid #dee2e6;
     }
 
-    .judge-tray-panel {
-      position: absolute;
-      right: 4%;
-      bottom: 12%;
-      width: 55%;
-      aspect-ratio: 16 / 10;
+    .judge-right-panel {
+      flex: 1;
+      position: relative;
       background-image: url('./요리 배치.png');
       background-size: 100% 135%;
       background-position: center 18%;
-      border: 4px solid #007cff;
-      border-radius: 22px;
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
+      border: 3px solid #007cff;
+      border-radius: 18px;
       overflow: hidden;
-      z-index: 22;
-      animation: popUp 0.5s ease;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.12);
     }
 
     #judge-tray-clone {
@@ -1073,20 +1167,20 @@
     }
 
     #judge-tray-clone .placed-food {
-      width: 118px;
-      height: 118px;
+      width: 96px;
+      height: 96px;
       cursor: default;
     }
 
     #judge-tray-clone .placed-food.chopsticks-type {
-      width: 145px;
-      height: 70px;
+      width: 122px;
+      height: 58px;
     }
 
     .judge-bottom-actions {
       position: absolute;
       right: 4%;
-      bottom: 2.5%;
+      bottom: 2.2%;
       display: flex;
       gap: 10px;
       z-index: 30;
@@ -1471,18 +1565,17 @@
       </div>
     </div>
 
-    <!-- [화면 1-1] 손님 주문 접수 화면 -->
+    <!-- [화면 1-1] 알바생 미션 제안 화면 -->
     <section id="scene-order" class="scene">
-      <img id="customer-img" class="enter" src="./손님 1 뒷모습.png" alt="손님 캐릭터">
       <div id="bubble-container" class="speech-bubble-wrap">
         <div class="speech-bubble">
-          <span id="mission-badge" class="mission-badge">미션 1</span>
+          <span id="mission-badge" class="mission-badge">라운드 1/3</span>
           <p id="mission-dialogue" class="mission-text">미션 내용이 여기에 표시됩니다.</p>
           <div id="mission-budget" class="mission-budget">💰 제한 예산: 5,000원</div>
         </div>
         <div class="order-btn-group">
           <button id="btn-accept-order" class="order-btn btn-accept">수락</button>
-          <button id="btn-reject-order" class="order-btn btn-reject">거절</button>
+          <button id="btn-reject-order" class="order-btn btn-reject">거절 (다른 미션)</button>
         </div>
       </div>
     </section>
@@ -1498,6 +1591,9 @@
 
       <button id="tab-ramen" class="cat-tab-btn active">라면</button>
       <button id="tab-drink" class="cat-tab-btn">음료</button>
+      <button id="tab-snack" class="cat-tab-btn">과자</button>
+      <button id="tab-dessert" class="cat-tab-btn">디저트</button>
+      <button id="tab-gimbap" class="cat-tab-btn">김밥</button>
       <button id="tab-etc" class="cat-tab-btn">기타</button>
 
       <div id="shelf-row-1" class="shelf-row"></div>
@@ -1576,31 +1672,29 @@
       <div id="plating-dock-bar"></div>
     </section>
 
-    <!-- [화면 1-6] 손님 심사 페이지 -->
+    <!-- [화면 1-6] 알바생 배경 심사 페이지 -->
     <section id="scene-judge" class="scene">
-      <div class="judge-bubble-wrap">
-        <div class="judge-bubble">
-          <div class="judge-score-box">
-            <span class="judge-score-label">종합 점수</span>
-            <span id="judge-score-num" class="judge-score-num">95점</span>
+      <div class="judge-bottom-card">
+        <div class="judge-left-panel">
+          <div class="judge-score-header">
+            <div class="judge-score-box">
+              <span class="judge-score-label">종합 점수</span>
+              <span id="judge-score-num" class="judge-score-num">95점</span>
+            </div>
+            <span id="judge-mission-tag" class="judge-mission-tag">라운드 1/3 · 가성비 한 끼</span>
           </div>
-          <div class="judge-review-content">
-            <span id="judge-mission-tag" class="judge-mission-tag">요청 #1 · 가성비 한 끼</span>
-            <p id="judge-review-text" class="judge-review-text">"와! 예산도 딱 맞추고 구성도 완벽해요!"</p>
-            <p id="judge-detail-sub" class="judge-detail-sub">결제 금액: 4,500원 / 제한 예산: 5,000원</p>
-          </div>
+          <p id="judge-review-text" class="judge-review-text">"와! 알바생인 저도 인정하는 완벽한 꿀조합이에요!"</p>
+          <p id="judge-detail-sub" class="judge-detail-sub">결제 금액: 4,500원 / 제한 예산: 5,000원</p>
         </div>
-      </div>
 
-      <img id="judge-customer-img" src="./손님 1 심사.png" alt="손님 심사 모습">
-
-      <div class="judge-tray-panel">
-        <div id="judge-tray-clone"></div>
+        <div class="judge-right-panel">
+          <div id="judge-tray-clone"></div>
+        </div>
       </div>
 
       <div class="judge-bottom-actions">
         <button id="btn-go-ranking" class="order-btn btn-rank">🏆 순위 · 투표 보기</button>
-        <button id="btn-next-customer" class="order-btn btn-accept">다음 손님 받기 ▶</button>
+        <button id="btn-next-customer" class="order-btn btn-accept">다음 라운드 ▶</button>
         <button id="btn-back-title" class="order-btn btn-reject">타이틀로</button>
       </div>
     </section>
@@ -1635,13 +1729,15 @@
       </div>
     </section>
 
-    <button id="btn-home" aria-label="Home">🏠</button>
+    <button id="btn-home" aria-label="홈">홈</button>
+    <audio id="click-sound" src="./넣뺏4.mp3" preload="auto"></audio>
+    <audio id="scene-bgm" src="./처음 시작 화면, 랭킹 및 심사화면/2.mp3" preload="auto" loop></audio>
     <div id="hud"></div>
     <div id="toast-msg">알림 메시지</div>
 
   </div>
 
-  <div id="drag-ghost"><img id="drag-ghost-img" src="" alt=""></div>
+  <div id="drag-ghost"></div>
 
   <script>
     const LANGS = ['ko', 'en', 'ja', 'zh'];
@@ -1672,6 +1768,7 @@
       cooked: ["[{0}] 조리 완료!", "[{0}] done!", "[{0}]完成!", "[{0}]完成!"],
       mixMax: ["믹싱컵에는 음료를 최대 2개까지만 섞을 수 있습니다!", "Mixing cup holds 2 drinks max!", "ミキシングカップは最大2本まで!", "混合杯最多放2种饮料!"],
       mixAdd: ["믹싱컵에 [{0}] 추가! ({1}/2)", "Added [{0}] to the cup! ({1}/2)", "[{0}]を追加!({1}/2)", "已加入[{0}]!({1}/2)"],
+      specialMix: ["스페셜 믹스!", "Special Mix!", "スペシャルミックス!", "特调混合!"],
       hint: ["💡 힌트: 화살표가 가리키는 곳을 터치하세요!", "💡 Hint: tap where the arrow points!", "💡 ヒント:矢印の場所をタップ!", "💡 提示:点击箭头所指处!"],
       allDone: ["✅ 필수 조리 완료! [배치하기 ▶]를 눌러주세요.", "✅ All cooked! Tap [Plate ▶].", "✅ 調理完了![盛り付け ▶]を押してね。", "✅ 烹饪完成!点击[摆盘 ▶]。"],
       cookGuide: ["👇 아래 트레이에서 조리할 재료를 먼저 클릭하세요!", "👇 Pick an item from the tray below first!", "👇 まず下のトレイから食材を選んでね!", "👇 请先点击下方托盘中的食材!"],
@@ -1734,6 +1831,9 @@
       '#tab-ramen': ["Ramen", "ラーメン", "方便面"],
       '#tab-drink': ["Drinks", "ドリンク", "饮料"],
       '#tab-etc': ["Etc.", "その他", "其他"],
+      '#tab-snack': ["Snacks", "お菓子", "零食"],
+      '#tab-dessert': ["Desserts", "デザート", "甜点"],
+      '#tab-gimbap': ["Gimbap", "キンパ", "紫菜包饭"],
       '.plating-guide-pill': ["🍽️ Drag dishes and chopsticks from the white bar onto the tray!", "🍽️ 下の白いバーから料理と割り箸をトレイにドラッグ!", "🍽️ 把下方白条里的料理和筷子拖到托盘上!"],
       '.judge-score-label': ["Total Score", "総合点", "综合得分"],
       '#btn-go-ranking': ["🏆 Ranking & Vote", "🏆 ランキング・投票", "🏆 排名·投票"],
@@ -1773,7 +1873,8 @@
       "허니버터칩": ["Honey Butter Chip", "ハニーバターチップ", "蜂蜜黄油薯片"],
       "호빵맨 고구마 케이크": ["Anpanman Sweet Potato Cake", "アンパンマンさつまいもケーキ", "面包超人红薯蛋糕"],
       "얼음컵": ["Ice Cup", "氷カップ", "冰杯"], "포카칩": ["Poca Chip", "ポカチップ", "Poca薯片"],
-      "나무 젓가락": ["Chopsticks", "割り箸", "木筷子"]
+      "나무 젓가락": ["Chopsticks", "割り箸", "木筷子"],
+      "스페셜 믹스!": ["Special Mix!", "スペシャルミックス!", "特调混合!"]
     };
     const pn = ko => (PN[ko] && PN[ko][LANGS.indexOf(LANG) - 1]) || ko;
 
@@ -1789,6 +1890,7 @@
     const mTr = m => (LANG === 'ko' ? null : MISSION_TR[m.id][LANGS.indexOf(LANG) - 1]);
     const mTitle = m => (mTr(m) ? mTr(m)[0] : m.title);
     const mText = m => (mTr(m) ? mTr(m)[1] : m.dialogue);
+    const mShort = m => (LANG === 'ko' ? m.short : mText(m));
 
     function applyLang() {
       document.documentElement.lang = LANG;
@@ -1811,18 +1913,14 @@
       applyLang();
     }
 
-    const CUSTOMERS = [
-      { id: 1, backImg: "./손님 1 뒷모습.png", judgeImg: "./손님 1 심사.png" },
-      { id: 2, backImg: "./손님 2 뒷모습.png", judgeImg: "./손님 2 심사.png" },
-      { id: 3, backImg: "./손님 3 뒷모습.png", judgeImg: "./손님 3 심사.png" }
-    ];
-
     const MISSIONS = [
-      { id: 1, title: "가성비 한 끼", dialogue: "5,000원 이하로 든든한 한 끼 부탁해요!", budget: 5000 },
-      { id: 2, title: "극강 매운맛", dialogue: "스트레스 풀리게 화끈한 매운 조합으로!", budget: 7500 },
-      { id: 3, title: "편의점 바리스타", dialogue: "음료 두 개를 섞은 스페셜 음료 주세요!", budget: 4500 },
-      { id: 4, title: "프리미엄 조합", dialogue: "돈 걱정 없어요! 토핑 듬뿍 풀코스로!", budget: 10000 },
-      { id: 5, title: "초스피드 식사", dialogue: "늦었어요! 전자레인지 한 번에 되는 간편식!", budget: 6000 }
+      { id: 1, title: "가성비 한 끼", dialogue: "어서 오세요! 알바생 강추 미션! 5,000원 이하로 배부르고 든든한 한 끼 꿀조합을 만들어 보실래요?", short: "5,000원 이하로 든든한 한 끼 부탁해요!", budget: 5000 },
+      { id: 2, title: "극강의 매운맛", dialogue: "스트레스 풀리는 한국식 매운맛! 매운 재료 2개 이상 넣어서 화끈한 조합에 도전해 보세요!", short: "스트레스 풀리게 화끈한 매운 조합으로!", budget: 7500 },
+      { id: 3, title: "편의점 바리스타", dialogue: "한국 편의점 필수 코스! 음료 두 가지를 섞어서 나만의 스페셜 음료를 만들어 볼까요?", short: "음료 두 개를 섞은 스페셜 음료 주세요!", budget: 4500 },
+      { id: 4, title: "프리미엄 꿀조합", dialogue: "오늘은 럭셔리하게! 예산 10,000원 안에서 재료 4개 이상 꽉 채운 풀코스 꿀조합을 보여주세요!", short: "돈 걱정 없어요! 토핑 듬뿍 풀코스로!", budget: 10000 },
+      { id: 5, title: "초스피드 간편식", dialogue: "바쁠 때 딱 좋은 알바생 추천템! 라면 없이 전자레인지에 딱 한 번만 돌리는 간편식 미션이에요!", short: "늦었어요! 전자레인지 한 번에 되는 간편식!", budget: 6000 },
+      { id: 6, title: "매콤달콤 밸런스", dialogue: "한국인들이 제일 좋아하는 맵단 조합! 매운 라면 2개 이상에 달콤한 음료 1개를 7,000원 이하로 맞춰보세요!", short: "매운 라면 2개 이상 + 달콤한 음료, 7,000원 이하!", budget: 7000 },
+      { id: 7, title: "풀코스 한 상", dialogue: "최종 마스터 미션! 라면, 김밥, 그리고 음료 2개를 섞은 스페셜 음료까지 12,000원 이하로 완성해 보세요!", short: "라면·김밥·믹스음료까지, 12,000원 이하!", budget: 12000 }
     ];
 
     const PRODUCTS = {
@@ -1840,37 +1938,43 @@
         { id: "r11", name: "참깨라면", file: "./참깨라면.png", price: 1700, cookType: "water", requiredCook: true, tags: ["꿀조합", "국물"] }
       ],
       "음료": [
-        { id: "d1", name: "게토레이", file: "./게토레이.png", price: 1500, cookType: "mix", requiredCook: false, color: "#d4ff33", tags: ["시원함", "음료혼합"] },
-        { id: "d2", name: "닥터 페퍼", file: "./닥터 페퍼.png", price: 1600, cookType: "mix", requiredCook: false, color: "#5e1924", tags: ["탄산", "음료혼합"] },
         { id: "d3", name: "딸기우유", file: "./딸기우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#ff9eb5", tags: ["달콤함", "음료혼합"] },
-        { id: "d4", name: "링티 제로", file: "./링티 제로.png", price: 2200, cookType: "mix", requiredCook: false, color: "#ffe082", tags: ["시원함", "음료혼합"] },
         { id: "d5", name: "바나나우유", file: "./바나나우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#fff176", tags: ["달콤함", "음료혼합"] },
-        { id: "d6", name: "사이다", file: "./사이다.png", price: 1500, cookType: "mix", requiredCook: false, color: "#e0f7fa", tags: ["탄산", "음료혼합"] },
         { id: "d7", name: "초코우유", file: "./초코우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#795548", tags: ["달콤함", "음료혼합"] },
+        { id: "d12", name: "흰우유", file: "./흰우유.png", price: 1300, cookType: "mix", requiredCook: false, color: "#ffffff", tags: ["중화", "음료혼합"] },
+        { id: "d2", name: "닥터 페퍼", file: "./닥터 페퍼.png", price: 1600, cookType: "mix", requiredCook: false, color: "#5e1924", tags: ["탄산", "음료혼합"] },
+        { id: "d6", name: "사이다", file: "./사이다.png", price: 1500, cookType: "mix", requiredCook: false, color: "#e0f7fa", tags: ["탄산", "음료혼합"] },
         { id: "d8", name: "콜라", file: "./콜라.png", price: 1600, cookType: "mix", requiredCook: false, color: "#3e1f14", tags: ["탄산", "음료혼합"] },
-        { id: "d9", name: "토레타", file: "./토레타.png", price: 1800, cookType: "mix", requiredCook: false, color: "#f8bbd0", tags: ["시원함", "음료혼합"] },
-        { id: "d10", name: "파워에이드", file: "./파워에이드.png", price: 1800, cookType: "mix", requiredCook: false, color: "#00b0ff", tags: ["시원함", "음료혼합"] },
         { id: "d11", name: "펩시 제로 라임", file: "./펩시 제로 라임.png", price: 1600, cookType: "mix", requiredCook: false, color: "#4caf50", tags: ["탄산", "음료혼합"] },
-        { id: "d12", name: "흰우유", file: "./흰우유.png", price: 1300, cookType: "mix", requiredCook: false, color: "#ffffff", tags: ["중화", "음료혼합"] }
+        { id: "d1", name: "게토레이", file: "./게토레이.png", price: 1500, cookType: "mix", requiredCook: false, color: "#d4ff33", tags: ["시원함", "음료혼합"] },
+        { id: "d4", name: "링티 제로", file: "./링티 제로.png", price: 2200, cookType: "mix", requiredCook: false, color: "#ffe082", tags: ["시원함", "음료혼합"] },
+        { id: "d9", name: "토레타", file: "./토레타.png", price: 1800, cookType: "mix", requiredCook: false, color: "#f8bbd0", tags: ["시원함", "음료혼합"] },
+        { id: "d10", name: "파워에이드", file: "./파워에이드.png", price: 1800, cookType: "mix", requiredCook: false, color: "#00b0ff", tags: ["시원함", "음료혼합"] }
       ],
-      "기타": [
+      "과자": [
+        { id: "e15", name: "포카칩", file: "./포카칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["꿀조합", "간식"] },
+        { id: "e16", name: "허니버터칩", file: "./허니버터칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
+        { id: "e11", name: "바프 허니버터 아몬드", file: "./바프 허니버터 아몬드.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e12", name: "빼빼로 아몬드", file: "./빼빼로 아몬드.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e13", name: "빼빼로 오리지널", file: "./빼빼로 오리지널.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] }
+      ],
+      "디저트": [
+        { id: "e9", name: "군고구마빠", file: "./군고구마빠.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e10", name: "그릭요거트", file: "./그릭요거트.png", price: 2400, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
+        { id: "e14", name: "우유크림모찌롤", file: "./우유크림모찌롤.png", price: 3600, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
+        { id: "e17", name: "호빵맨 고구마 케이크", file: "./호빵맨 고구마 케이크.png", price: 2000, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] }
+      ],
+      "김밥": [
         { id: "e1", name: "계란마요김밥", file: "./계란마요김밥.png", price: 3200, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
         { id: "e2", name: "기본김밥", file: "./기본김밥.png", price: 2800, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
-        { id: "e3", name: "날치알 묵은지 참치김밥", file: "./날치알 묵은지 참치김밥.png", price: 3500, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
+        { id: "e3", name: "날치알 묵은지 참치김밥", file: "./날치알 묵은지 참치김밥.png", price: 3500, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] }
+      ],
+      "기타": [
         { id: "e4", name: "매콤 닭가슴살 닭꼬치", file: "./매콤 닭가슴살 닭꼬치.png", price: 2500, cookType: "microwave", requiredCook: true, tags: ["매움", "든든함", "전자레인지"] },
         { id: "e5", name: "맥스봉", file: "./맥스봉.png", price: 1800, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
         { id: "e6", name: "정통 프랑크", file: "./정통 프랑크.png", price: 2200, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
         { id: "e7", name: "치즈 후랑크", file: "./치즈 후랑크.png", price: 2300, cookType: "microwave", requiredCook: true, tags: ["꿀조합", "든든함", "전자레인지"] },
-        { id: "e8", name: "얼음컵", file: "./얼음컵.png", price: 800, cookType: "ice", requiredCook: false, tags: ["얼음컵", "음료혼합"] },
-        { id: "e9", name: "군고구마빠", file: "./군고구마빠.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e10", name: "그릭요거트", file: "./그릭요거트.png", price: 2400, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e11", name: "바프 허니버터 아몬드", file: "./바프 허니버터 아몬드.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e12", name: "빼빼로 아몬드", file: "./빼빼로 아몬드.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e13", name: "빼빼로 오리지널", file: "./빼빼로 오리지널.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e14", name: "우유크림모찌롤", file: "./우유크림모찌롤.png", price: 3600, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
-        { id: "e15", name: "포카칩", file: "./포카칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["꿀조합", "간식"] },
-        { id: "e16", name: "허니버터칩", file: "./허니버터칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
-        { id: "e17", name: "호빵맨 고구마 케이크", file: "./호빵맨 고구마 케이크.png", price: 2000, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] }
+        { id: "e8", name: "얼음컵", file: "./얼음컵.png", price: 800, cookType: "ice", requiredCook: false, tags: ["얼음컵", "음료혼합"] }
       ]
     };
 
@@ -1879,10 +1983,6 @@
       Object.defineProperty(p, 'name', { get() { return pn(p.ko); }, enumerable: true });
     });
 
-    MISSIONS.push(
-      { id: 6, title: "매콤달콤", dialogue: "매운 라면 2개 이상 + 달콤한 음료, 7,000원 이하!", budget: 7000 },
-      { id: 7, title: "풀코스", dialogue: "라면·김밥·믹스음료까지, 12,000원 이하!", budget: 12000 }
-    );
     const LEVEL = { 1: 1, 5: 1, 2: 2, 3: 2, 4: 3, 6: 3, 7: 3 };
     MISSIONS.forEach(m => { m.level = LEVEL[m.id]; });
 
@@ -1896,7 +1996,7 @@
         score: 91,
         votes: 42,
         trayHtml: `
-          <div class="placed-food" style="left:32%; top:48%; transform:translate(-50%,-50%);"><img src="./완성된 컵라면.png"></div>
+          <div class="placed-food" style="left:32%; top:48%; transform:translate(-50%,-50%);"><img src="./까르보 불닭.png"></div>
           <div class="placed-food" style="left:66%; top:35%; transform:translate(-50%,-50%);"><img src="./계란마요김밥.png"></div>
           <div class="placed-food" style="left:68%; top:72%; transform:translate(-50%,-50%);"><img src="./바나나우유.png"></div>
         `
@@ -1910,9 +2010,14 @@
         score: 78,
         votes: 35,
         trayHtml: `
-          <div class="placed-food" style="left:30%; top:45%; transform:translate(-50%,-50%);"><img src="./파워에이드.png"></div>
-          <div class="placed-food" style="left:54%; top:45%; transform:translate(-50%,-50%);"><img src="./사이다.png"></div>
-          <div class="placed-food" style="left:76%; top:55%; transform:translate(-50%,-50%);"><img src="./얼음컵.png"></div>
+          <div class="placed-food" style="left:38%; top:48%; transform:translate(-50%,-50%);">
+            <div class="mixed-drink-card-visual">
+              <div class="cup-straw"></div>
+              <div class="cup-body" style="background:linear-gradient(135deg, #00b0ff 35%, #e0f7fa 65%);"></div>
+              <span class="cup-label">스페셜 믹스!</span>
+            </div>
+          </div>
+          <div class="placed-food" style="left:72%; top:55%; transform:translate(-50%,-50%);"><img src="./얼음컵.png"></div>
         `
       },
       {
@@ -1924,7 +2029,7 @@
         score: 84,
         votes: 28,
         trayHtml: `
-          <div class="placed-food" style="left:34%; top:50%; transform:translate(-50%,-50%);"><img src="./완성된 컵라면.png"></div>
+          <div class="placed-food" style="left:34%; top:50%; transform:translate(-50%,-50%);"><img src="./육개장.png"></div>
           <div class="placed-food" style="left:66%; top:58%; transform:translate(-50%,-50%);"><img src="./기본김밥.png"></div>
           <div class="placed-food chopsticks-type" style="left:65%; top:24%; transform:translate(-50%,-50%);"><img src="./나무 젓가락.png"></div>
         `
@@ -1990,12 +2095,35 @@
       goToScene('scene-order');
     }
 
+    function updateSceneBgm(sceneId) {
+      const bgm = document.getElementById('scene-bgm');
+      const shouldPlay = ['scene-title', 'scene-judge', 'scene-ranking'].includes(sceneId);
+      if (!shouldPlay) {
+        bgm.pause();
+        bgm.currentTime = 0;
+        return;
+      }
+      if (bgm.paused) {
+        bgm.volume = 0.35;
+        bgm.play().catch(() => {});
+      }
+    }
+
+    function playClickSound() {
+      const sound = document.getElementById('click-sound');
+      if (!sound) return;
+      sound.currentTime = 0;
+      sound.volume = 0.65;
+      sound.play().catch(() => {});
+    }
+
     function goToScene(sceneId) {
       document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(sceneId);
       if (target) target.classList.add('active');
       document.getElementById('btn-home').style.display = (sceneId === 'scene-title') ? 'none' : 'block';
       if (sceneId === 'scene-title') stopTimer();
+      updateSceneBgm(sceneId);
       updateHud();
     }
 
@@ -2012,17 +2140,13 @@
     }
 
     function spawnRandomCustomer() {
-      const randomCust = CUSTOMERS[Math.floor(Math.random() * CUSTOMERS.length)];
       const pool = MISSIONS.filter(m => m.level === currentState.round);
-      const randomMission = pool[Math.floor(Math.random() * pool.length)];
+      const filteredPool = (pool.length > 1 && currentState.mission)
+        ? pool.filter(m => m.id !== currentState.mission.id)
+        : pool;
+      const randomMission = filteredPool[Math.floor(Math.random() * filteredPool.length)];
 
-      currentState.customer = randomCust;
       currentState.mission = randomMission;
-
-      const imgEl = document.getElementById('customer-img');
-      imgEl.src = randomCust.backImg;
-      imgEl.classList.remove('exit-left');
-      imgEl.classList.add('enter');
 
       document.getElementById('mission-badge').textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ${mTitle(randomMission)}`;
       document.getElementById('mission-dialogue').textContent = `"${mText(randomMission)}"`;
@@ -2036,21 +2160,14 @@
     }
 
     function rejectOrder() {
-      const imgEl = document.getElementById('customer-img');
-      const bubbleWrap = document.getElementById('bubble-container');
-
-      bubbleWrap.style.display = 'none';
-      imgEl.classList.remove('enter');
-      imgEl.classList.add('exit-left');
-
-      setTimeout(() => spawnRandomCustomer(), 550);
+      spawnRandomCustomer();
     }
 
     function acceptOrder() {
       currentState.cart = [];
       currentState.currentCategory = "라면";
       document.getElementById('shelf-mission-summary').textContent =
-        `📋 [${mTitle(currentState.mission)}] ${mText(currentState.mission)}`;
+        `📋 [${mTitle(currentState.mission)}] ${mShort(currentState.mission)}`;
       document.getElementById('tray-drop-zone').innerHTML = '';
       currentState.platingItems = [];
       startTimer();
@@ -2069,6 +2186,9 @@
       document.querySelectorAll('.cat-tab-btn').forEach(btn => btn.classList.remove('active'));
       if (category === "라면") document.getElementById('tab-ramen').classList.add('active');
       if (category === "음료") document.getElementById('tab-drink').classList.add('active');
+      if (category === "과자") document.getElementById('tab-snack').classList.add('active');
+      if (category === "디저트") document.getElementById('tab-dessert').classList.add('active');
+      if (category === "김밥") document.getElementById('tab-gimbap').classList.add('active');
       if (category === "기타") document.getElementById('tab-etc').classList.add('active');
 
       renderShelfItems(category);
@@ -2181,6 +2301,7 @@
 
       currentState.cart.forEach(item => {
         item.isCooked = false;
+        item.isMixed = false;
         if (hasBaristaMission && item.cookType === "mix" && drinkCount >= 2) {
           item.requiredCook = true;
         }
@@ -2312,6 +2433,7 @@
 
         currentState.mixedDrinks.push(item);
         item.isCooked = true;
+        item.isMixed = true;
         currentState.selectedCookIdx = null;
 
         updateMixedDrinkIcon();
@@ -2320,19 +2442,22 @@
       }
     }
 
+    function getMixedDrinkBackground() {
+      if (currentState.mixedDrinks.length === 1) {
+        return currentState.mixedDrinks[0].color || "#00b0ff";
+      } else if (currentState.mixedDrinks.length >= 2) {
+        const c1 = currentState.mixedDrinks[0].color || "#00b0ff";
+        const c2 = currentState.mixedDrinks[1].color || "#ff9eb5";
+        return `linear-gradient(135deg, ${c1} 35%, ${c2} 65%)`;
+      }
+      return "#00b0ff";
+    }
+
     function updateMixedDrinkIcon() {
       const resultBox = document.getElementById('mixed-drink-result');
       const cupColorEl = document.getElementById('mixed-cup-color');
       resultBox.style.display = 'flex';
-
-      if (currentState.mixedDrinks.length === 1) {
-        const c1 = currentState.mixedDrinks[0].color || "#00b0ff";
-        cupColorEl.style.background = c1;
-      } else if (currentState.mixedDrinks.length >= 2) {
-        const c1 = currentState.mixedDrinks[0].color || "#00b0ff";
-        const c2 = currentState.mixedDrinks[1].color || "#ff9eb5";
-        cupColorEl.style.background = `linear-gradient(135deg, ${c1} 35%, ${c2} 65%)`;
-      }
+      cupColorEl.style.background = getMixedDrinkBackground();
     }
 
     function recordMistake() {
@@ -2366,24 +2491,43 @@
     }
 
     function goToPlatingScene() {
-      currentState.platingItems = currentState.cart.map((item, idx) => {
-        const displayFile = (item.category === "라면") ? "./완성된 컵라면.png" : item.file;
-        return {
+      const hasMixed = currentState.mixedDrinks.length > 0;
+
+      // 믹싱컵에 섞은 음료는 제외하고, 고른 컵라면은 원래 이미지(item.file) 그대로 유지
+      currentState.platingItems = currentState.cart
+        .filter(item => !item.isMixed)
+        .map((item, idx) => ({
           uid: `food-${idx}`,
           name: item.ko || item.name,
-          file: displayFile,
+          file: item.file,
           isChopsticks: false,
+          isMixedDrink: false,
           placed: false,
           xPercent: 50,
           yPercent: 50
-        };
-      });
+        }));
+
+      // 믹싱컵에 섞은 음료가 있으면 스페셜 믹스 컵 아이템 추가
+      if (hasMixed) {
+        currentState.platingItems.push({
+          uid: "item-mixed-drink",
+          name: "스페셜 믹스!",
+          file: "",
+          mixBg: getMixedDrinkBackground(),
+          isChopsticks: false,
+          isMixedDrink: true,
+          placed: false,
+          xPercent: 50,
+          yPercent: 50
+        });
+      }
 
       currentState.platingItems.push({
         uid: "item-chopsticks",
         name: "나무 젓가락",
         file: "./나무 젓가락.png",
         isChopsticks: true,
+        isMixedDrink: false,
         placed: false,
         xPercent: 50,
         yPercent: 50
@@ -2391,6 +2535,16 @@
 
       renderPlatingBoard();
       goToScene('scene-plating');
+    }
+
+    function buildMixedDrinkHtml(mixBg) {
+      return `
+        <div class="mixed-drink-card-visual">
+          <div class="cup-straw"></div>
+          <div class="cup-body" style="background: ${mixBg};"></div>
+          <span class="cup-label">${t('specialMix')}</span>
+        </div>
+      `;
     }
 
     function renderPlatingBoard() {
@@ -2406,10 +2560,19 @@
         if (!pItem.placed) {
           const dockEl = document.createElement('div');
           dockEl.className = 'dock-food-item';
-          dockEl.innerHTML = `
-            <img src="${pItem.file}" alt="${pn(pItem.name)}">
-            <span class="dock-food-tag">${pn(pItem.name)}</span>
-          `;
+
+          if (pItem.isMixedDrink) {
+            dockEl.innerHTML = `
+              ${buildMixedDrinkHtml(pItem.mixBg)}
+              <span class="dock-food-tag">${t('specialMix')}</span>
+            `;
+          } else {
+            dockEl.innerHTML = `
+              <img src="${pItem.file}" alt="${pn(pItem.name)}">
+              <span class="dock-food-tag">${pn(pItem.name)}</span>
+            `;
+          }
+
           dockEl.addEventListener('pointerdown', (e) => startDragItem(e, pItem));
           dockBar.appendChild(dockEl);
         } else {
@@ -2422,7 +2585,12 @@
           placedEl.style.left = `${pItem.xPercent}%`;
           placedEl.style.top = `${pItem.yPercent}%`;
           placedEl.style.transform = 'translate(-50%, -50%)';
-          placedEl.innerHTML = `<img src="${pItem.file}" alt="${pn(pItem.name)}">`;
+
+          if (pItem.isMixedDrink) {
+            placedEl.innerHTML = buildMixedDrinkHtml(pItem.mixBg);
+          } else {
+            placedEl.innerHTML = `<img src="${pItem.file}" alt="${pn(pItem.name)}">`;
+          }
 
           placedEl.addEventListener('pointerdown', (e) => startDragItem(e, pItem));
           trayZone.appendChild(placedEl);
@@ -2439,14 +2607,21 @@
       draggingItem = pItem;
 
       const ghost = document.getElementById('drag-ghost');
-      const ghostImg = document.getElementById('drag-ghost-img');
+      ghost.innerHTML = "";
 
-      ghostImg.src = pItem.file;
-      ghost.style.width = pItem.isChopsticks ? '245px' : '195px';
-      ghost.style.height = pItem.isChopsticks ? '120px' : '195px';
+      if (pItem.isMixedDrink) {
+        ghost.style.width = '140px';
+        ghost.style.height = '160px';
+        ghost.innerHTML = buildMixedDrinkHtml(pItem.mixBg);
+      } else {
+        ghost.style.width = pItem.isChopsticks ? '245px' : '195px';
+        ghost.style.height = pItem.isChopsticks ? '120px' : '195px';
+        ghost.innerHTML = `<img src="${pItem.file}" alt="">`;
+      }
+
       ghost.style.left = `${e.clientX}px`;
       ghost.style.top = `${e.clientY}px`;
-      ghost.style.display = 'block';
+      ghost.style.display = 'flex';
     }
 
     window.addEventListener('pointermove', (e) => {
@@ -2496,8 +2671,6 @@
 
     function finishPlating(timedOut) {
       stopTimer();
-      const cust = currentState.customer || CUSTOMERS[0];
-      document.getElementById('judge-customer-img').src = cust.judgeImg;
 
       const sourceTray = document.getElementById('tray-drop-zone');
       document.getElementById('judge-tray-clone').innerHTML = sourceTray.innerHTML;
@@ -2720,6 +2893,21 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('click', (event) => {
+        if (event.target.closest('button, .product-item, .cart-slot.filled, .appliance-box, .cook-item-card, .dock-food-item, .placed-food, .btn-heart-vote')) {
+          playClickSound();
+        }
+      });
+
+      document.addEventListener('pointerdown', function unlockBgm() {
+        const bgm = document.getElementById('scene-bgm');
+        const activeScene = document.querySelector('.scene.active');
+        if (bgm && activeScene && ['scene-title', 'scene-judge', 'scene-ranking'].includes(activeScene.id)) {
+          bgm.volume = 0.35;
+          bgm.play().catch(() => {});
+        }
+      });
+
       document.getElementById('btn-area-start').addEventListener('click', startGame);
       document.getElementById('btn-area-howto').addEventListener('click', () => toggleHowToModal(true));
       document.getElementById('btn-modal-close').addEventListener('click', () => toggleHowToModal(false));
@@ -2732,6 +2920,9 @@
 
       document.getElementById('tab-ramen').addEventListener('click', () => selectCategory('라면'));
       document.getElementById('tab-drink').addEventListener('click', () => selectCategory('음료'));
+      document.getElementById('tab-snack').addEventListener('click', () => selectCategory('과자'));
+      document.getElementById('tab-dessert').addEventListener('click', () => selectCategory('디저트'));
+      document.getElementById('tab-gimbap').addEventListener('click', () => selectCategory('김밥'));
       document.getElementById('tab-etc').addEventListener('click', () => selectCategory('기타'));
       document.getElementById('btn-go-cook').addEventListener('click', goToCookScene);
 
@@ -2780,6 +2971,7 @@
 
       document.querySelectorAll('#lang-bar button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
       applyLang();
+      updateSceneBgm('scene-title');
 
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && document.getElementById('scene-title').classList.contains('active')) {
