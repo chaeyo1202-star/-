@@ -15,26 +15,30 @@
       user-select: none;
     }
 
-    body {
+body {
       background-color: #1e1e24;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      width: 100vw;
+      height: 100dvh;
+      margin: 0;
+      overflow: hidden;
       font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
     }
 
     #game-container {
       position: relative;
-      width: 100%;
-      max-width: 960px;
-      aspect-ratio: 4 / 3;
+      width: 960px;
+      height: 720px;
+      flex-shrink: 0;
       background-color: #ffffff;
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      transform-origin: center center;
     }
-
+    
     .scene {
       position: absolute;
       inset: 0;
@@ -3434,6 +3438,18 @@ const firebaseConfig = {
         }
       });
     });
+    function fitGameToScreen() {
+      const container = document.getElementById('game-container');
+      if (!container) return;
+      const scaleX = window.innerWidth / 960;
+      const scaleY = window.innerHeight / 720;
+      const scale = Math.min(scaleX, scaleY);
+      container.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', fitGameToScreen);
+    window.addEventListener('orientationchange', fitGameToScreen);
+    fitGameToScreen();
   </script>
 
 </body>
