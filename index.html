@@ -1758,7 +1758,7 @@
     <!-- [팝업] 게임 방법 안내 창 -->
     <div id="modal-howto" class="modal-overlay">
       <div class="modal-box">
-        <h2>🏪 편의점 모디슈머 게임 방법</h2>
+        <h2>🏪 K-편의점 꿀조합리그 게임 방법</h2>
         <ol class="howto-list">
           <li><strong>미션 확인:</strong> 알바생이 추천하는 미션과 예산을 확인하고 수락하세요. 마음에 들지 않으면 거절하고 다른 미션을 받을 수 있어요.</li>
           <li><strong>재료 담기:</strong> 진열대에서 컵라면·음료·과자·디저트·김밥·기타 재료를 최대 5개까지 담으세요.</li>
@@ -1977,16 +1977,16 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, increment, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+const firebaseConfig = {
+      apiKey: "AIzaSyBzwJSm3_UTWWwegklVbHP7CKRHqwo2jvs",
+      authDomain: "store-cf94c.firebaseapp.com",
+      projectId: "store-cf94c",
+      storageBucket: "store-cf94c.firebasestorage.app",
+      messagingSenderId: "80247428587",
+      appId: "1:80247428587:web:1ef80d65785d45e81d75ae"
     };
 
-    const COLLECTION = "modi_rankings";
+   const COLLECTION = "rankings";
 
     if (!String(firebaseConfig.apiKey).startsWith("YOUR_")) {
       try {
