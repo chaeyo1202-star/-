@@ -162,7 +162,28 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     }
 
-    /* 타이머 크기 확대 */
+    /* 홈 버튼 옆 힌트 버튼 */
+    #btn-hint {
+      position: absolute;
+      top: 6px;
+      left: 46px;
+      height: 34px;
+      padding: 0 12px;
+      border: 2.5px solid #ff9800;
+      border-radius: 999px;
+      background: #fff8e1;
+      color: #e65100;
+      font-size: 0.85rem;
+      font-weight: 900;
+      cursor: pointer;
+      z-index: 90;
+      display: none;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    #btn-hint:hover { background: #ffecb3; }
+
     #hud {
       position: absolute;
       top: 0;
@@ -395,6 +416,7 @@
     #tab-gimbap  { top: 59.8%; }
     #tab-etc     { top: 71.2%; }
 
+    /* 한 단에 최대 5칸 (열 수는 스크립트에서 단별로 지정) */
     .shelf-row {
       position: absolute;
       left: 10.5%;
@@ -419,15 +441,15 @@
       align-items: center;
       cursor: pointer;
       transition: transform 0.15s ease;
-      width: 135px;
+      width: 128px;
     }
 
     .product-item:hover { transform: translateY(-6px) scale(1.05); z-index: 25; }
     .product-item:active { transform: scale(0.95); }
 
     .product-item img {
-      height: 86px;
-      max-width: 115px;
+      height: 80px;
+      max-width: 112px;
       object-fit: contain;
       filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.22));
     }
@@ -437,13 +459,18 @@
       background-color: rgba(255, 255, 255, 0.94);
       border: 1.5px solid #4a90e2;
       border-radius: 8px;
-      padding: 2px 8px;
-      font-size: 0.78rem;
+      padding: 2px 6px;
+      font-size: 0.72rem;
       font-weight: 800;
       color: #1a2b4c;
-      white-space: nowrap;
+      white-space: normal;
+      text-align: center;
+      line-height: 1.2;
+      max-width: 124px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     }
+
+    .product-price { display: block; color: #007cff; }
 
     .page-nav {
       position: absolute;
@@ -489,8 +516,6 @@
       font-weight: 900;
       color: #0056b3;
     }
-
-    .product-price { color: #007cff; margin-left: 3px; }
 
     .cart-dock {
       position: absolute;
@@ -916,7 +941,6 @@
       white-space: nowrap;
     }
 
-    /* 하단 흰색 바(독) 안에서의 믹스 음료 축소 크기 */
     .dock-food-item .mixed-drink-card-visual {
       padding: 4px 8px;
       border-width: 2px;
@@ -939,29 +963,31 @@
       display: none;
     }
 
-    /* 심사 화면(중간 식판)에서의 믹스 음료 크기 */
-    #judge-tray-clone .mixed-drink-card-visual {
+    #judge-tray-clone .mixed-drink-card-visual,
+    .pick-tray .mixed-drink-card-visual {
       padding: 6px 10px;
       border-width: 2px;
       border-radius: 12px;
     }
-    #judge-tray-clone .mixed-drink-card-visual .cup-straw {
+    #judge-tray-clone .mixed-drink-card-visual .cup-straw,
+    .pick-tray .mixed-drink-card-visual .cup-straw {
       width: 4px;
       height: 10px;
       border-width: 1.5px;
       margin-left: 10px;
     }
-    #judge-tray-clone .mixed-drink-card-visual .cup-body {
+    #judge-tray-clone .mixed-drink-card-visual .cup-body,
+    .pick-tray .mixed-drink-card-visual .cup-body {
       width: 32px;
       height: 42px;
       border-width: 2px;
     }
-    #judge-tray-clone .mixed-drink-card-visual .cup-label {
+    #judge-tray-clone .mixed-drink-card-visual .cup-label,
+    .pick-tray .mixed-drink-card-visual .cup-label {
       font-size: 0.62rem;
       margin-top: 3px;
     }
 
-    /* 랭킹 화면(미니 식판)에서의 믹스 음료 크기 */
     .mini-tray-preview .mixed-drink-card-visual {
       padding: 2px 4px;
       border-width: 1.5px;
@@ -1187,6 +1213,114 @@
     }
 
     /* =========================================
+       [화면 1-6-2] 내 조합 고르기 (3라운드 결과 중 1개)
+       ========================================= */
+    #scene-pick {
+      background: linear-gradient(180deg, #e8f3ff 0%, #f7fbff 100%);
+      padding: 20px 26px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #scene-pick.active { display: flex; }
+
+    .pick-header {
+      background-color: #ffffff;
+      border: 3px solid #007cff;
+      border-radius: 18px;
+      padding: 10px 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .pick-header h2 { font-size: 1.35rem; font-weight: 900; color: #0056b3; }
+    .pick-header p { margin-top: 4px; font-size: 0.9rem; font-weight: 700; color: #495057; }
+
+    .pick-grid {
+      flex: 1;
+      display: flex;
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .pick-card {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background-color: #ffffff;
+      border: 3px solid #d0e2ff;
+      border-radius: 18px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .pick-card:hover { transform: translateY(-3px); border-color: #74c0fc; }
+
+    .pick-card.selected {
+      border-color: #ff9800;
+      background-color: #fff8e1;
+      box-shadow: 0 6px 16px rgba(255, 152, 0, 0.35);
+    }
+
+    .pick-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pick-round { font-size: 0.85rem; font-weight: 900; color: #007cff; }
+    .pick-score { font-size: 1.15rem; font-weight: 900; color: #d90429; }
+    .pick-mission { font-size: 0.95rem; font-weight: 800; color: #1a2b4c; }
+
+    .pick-tray {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background-image: url('./요리 배치.png');
+      background-size: 100% 135%;
+      background-position: center 18%;
+      border: 2px solid #74c0fc;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .pick-tray .placed-food {
+      width: 70px;
+      height: 70px;
+      cursor: pointer;
+      pointer-events: none;
+    }
+
+    .pick-tray .placed-food.chopsticks-type {
+      width: 86px;
+      height: 42px;
+    }
+
+    .pick-menus {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #0056b3;
+      line-height: 1.3;
+      word-break: keep-all;
+    }
+
+    .pick-check {
+      display: none;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: #ffffff;
+      background-color: #ff9800;
+      border-radius: 10px;
+      padding: 3px 0;
+    }
+
+    .pick-card.selected .pick-check { display: block; }
+
+    /* =========================================
        [화면 1-7] 최종 순위 및 투표 페이지
        ========================================= */
     #scene-ranking {
@@ -1262,6 +1396,12 @@
       padding: 8px 14px;
     }
 
+    .my-comment-box > span {
+      font-weight: 900;
+      color: #e67700;
+      white-space: nowrap;
+    }
+
     .my-comment-box input {
       flex: 1;
       padding: 8px 12px;
@@ -1300,6 +1440,13 @@
       flex-direction: column;
       gap: 10px;
       padding-right: 4px;
+    }
+
+    .rank-loading {
+      text-align: center;
+      padding: 30px 0;
+      font-weight: 800;
+      color: #495057;
     }
 
     .rank-card {
@@ -1373,6 +1520,16 @@
       text-align: left;
     }
 
+    .rank-combo-name {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #1a2b4c;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .rank-menu-chips {
       font-size: 0.85rem;
       font-weight: 800;
@@ -1381,14 +1538,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .rank-user-comment {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #212529;
-      margin-bottom: 4px;
-      word-break: keep-all;
     }
 
     .rank-meta {
@@ -1484,28 +1633,30 @@
 
     .modal-box {
       background-color: #ffffff;
-      width: 78%;
-      max-width: 600px;
-      padding: 32px;
+      width: 82%;
+      max-width: 640px;
+      max-height: 92%;
+      overflow-y: auto;
+      padding: 26px 30px;
       border-radius: 20px;
       border: 4px solid #007cff;
       text-align: center;
     }
 
-    .modal-box h2 { font-size: 1.7rem; color: #007cff; margin-bottom: 20px; }
+    .modal-box h2 { font-size: 1.6rem; color: #007cff; margin-bottom: 16px; }
 
     .howto-list {
       text-align: left;
       background-color: #f4f8fc;
-      padding: 20px 24px;
+      padding: 16px 20px 16px 36px;
       border-radius: 12px;
-      margin-bottom: 24px;
-      line-height: 1.7;
-      font-size: 1.05rem;
+      margin-bottom: 18px;
+      line-height: 1.55;
+      font-size: 0.95rem;
       color: #333;
     }
 
-    .howto-list li { margin-bottom: 8px; list-style-position: inside; }
+    .howto-list li { margin-bottom: 8px; word-break: keep-all; }
 
     .btn-close {
       padding: 12px 36px;
@@ -1516,6 +1667,60 @@
       border: none;
       border-radius: 30px;
       cursor: pointer;
+    }
+
+    /* 힌트 모달 */
+    #modal-hint .modal-box { border-color: #ff9800; }
+    #modal-hint h2 { color: #e65100; }
+
+    .hint-mission {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1a2b4c;
+      margin-bottom: 10px;
+    }
+
+    .hint-items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .hint-item {
+      width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background-color: #fff8e1;
+      border: 2px solid #ffcc80;
+      border-radius: 14px;
+      padding: 8px 6px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #1a2b4c;
+      line-height: 1.2;
+    }
+
+    .hint-item img { width: 60px; height: 60px; object-fit: contain; }
+    .hint-item b { color: #007cff; }
+
+    .hint-total {
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: #d90429;
+      margin-bottom: 8px;
+    }
+
+    .hint-tail {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #495057;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      word-break: keep-all;
     }
 
     @keyframes popUp {
@@ -1539,7 +1744,7 @@
 <body>
 
   <div id="game-container">
-    
+
     <!-- [화면 0] 시작(타이틀) 화면 -->
     <section id="scene-title" class="scene active">
       <button id="btn-area-start" class="title-casual-btn" aria-label="게임 시작">게임 시작</button>
@@ -1555,13 +1760,23 @@
       <div class="modal-box">
         <h2>🏪 편의점 모디슈머 게임 방법</h2>
         <ol class="howto-list">
-          <li><strong>주문 확인:</strong> 손님이 원하는 예산과 요구사항을 확인하고 수락하세요.</li>
-          <li><strong>재료 담기:</strong> 진열대에서 라면, 음료, 기타 재료를 최대 5개까지 담으세요.</li>
-          <li><strong>조리하기:</strong> 아래 재료를 먼저 클릭한 뒤, 알맞은 조리기구(온수대/전자레인지/믹싱컵)를 터치하세요!</li>
-          <li><strong>플레이팅:</strong> 완성된 음식과 나무 젓가락을 손가락(마우스)으로 끌어 식판 위에 자유롭게 배치하세요.</li>
-          <li><strong>심사 및 투표:</strong> 손님의 점수를 확인하고, 1플레이당 1번 하트를 눌러 1위 출시 후보에 투표하세요!</li>
+          <li><strong>미션 확인:</strong> 알바생이 추천하는 미션과 예산을 확인하고 수락하세요. 마음에 들지 않으면 거절하고 다른 미션을 받을 수 있어요.</li>
+          <li><strong>재료 담기:</strong> 진열대에서 컵라면·음료·과자·디저트·김밥·기타 재료를 최대 5개까지 담으세요.</li>
+          <li><strong>조리하기:</strong> 재료를 먼저 클릭한 뒤 알맞은 조리기구(온수대/전자레인지/믹싱컵)를 누르세요. 음료 2개를 믹싱컵에 넣으면 스페셜 믹스가 완성돼요!</li>
+          <li><strong>플레이팅:</strong> 완성된 음식과 나무 젓가락을 끌어서 식판 위에 올려놓으세요.</li>
+          <li><strong>제한 시간:</strong> 라운드마다 2분! 시간이 지나면 실패하니 서두르세요. 막히면 💡 힌트 버튼을 눌러보세요.</li>
+          <li><strong>랭킹 & 투표:</strong> 3라운드가 끝나면 가장 마음에 드는 조합 1개를 골라 조합명을 붙여 랭킹에 올리고, 하트로 1번 투표하세요!</li>
         </ol>
         <button id="btn-modal-close" class="btn-close">확인</button>
+      </div>
+    </div>
+
+    <!-- [팝업] 100점 힌트 창 -->
+    <div id="modal-hint" class="modal-overlay">
+      <div class="modal-box">
+        <h2 id="hint-title">💡 100점 힌트</h2>
+        <div id="hint-body"></div>
+        <button id="btn-hint-close" class="btn-close">닫기</button>
       </div>
     </div>
 
@@ -1693,9 +1908,27 @@
       </div>
 
       <div class="judge-bottom-actions">
-        <button id="btn-go-ranking" class="order-btn btn-rank">🏆 순위 · 투표 보기</button>
+        <button id="btn-go-ranking" class="order-btn btn-rank">🏆 내 조합 고르기</button>
         <button id="btn-next-customer" class="order-btn btn-accept">다음 라운드 ▶</button>
         <button id="btn-back-title" class="order-btn btn-reject">타이틀로</button>
+        <button id="btn-retry" class="order-btn btn-accept" style="display:none;">🔄 다시 도전하기</button>
+        <button id="btn-fail-ranking" class="order-btn btn-rank" style="display:none;">🏆 랭킹 보기</button>
+      </div>
+    </section>
+
+    <!-- [화면 1-6-2] 내 조합 고르기 -->
+    <section id="scene-pick" class="scene">
+      <div class="pick-header">
+        <h2 id="pick-title">🏆 랭킹에 올릴 조합을 하나 골라주세요!</h2>
+        <p id="pick-sub">3라운드 결과 중 가장 마음에 드는 조합을 고르고 이름을 붙여보세요.</p>
+      </div>
+
+      <div id="pick-grid" class="pick-grid"></div>
+
+      <div class="my-comment-box pick-name-box">
+        <span>🏷️ 내 조합명:</span>
+        <input type="text" id="my-combo-name-input" maxlength="20" placeholder="내 조합의 이름을 지어주세요! (최대 20자)">
+        <button id="btn-submit-pick" class="btn-post-comment">랭킹 등록 ▶</button>
       </div>
     </section>
 
@@ -1712,12 +1945,6 @@
         </div>
       </div>
 
-      <div class="my-comment-box">
-        <span style="font-weight: 900; color: #e67700; white-space: nowrap;">내 메뉴 한줄평:</span>
-        <input type="text" id="my-recipe-comment-input" maxlength="45" placeholder="내가 만든 조합의 매력 포인트를 한줄평으로 남겨보세요! (최대 45자)">
-        <button id="btn-save-my-comment" class="btn-post-comment">한줄평 등록</button>
-      </div>
-
       <div id="ranking-list-container" class="ranking-list-container"></div>
 
       <div class="rank-footer">
@@ -1730,6 +1957,7 @@
     </section>
 
     <button id="btn-home" aria-label="홈">홈</button>
+    <button id="btn-hint" aria-label="힌트">💡 힌트</button>
     <audio id="click-sound" src="./넣뺏4.mp3" preload="auto"></audio>
     <audio id="scene-bgm" src="./2.mp3" preload="auto" loop></audio>
     <div id="hud"></div>
@@ -1738,6 +1966,69 @@
   </div>
 
   <div id="drag-ghost"></div>
+
+  <!-- ===================================================
+       Firebase (Firestore) 랭킹 연결
+       아래 firebaseConfig 값을 Firebase 콘솔의
+       [프로젝트 설정 > 내 앱 > SDK 설정 및 구성] 값으로 바꿔주세요.
+       값이 "YOUR_"로 시작하면 Firebase 없이 내 브라우저에서만 동작합니다.
+       =================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, increment, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const COLLECTION = "modi_rankings";
+
+    if (!String(firebaseConfig.apiKey).startsWith("YOUR_")) {
+      try {
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const col = collection(db, COLLECTION);
+
+        window.fbApi = {
+          async addEntry(e) {
+            const ref = await addDoc(col, {
+              name: e.name,
+              menus: e.menus,
+              score: e.score,
+              votes: 0,
+              layout: e.layout,
+              createdAt: serverTimestamp()
+            });
+            return ref.id;
+          },
+          async getEntries() {
+            const snap = await getDocs(query(col, orderBy("votes", "desc"), limit(100)));
+            return snap.docs.map(d => {
+              const v = d.data();
+              return {
+                id: d.id,
+                name: v.name || "",
+                menus: Array.isArray(v.menus) ? v.menus : [],
+                score: Number(v.score) || 0,
+                votes: Number(v.votes) || 0,
+                layout: Array.isArray(v.layout) ? v.layout : []
+              };
+            });
+          },
+          async vote(id) {
+            await updateDoc(doc(db, COLLECTION, id), { votes: increment(1) });
+          }
+        };
+      } catch (err) {
+        console.error("Firebase 초기화 실패:", err);
+      }
+    }
+  </script>
 
   <script>
     const LANGS = ['ko', 'en', 'ja', 'zh'];
@@ -1776,13 +2067,13 @@
       bDone: ["조리완료", "Done", "完了", "完成"],
       bNeed: ["조리필수", "Cook!", "要調理", "需烹饪"],
       bOpt: ["믹스가능", "Mixable", "ミックス可", "可混合"],
-      cEmpty: ["한줄평 내용을 입력해주세요!", "Please enter a comment!", "コメントを入力してください!", "请输入评语!"],
-      cSaved: ["✅ 한줄평이 등록되었습니다!", "✅ Comment saved!", "✅ コメントを登録しました!", "✅ 评语已保存!"],
       voteUsed: ["이미 이번 플레이의 투표권을 사용했습니다!", "You already used your vote this play!", "今回の投票権は使用済みです!", "本局的投票已用完!"],
-      voted: ["❤️ [{0}]님의 꿀조합에 투표했습니다!", "❤️ Voted for [{0}]!", "❤️ [{0}]に投票しました!", "❤️ 已投给[{0}]!"],
+      voted: ["❤️ [{0}]에 투표했습니다!", "❤️ Voted for [{0}]!", "❤️ [{0}]に投票しました!", "❤️ 已投给[{0}]!"],
       voteH0: ["❤️ 하트는 한 번의 플레이당 1번만 투표할 수 있습니다! (남은 투표권: 1회)", "❤️ One heart vote per play! (1 left)", "❤️ 投票は1プレイにつき1回!(残り1回)", "❤️ 每局只能投1次票!(剩余1次)"],
       voteH1: ["✅ 이번 플레이의 하트 투표를 완료했습니다! (남은 투표권: 0회)", "✅ Vote cast! (0 left)", "✅ 投票完了!(残り0回)", "✅ 已投票!(剩余0次)"],
       timeUp: ["⏰ 시간 종료!", "⏰ Time's up!", "⏰ 時間切れ!", "⏰ 时间到!"],
+      fail: ["실패", "Failed", "失敗", "失败"],
+      failSub: ["제한 시간 안에 완성하지 못했어요!", "You didn't finish in time!", "制限時間内に完成できませんでした!", "未能在时间内完成!"],
       cTime: ["앗, 시간이 다 됐어요... 기다리다 지쳤어요 ㅠㅠ", "Time ran out... I waited too long!", "時間切れ…待ちくたびれました…", "时间到了…我等得太久了…"],
       c0: ["맛있어 보이긴 하는데... 제 예산을 초과해서 지갑이 좀 아프네요 ㅠㅠ", "Looks tasty, but it blew my budget...", "おいしそうだけど…予算オーバーです…", "看起来不错,但超出预算了…"],
       c90: ["완벽 그 자체! 제가 딱 원하던 조합에 플레이팅 센스까지 최고예요!", "Perfect! Exactly what I wanted, and great plating!", "完璧!理想の組み合わせで盛り付けも最高!", "完美!正是我想要的搭配,摆盘也棒极了!"],
@@ -1792,10 +2083,18 @@
       paid: ["결제 금액: {0} / 제한 예산: {1}", "Paid: {0} / Budget: {1}", "お会計: {0} / 予算: {1}", "结账: {0} / 预算: {1}"],
       bonus: [" · 🥢 젓가락 세팅 보너스!", " · 🥢 Chopsticks bonus!", " · 🥢 お箸ボーナス!", " · 🥢 筷子加分!"],
       me: ["나 (도전자)", "Me (Challenger)", "私(挑戦者)", "我(挑战者)"],
-      defC: ["{0} 환상의 꿀조합! 꼭 한 번 드셔보세요!", "{0}: a dream combo! You must try it!", "{0} 夢の組み合わせ!ぜひ一度どうぞ!", "{0} 梦幻搭配!一定要试试!"],
+      guest: ["익명 도전자", "Anonymous", "名無しの挑戦者", "匿名挑战者"],
+      defName: ["{0} 꿀조합", "{0} Combo", "{0}の組み合わせ", "{0}搭配"],
+      pickSelected: ["✔ 선택됨", "✔ Selected", "✔ 選択中", "✔ 已选择"],
+      pickFirst: ["랭킹에 올릴 조합을 먼저 골라주세요!", "Pick a combo first!", "先に組み合わせを選んでください!", "请先选择一个搭配!"],
+      fbError: ["랭킹 서버 연결에 실패했어요. 잠시 후 다시 시도해주세요.", "Couldn't reach the ranking server.", "ランキングサーバーに接続できませんでした。", "无法连接排名服务器。"],
+      loading: ["랭킹을 불러오는 중...", "Loading ranking...", "ランキングを読み込み中...", "正在加载排名..."],
       rMenu: ["🍱 조합 메뉴: {0}", "🍱 Combo: {0}", "🍱 組み合わせ: {0}", "🍱 搭配: {0}"],
       rMeta: ["작성자: <strong>{0}</strong> · 심사 점수: <strong>{1}점</strong>", "By <strong>{0}</strong> · Score: <strong>{1}</strong>", "作成者: <strong>{0}</strong> · スコア: <strong>{1}点</strong>", "作者:<strong>{0}</strong> · 评分:<strong>{1}分</strong>"],
-      votes: ["{0}표", "{0} votes", "{0}票", "{0}票"]
+      votes: ["{0}표", "{0} votes", "{0}票", "{0}票"],
+      hintTotal: ["합계 {0}", "Total: {0}", "合計 {0}", "合计 {0}"],
+      hintMix: ["🥤 음료 2개를 모두 믹싱컵에 넣어 섞어주세요!", "🥤 Put both drinks into the mixing cup!", "🥤 ドリンク2本をミキシングカップで混ぜてね!", "🥤 把两种饮料都放进混合杯!"],
+      hintTail: ["🥢 모든 재료와 나무 젓가락을 식판 위에 올려야 100점이에요!", "🥢 Place every item and the chopsticks on the tray for 100 pts!", "🥢 全ての料理とお箸をトレイに置くと100点!", "🥢 把所有食物和筷子都摆上托盘才能拿100分!"]
     };
 
     function t(key, ...args) {
@@ -1807,18 +2106,26 @@
     const won = n => n.toLocaleString() + t('won');
     const applianceNames = () => ({ water: t('aWater'), microwave: t('aMw'), mix: t('aMix') });
 
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const safeFile = f => (typeof f === 'string' && /^\.\/[^"'<>\\]+\.png$/.test(f)) ? f : '';
+    const safeBg = b => (typeof b === 'string' && /^[#a-zA-Z0-9(),.%\s-]+$/.test(b)) ? b : '#00b0ff';
+
     const ST = {
       '#btn-area-start': ["Start Game", "ゲーム開始", "开始游戏"],
       '#btn-area-howto': ["How to Play", "遊び方", "游戏玩法"],
       '#modal-howto h2': ["🏪 Modisumer Convenience Store Guide", "🏪 モディスーマー コンビニゲームの遊び方", "🏪 便利店创意搭配玩法"],
-      '.howto-list li:nth-child(1)': ["<strong>Order:</strong> Check the customer's budget and request, then accept.", "<strong>注文確認:</strong>お客様の予算と要望を確認して受けましょう。", "<strong>确认订单:</strong>查看顾客的预算和要求后接单。"],
-      '.howto-list li:nth-child(2)': ["<strong>Shop:</strong> Pick up to 5 ramen, drinks, or extras from the shelves.", "<strong>材料選び:</strong>棚からラーメン・ドリンク・その他を最大5個選びます。", "<strong>选材料:</strong>从货架选择面、饮料、其他食材,最多5个。"],
-      '.howto-list li:nth-child(3)': ["<strong>Cook:</strong> Tap an item first, then the right appliance (hot water / microwave / mixing cup)!", "<strong>調理:</strong>先に食材をタップし、合う調理器具(お湯/電子レンジ/ミキサー)をタップ!", "<strong>烹饪:</strong>先点食材,再点合适的器具(热水台/微波炉/混合杯)!"],
-      '.howto-list li:nth-child(4)': ["<strong>Plate:</strong> Drag your dishes and chopsticks onto the tray with your finger or mouse.", "<strong>盛り付け:</strong>料理と割り箸を指やマウスでトレイにドラッグして配置。", "<strong>摆盘:</strong>用手指或鼠标把料理和筷子拖到托盘上。"],
-      '.howto-list li:nth-child(5)': ["<strong>Judge &amp; Vote:</strong> Clear 3 rounds, then cast one heart vote for your favorite combo!", "<strong>審査と投票:</strong>3ラウンドをクリアして、ハートで1票を投じよう!", "<strong>评分与投票:</strong>通关3轮后,给最爱的搭配投出1张爱心票!"],
+      '.howto-list li:nth-child(1)': ["<strong>Mission:</strong> Check the mission and budget the clerk suggests, then accept. Don't like it? Decline for a different one.", "<strong>ミッション確認:</strong>店員さんのおすすめミッションと予算を確認して受けよう。気に入らなければ断って別のミッションに変更できます。", "<strong>确认任务:</strong>查看店员推荐的任务和预算后接受。不喜欢可以拒绝换一个。"],
+      '.howto-list li:nth-child(2)': ["<strong>Shop:</strong> Pick up to 5 items from ramen, drinks, snacks, desserts, gimbap and more.", "<strong>材料選び:</strong>カップ麺・ドリンク・お菓子・デザート・キンパ・その他から最大5個選びます。", "<strong>选材料:</strong>从泡面、饮料、零食、甜点、紫菜包饭等中最多选5个。"],
+      '.howto-list li:nth-child(3)': ["<strong>Cook:</strong> Tap an item first, then the right appliance (hot water / microwave / mixing cup). Mix 2 drinks for a Special Mix!", "<strong>調理:</strong>先に食材をタップし、合う調理器具(お湯/電子レンジ/ミキサー)をタップ。ドリンク2本を混ぜるとスペシャルミックス!", "<strong>烹饪:</strong>先点食材,再点合适的器具(热水台/微波炉/混合杯)。两种饮料混合就是特调!"],
+      '.howto-list li:nth-child(4)': ["<strong>Plate:</strong> Drag your dishes and chopsticks onto the tray.", "<strong>盛り付け:</strong>料理と割り箸をトレイにドラッグして置きます。", "<strong>摆盘:</strong>把料理和筷子拖到托盘上。"],
+      '.howto-list li:nth-child(5)': ["<strong>Time limit:</strong> 2 minutes per round! Fail if time runs out. Stuck? Tap the 💡 Hint button.", "<strong>制限時間:</strong>1ラウンド2分!時間切れは失敗です。困ったら💡ヒントボタンを押そう。", "<strong>限时:</strong>每轮2分钟!超时即失败。卡住了就点💡提示按钮。"],
+      '.howto-list li:nth-child(6)': ["<strong>Ranking &amp; Vote:</strong> After 3 rounds, pick your favorite combo, name it, post it to the ranking, and cast one heart vote!", "<strong>ランキング&投票:</strong>3ラウンド後、お気に入りの組み合わせを1つ選んで名前をつけ、ランキングに登録。ハートで1票!", "<strong>排名与投票:</strong>三轮结束后选出最爱的搭配,取名并上传排名,再投出1张爱心票!"],
       '#btn-modal-close': ["OK", "OK", "确定"],
-      '#btn-accept-order': ["Accept", "受ける", "接单"],
-      '#btn-reject-order': ["Decline", "断る", "拒绝"],
+      '#btn-hint': ["💡 Hint", "💡 ヒント", "💡 提示"],
+      '#hint-title': ["💡 Hint for 100 pts", "💡 100点ヒント", "💡 满分提示"],
+      '#btn-hint-close': ["Close", "閉じる", "关闭"],
+      '#btn-accept-order': ["Accept", "受ける", "接受"],
+      '#btn-reject-order': ["Decline (new mission)", "断る(別のミッション)", "拒绝(换任务)"],
       '#app-water .appliance-tag': ["💧 Hot Water (add water)", "💧 お湯 (注ぐ)", "💧 热水台(倒水)"],
       '#app-microwave .appliance-tag': ["♨️ Microwave (3 sec)", "♨️ 電子レンジ (3秒)", "♨️ 微波炉(3秒)"],
       '#app-mix .appliance-tag': ["🥤 Mixing Cup (max 2)", "🥤 ミキシングカップ (最大2本)", "🥤 混合杯(最多2种)"],
@@ -1836,43 +2143,71 @@
       '#tab-gimbap': ["Gimbap", "キンパ", "紫菜包饭"],
       '.plating-guide-pill': ["🍽️ Drag dishes and chopsticks from the white bar onto the tray!", "🍽️ 下の白いバーから料理と割り箸をトレイにドラッグ!", "🍽️ 把下方白条里的料理和筷子拖到托盘上!"],
       '.judge-score-label': ["Total Score", "総合点", "综合得分"],
-      '#btn-go-ranking': ["🏆 Ranking & Vote", "🏆 ランキング・投票", "🏆 排名·投票"],
+      '#btn-go-ranking': ["🏆 Pick My Combo", "🏆 組み合わせを選ぶ", "🏆 选择我的搭配"],
+      '#btn-retry': ["🔄 Try Again", "🔄 もう一度挑戦", "🔄 重新挑战"],
+      '#btn-fail-ranking': ["🏆 View Ranking", "🏆 ランキングを見る", "🏆 查看排名"],
       '#btn-back-title, #btn-rank-to-title': ["Title", "タイトルへ", "返回标题"],
+      '#pick-title': ["🏆 Pick one combo for the ranking!", "🏆 ランキングに載せる組み合わせを1つ選んでね!", "🏆 选一个搭配上传排名吧!"],
+      '#pick-sub': ["Choose your best of the 3 rounds and give it a name.", "3ラウンドの中から1つ選んで名前をつけよう。", "从三轮作品中选一个并取个名字。"],
+      '.pick-name-box > span': ["🏷️ Combo name:", "🏷️ 組み合わせ名:", "🏷️ 搭配名称:"],
+      '#btn-submit-pick': ["Submit ▶", "登録 ▶", "提交 ▶"],
       '.rank-title-area h2': ["🏆 GS25 Modisumer Combo Ranking & Vote", "🏆 GS25 モディスーマー ランキング&投票", "🏆 GS25 创意搭配排名与投票"],
       '.real-launch-notice': ["✨ The #1 voted combo may launch as a real product!", "✨ 投票1位の組み合わせは実際に商品化されるかも!", "✨ 得票第一的搭配有机会成为真实商品!"],
       '#sort-by-votes': ["❤️ By Votes", "❤️ 投票順", "❤️ 按票数"],
       '#sort-by-score': ["⭐ By Score", "⭐ スコア順", "⭐ 按评分"],
-      '.my-comment-box > span': ["✍️ My comment:", "✍️ ひとこと:", "✍️ 我的评语:"],
-      '#btn-save-my-comment': ["Post", "登録", "提交"],
       '#btn-rank-play-again': ["Play Again ▶", "もう一度 ▶", "再玩一次 ▶"]
     };
-    const PH = ["Tell us what makes your combo great! (max 45)", "組み合わせの魅力をひとことで!(最大45字)", "写下你的搭配亮点!(最多45字)"];
+    const INPUT_PH = {
+      'my-combo-name-input': ["Name your combo! (max 20)", "組み合わせ名を入力!(最大20字)", "给搭配起个名字!(最多20字)"]
+    };
 
+    // ===== 메뉴 이름 번역 =====
     const PN = {
       "간짬뽕": ["Dry Jjamppong", "カンチャンポン", "干炒码面"], "까르보 불닭": ["Carbo Buldak", "カルボブルダック", "卡邦火鸡面"],
       "불닭볶음탕면": ["Buldak Stew Ramen", "ブルダック炒めタン麺", "火鸡炖汤面"], "불닭볶음면": ["Buldak Ramen", "ブルダック炒め麺", "火鸡面"],
       "새우탕": ["Shrimp Tang", "セウタン", "鲜虾汤面"], "신라면": ["Shin Ramyun", "辛ラーメン", "辛拉面"],
-      "왕뚜껑": ["Wangttukkeong", "ワンットゥッケン", "王盖面"], "육개장": ["Yukgaejang", "ユッケジャン", "辣牛肉汤面"],
+      "신라면 블랙": ["Shin Ramyun Black", "辛ラーメン ブラック", "辛拉面黑"],
+      "열라면": ["Yeol Ramyun", "ヨルラーメン", "烈拉面"], "틈새라면": ["Teumsae Ramyun", "トゥムセラーメン", "缝隙拉面"],
+      "왕뚜껑": ["Wangttukkeong", "ワンットゥッケン", "王盖面"],
+      "왕뚜껑 김치": ["Wangttukkeong Kimchi", "ワンットゥッケン キムチ", "王盖面 泡菜"],
+      "왕뚜껑 짬뽕": ["Wangttukkeong Jjamppong", "ワンットゥッケン チャンポン", "王盖面 炒码"],
+      "오모리 김치찌개 라면": ["Omori Kimchi Stew Ramyun", "オモリ キムチチゲラーメン", "Omori泡菜汤拉面"],
+      "육개장": ["Yukgaejang", "ユッケジャン", "辣牛肉汤面"],
       "육개장 사발면 작은": ["Small Yukgaejang", "ユッケジャン(小)", "辣牛肉汤面(小)"],
-      "진라면": ["Jin Ramyun", "ジンラーメン", "真拉面"], "참깨라면": ["Sesame Ramyun", "ごまラーメン", "芝麻拉面"],
+      "멸치 칼국수": ["Anchovy Kalguksu", "煮干しカルグクス", "鳀鱼刀削面"], "튀김우동": ["Tempura Udon", "天ぷらうどん", "天妇罗乌冬"],
+      "진라면": ["Jin Ramyun", "ジンラーメン", "真拉面"],
+      "진라면 순한맛": ["Jin Ramyun Mild", "ジンラーメン マイルド", "真拉面(原味)"],
+      "진라면 매운맛": ["Jin Ramyun Spicy", "ジンラーメン 辛口", "真拉面(辣味)"],
+      "참깨라면": ["Sesame Ramyun", "ごまラーメン", "芝麻拉面"],
+      "짜파게티": ["Chapagetti", "チャパゲティ", "炸酱面"],
+      "콕콕콕 스파게티": ["Kokokok Spaghetti", "コクコクコク スパゲティ", "Kokokok意面"],
+      "콕콕콕 치즈볶이": ["Kokokok Cheese Tteokbokki", "コクコクコク チーズトッポッキ", "Kokokok芝士炒年糕"],
+      "팔도 비빔면": ["Paldo Bibimmyeon", "パルド ビビン麺", "八道拌面"],
       "게토레이": ["Gatorade", "ゲータレード", "佳得乐"], "딸기우유": ["Strawberry Milk", "いちごミルク", "草莓牛奶"],
       "링티 제로": ["Ringtea Zero", "リンティー ゼロ", "Ringtea 零度"], "바나나우유": ["Banana Milk", "バナナ牛乳", "香蕉牛奶"],
       "사이다": ["Cider (Soda)", "サイダー", "汽水"], "초코우유": ["Choco Milk", "チョコ牛乳", "巧克力牛奶"],
       "콜라": ["Cola", "コーラ", "可乐"], "토레타": ["Toreta", "トレタ", "Toreta运动饮料"],
       "파워에이드": ["Powerade", "パワーエイド", "劲能"], "흰우유": ["Plain Milk", "牛乳", "牛奶"],
       "닥터 페퍼": ["Dr Pepper", "ドクターペッパー", "胡椒博士"], "펩시 제로 라임": ["Pepsi Zero Lime", "ペプシゼロライム", "百事零度青柠"],
+      "카라멜커피": ["Caramel Coffee", "キャラメルコーヒー", "焦糖咖啡"],
       "계란마요김밥": ["Egg Mayo Gimbap", "卵マヨキンパ", "鸡蛋蛋黄酱紫菜包饭"], "기본김밥": ["Classic Gimbap", "基本キンパ", "经典紫菜包饭"],
       "날치알 묵은지 참치김밥": ["Tuna Kimchi Gimbap", "とびこ古漬けツナキンパ", "飞鱼籽泡菜金枪鱼紫菜包饭"],
       "매콤 닭가슴살 닭꼬치": ["Spicy Chicken Skewer", "ピリ辛鶏むね串", "香辣鸡胸肉串"],
       "맥스봉": ["Maxbon Sausage", "マックスボン", "Maxbon香肠"], "정통 프랑크": ["Classic Frank", "本格フランク", "经典法兰克香肠"],
       "치즈 후랑크": ["Cheese Frank", "チーズフランク", "芝士法兰克香肠"],
+      "찐만두 6개입": ["Steamed Dumplings (6)", "蒸し餃子 6個入", "蒸饺 6个装"],
+      "감동란": ["Gamdongran Egg", "カムドンラン(燻製卵)", "感动蛋"], "스트링치즈": ["String Cheese", "ストリングチーズ", "芝士条"],
       "군고구마빠": ["Sweet Potato Bar", "焼き芋バー", "烤红薯棒"], "그릭요거트": ["Greek Yogurt", "グリークヨーグルト", "希腊酸奶"],
+      "우유크림모찌롤": ["Milk Cream Mochi Roll", "ミルククリームもちロール", "牛奶奶油麻薯卷"],
+      "호빵맨 고구마 케이크": ["Anpanman Sweet Potato Cake", "アンパンマンさつまいもケーキ", "面包超人红薯蛋糕"],
+      "우유생크림 크로아상": ["Milk Cream Croissant", "ミルク生クリーム クロワッサン", "牛奶鲜奶油可颂"],
+      "허쉬 쿠키앤크림 초콜릿": ["Hershey's Cookies 'n' Creme", "ハーシー クッキー&クリーム", "好时曲奇奶香巧克力"],
+      "돼지바": ["Dwaeji Bar", "テジバー", "猪猪冰棒"], "메로나": ["Melona", "メロナ", "哈密瓜冰棒"],
+      "월드콘": ["World Cone", "ワールドコーン", "世界甜筒"], "롯데 찰떡아이스": ["Chaltteok Ice", "チャルトクアイス", "糯米糍冰淇淋"],
+      "포카칩": ["Poca Chip", "ポカチップ", "Poca薯片"], "포카칩 어니언": ["Poca Chip Onion", "ポカチップ オニオン", "Poca薯片洋葱味"],
+      "허니버터칩": ["Honey Butter Chip", "ハニーバターチップ", "蜂蜜黄油薯片"], "바나나킥": ["Banana Kick", "バナナキック", "香蕉脆"],
       "바프 허니버터 아몬드": ["Honey Butter Almond", "ハニーバターアーモンド", "蜂蜜黄油扁桃仁"],
       "빼빼로 아몬드": ["Almond Pepero", "アーモンドペペロ", "扁桃仁百奇"], "빼빼로 오리지널": ["Original Pepero", "オリジナルペペロ", "原味百奇"],
-      "우유크림모찌롤": ["Milk Cream Mochi Roll", "ミルククリームもちロール", "牛奶奶油麻薯卷"],
-      "허니버터칩": ["Honey Butter Chip", "ハニーバターチップ", "蜂蜜黄油薯片"],
-      "호빵맨 고구마 케이크": ["Anpanman Sweet Potato Cake", "アンパンマンさつまいもケーキ", "面包超人红薯蛋糕"],
-      "얼음컵": ["Ice Cup", "氷カップ", "冰杯"], "포카칩": ["Poca Chip", "ポカチップ", "Poca薯片"],
       "나무 젓가락": ["Chopsticks", "割り箸", "木筷子"],
       "스페셜 믹스!": ["Special Mix!", "スペシャルミックス!", "特调混合!"]
     };
@@ -1899,11 +2234,16 @@
         if (el.dataset.ko === undefined) el.dataset.ko = el.innerHTML;
         el.innerHTML = LANG === 'ko' ? el.dataset.ko : tr[idx];
       }));
-      const inp = document.getElementById('my-recipe-comment-input');
-      if (inp.dataset.ko === undefined) inp.dataset.ko = inp.placeholder;
-      inp.placeholder = LANG === 'ko' ? inp.dataset.ko : PH[idx];
+      Object.entries(INPUT_PH).forEach(([id, tr]) => {
+        const inp = document.getElementById(id);
+        if (!inp) return;
+        if (inp.dataset.ko === undefined) inp.dataset.ko = inp.placeholder;
+        inp.placeholder = LANG === 'ko' ? inp.dataset.ko : tr[idx];
+      });
       document.getElementById('btn-next-customer').textContent = t('nextRound');
       document.querySelectorAll('#lang-bar button').forEach(b => b.classList.toggle('active', b.dataset.lang === LANG));
+      const active = document.querySelector('.scene.active');
+      if (active && active.id === 'scene-order' && currentState.mission) renderMission(currentState.mission);
       updateHud();
     }
 
@@ -1922,126 +2262,100 @@
       { id: 6, title: "매콤달콤 밸런스", dialogue: "한국인들이 제일 좋아하는 맵단 조합! 매운 라면 2개 이상에 달콤한 음료 1개를 7,000원 이하로 맞춰보세요!", short: "매운 라면 2개 이상 + 달콤한 음료, 7,000원 이하!", budget: 7000 },
       { id: 7, title: "풀코스 한 상", dialogue: "최종 마스터 미션! 라면, 김밥, 그리고 음료 2개를 섞은 스페셜 음료까지 12,000원 이하로 완성해 보세요!", short: "라면·김밥·믹스음료까지, 12,000원 이하!", budget: 12000 }
     ];
-
-    const PRODUCTS = {
-      "라면": [
-        { id: "r1", name: "간짬뽕", file: "./간짬뽕.png", price: 1800, cookType: "water", requiredCook: true, tags: ["매움", "든든함"] },
-        { id: "r2", name: "까르보 불닭", file: "./까르보 불닭.png", price: 1800, cookType: "water", requiredCook: true, tags: ["매움", "꿀조합"] },
-        { id: "r3", name: "불닭볶음탕면", file: "./불닭볶음탕면.png", price: 1800, cookType: "water", requiredCook: true, tags: ["매움", "국물"] },
-        { id: "r4", name: "불닭볶음면", file: "./붉닭.png", price: 1700, cookType: "water", requiredCook: true, tags: ["매움", "꿀조합"] },
-        { id: "r5", name: "새우탕", file: "./새우탕.png", price: 1400, cookType: "water", requiredCook: true, tags: ["국물", "든든함"] },
-        { id: "r6", name: "신라면", file: "./신라면.png", price: 1400, cookType: "water", requiredCook: true, tags: ["매움", "국물"] },
-        { id: "r7", name: "왕뚜껑", file: "./왕뚜껑.png", price: 1500, cookType: "water", requiredCook: true, tags: ["든든함", "국물"] },
-        { id: "r8", name: "육개장", file: "./육개장.png", price: 1100, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
-        { id: "r9", name: "육개장 사발면 작은", file: "./육개장 사발면 작은.png", price: 1000, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
-        { id: "r10", name: "진라면", file: "./진라면.png", price: 1200, cookType: "water", requiredCook: true, tags: ["가성비", "국물"] },
-        { id: "r11", name: "참깨라면", file: "./참깨라면.png", price: 1700, cookType: "water", requiredCook: true, tags: ["꿀조합", "국물"] }
-      ],
-      "음료": [
-        { id: "d3", name: "딸기우유", file: "./딸기우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#ff9eb5", tags: ["달콤함", "음료혼합"] },
-        { id: "d5", name: "바나나우유", file: "./바나나우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#fff176", tags: ["달콤함", "음료혼합"] },
-        { id: "d7", name: "초코우유", file: "./초코우유.png", price: 1700, cookType: "mix", requiredCook: false, color: "#795548", tags: ["달콤함", "음료혼합"] },
-        { id: "d12", name: "흰우유", file: "./흰우유.png", price: 1300, cookType: "mix", requiredCook: false, color: "#ffffff", tags: ["중화", "음료혼합"] },
-        { id: "d2", name: "닥터 페퍼", file: "./닥터 페퍼.png", price: 1600, cookType: "mix", requiredCook: false, color: "#5e1924", tags: ["탄산", "음료혼합"] },
-        { id: "d6", name: "사이다", file: "./사이다.png", price: 1500, cookType: "mix", requiredCook: false, color: "#e0f7fa", tags: ["탄산", "음료혼합"] },
-        { id: "d8", name: "콜라", file: "./콜라.png", price: 1600, cookType: "mix", requiredCook: false, color: "#3e1f14", tags: ["탄산", "음료혼합"] },
-        { id: "d11", name: "펩시 제로 라임", file: "./펩시 제로 라임.png", price: 1600, cookType: "mix", requiredCook: false, color: "#4caf50", tags: ["탄산", "음료혼합"] },
-        { id: "d1", name: "게토레이", file: "./게토레이.png", price: 1500, cookType: "mix", requiredCook: false, color: "#d4ff33", tags: ["시원함", "음료혼합"] },
-        { id: "d4", name: "링티 제로", file: "./링티 제로.png", price: 2200, cookType: "mix", requiredCook: false, color: "#ffe082", tags: ["시원함", "음료혼합"] },
-        { id: "d9", name: "토레타", file: "./토레타.png", price: 1800, cookType: "mix", requiredCook: false, color: "#f8bbd0", tags: ["시원함", "음료혼합"] },
-        { id: "d10", name: "파워에이드", file: "./파워에이드.png", price: 1800, cookType: "mix", requiredCook: false, color: "#00b0ff", tags: ["시원함", "음료혼합"] }
-      ],
-      "과자": [
-        { id: "e15", name: "포카칩", file: "./포카칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["꿀조합", "간식"] },
-        { id: "e16", name: "허니버터칩", file: "./허니버터칩.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
-        { id: "e11", name: "바프 허니버터 아몬드", file: "./바프 허니버터 아몬드.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e12", name: "빼빼로 아몬드", file: "./빼빼로 아몬드.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e13", name: "빼빼로 오리지널", file: "./빼빼로 오리지널.png", price: 1700, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] }
-      ],
-      "디저트": [
-        { id: "e9", name: "군고구마빠", file: "./군고구마빠.png", price: 1500, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e10", name: "그릭요거트", file: "./그릭요거트.png", price: 2400, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] },
-        { id: "e14", name: "우유크림모찌롤", file: "./우유크림모찌롤.png", price: 3600, cookType: "topping", requiredCook: false, tags: ["달콤함", "꿀조합", "간식"] },
-        { id: "e17", name: "호빵맨 고구마 케이크", file: "./호빵맨 고구마 케이크.png", price: 2000, cookType: "topping", requiredCook: false, tags: ["달콤함", "간식"] }
-      ],
-      "김밥": [
-        { id: "e1", name: "계란마요김밥", file: "./계란마요김밥.png", price: 3200, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
-        { id: "e2", name: "기본김밥", file: "./기본김밥.png", price: 2800, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
-        { id: "e3", name: "날치알 묵은지 참치김밥", file: "./날치알 묵은지 참치김밥.png", price: 3500, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] }
-      ],
-      "기타": [
-        { id: "e4", name: "매콤 닭가슴살 닭꼬치", file: "./매콤 닭가슴살 닭꼬치.png", price: 2500, cookType: "microwave", requiredCook: true, tags: ["매움", "든든함", "전자레인지"] },
-        { id: "e5", name: "맥스봉", file: "./맥스봉.png", price: 1800, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
-        { id: "e6", name: "정통 프랑크", file: "./정통 프랑크.png", price: 2200, cookType: "microwave", requiredCook: true, tags: ["든든함", "전자레인지"] },
-        { id: "e7", name: "치즈 후랑크", file: "./치즈 후랑크.png", price: 2300, cookType: "microwave", requiredCook: true, tags: ["꿀조합", "든든함", "전자레인지"] },
-        { id: "e8", name: "얼음컵", file: "./얼음컵.png", price: 800, cookType: "ice", requiredCook: false, tags: ["얼음컵", "음료혼합"] }
-      ]
-    };
-
-    Object.values(PRODUCTS).flat().forEach(p => {
-      p.ko = p.name;
-      Object.defineProperty(p, 'name', { get() { return pn(p.ko); }, enumerable: true });
-    });
-
     const LEVEL = { 1: 1, 5: 1, 2: 2, 3: 2, 4: 3, 6: 3, 7: 3 };
     MISSIONS.forEach(m => { m.level = LEVEL[m.id]; });
 
-    let rankingEntries = [
+    // ===== 상품 목록 =====
+    // 배열의 한 줄(안쪽 배열) = 매대 한 단. 같은 시리즈는 같은 단에 모아두었고, 한 단에 최대 5개, 한 페이지는 3단.
+    // mk(id, 이름, 가격, 조리타입, 태그, {file, color})  → 이미지는 기본적으로 "./이름.png"
+    const mk = (id, name, price, cookType, tags, opt = {}) => ({
+      id, name, price, cookType, tags,
+      file: opt.file || `./${name}.png`,
+      color: opt.color,
+      requiredCook: cookType === 'water' || cookType === 'microwave'
+    });
+
+    const PRODUCTS = {
+      "라면": [
+        [mk('r1', '신라면', 1400, 'water', ['매움', '국물']), mk('r2', '신라면 블랙', 1900, 'water', ['매움', '국물', '든든함']), mk('r3', '열라면', 1300, 'water', ['매움', '국물']), mk('r4', '틈새라면', 1500, 'water', ['매움', '국물'])],
+        [mk('r5', '진라면', 1200, 'water', ['가성비', '국물']), mk('r6', '진라면 순한맛', 1200, 'water', ['가성비', '국물']), mk('r7', '진라면 매운맛', 1300, 'water', ['매움', '국물']), mk('r8', '참깨라면', 1700, 'water', ['꿀조합', '국물'])],
+        [mk('r9', '불닭볶음면', 1700, 'water', ['매움', '꿀조합'], { file: './붉닭.png' }), mk('r10', '까르보 불닭', 1800, 'water', ['매움', '꿀조합']), mk('r11', '불닭볶음탕면', 1800, 'water', ['매움', '국물']), mk('r12', '간짬뽕', 1800, 'water', ['매움', '든든함'])],
+        [mk('r13', '왕뚜껑', 1500, 'water', ['든든함', '국물']), mk('r14', '왕뚜껑 김치', 1600, 'water', ['매움', '든든함', '국물']), mk('r15', '왕뚜껑 짬뽕', 1600, 'water', ['매움', '든든함', '국물']), mk('r16', '오모리 김치찌개 라면', 1500, 'water', ['국물', '든든함'])],
+        [mk('r17', '육개장', 1100, 'water', ['가성비', '국물']), mk('r18', '육개장 사발면 작은', 1000, 'water', ['가성비', '국물']), mk('r19', '새우탕', 1400, 'water', ['국물', '든든함']), mk('r20', '멸치 칼국수', 1500, 'water', ['국물', '가성비']), mk('r21', '튀김우동', 1400, 'water', ['국물', '든든함'])],
+        [mk('r22', '콕콕콕 스파게티', 2000, 'water', ['든든함', '꿀조합']), mk('r23', '콕콕콕 치즈볶이', 2000, 'water', ['매움', '꿀조합', '든든함']), mk('r24', '짜파게티', 1500, 'water', ['든든함', '꿀조합']), mk('r25', '팔도 비빔면', 1300, 'water', ['매움', '꿀조합'])]
+      ],
+      "음료": [
+        [mk('d1', '딸기우유', 1700, 'mix', ['달콤함', '음료혼합'], { color: '#ff9eb5' }), mk('d2', '바나나우유', 1700, 'mix', ['달콤함', '음료혼합'], { color: '#fff176' }), mk('d3', '초코우유', 1700, 'mix', ['달콤함', '음료혼합'], { color: '#795548' }), mk('d4', '흰우유', 1300, 'mix', ['중화', '음료혼합'], { color: '#ffffff' }), mk('d5', '카라멜커피', 1800, 'mix', ['달콤함', '음료혼합'], { color: '#c8956a' })],
+        [mk('d6', '닥터 페퍼', 1600, 'mix', ['탄산', '음료혼합'], { color: '#5e1924' }), mk('d7', '사이다', 1500, 'mix', ['탄산', '음료혼합'], { color: '#e0f7fa' }), mk('d8', '콜라', 1600, 'mix', ['탄산', '음료혼합'], { color: '#3e1f14' }), mk('d9', '펩시 제로 라임', 1600, 'mix', ['탄산', '음료혼합'], { color: '#4caf50' })],
+        [mk('d10', '게토레이', 1500, 'mix', ['시원함', '음료혼합'], { color: '#d4ff33' }), mk('d11', '토레타', 1800, 'mix', ['시원함', '음료혼합'], { color: '#f8bbd0' }), mk('d12', '파워에이드', 1800, 'mix', ['시원함', '음료혼합'], { color: '#00b0ff' }), mk('d13', '링티 제로', 2200, 'mix', ['시원함', '음료혼합'], { color: '#ffe082' })]
+      ],
+      "과자": [
+        [mk('s1', '포카칩', 1700, 'topping', ['꿀조합', '간식']), mk('s2', '포카칩 어니언', 1700, 'topping', ['꿀조합', '간식']), mk('s3', '허니버터칩', 1700, 'topping', ['달콤함', '꿀조합', '간식']), mk('s4', '바나나킥', 1700, 'topping', ['달콤함', '간식'])],
+        [mk('s5', '빼빼로 아몬드', 1700, 'topping', ['달콤함', '간식']), mk('s6', '빼빼로 오리지널', 1700, 'topping', ['달콤함', '간식']), mk('s7', '바프 허니버터 아몬드', 1500, 'topping', ['달콤함', '간식'])]
+      ],
+      "디저트": [
+        [mk('t1', '돼지바', 1200, 'topping', ['달콤함', '간식']), mk('t2', '메로나', 1400, 'topping', ['달콤함', '간식']), mk('t3', '월드콘', 2000, 'topping', ['달콤함', '간식']), mk('t4', '롯데 찰떡아이스', 2500, 'topping', ['달콤함', '간식'], { file: './롯데 찰떡아이스 패키지 라벨.png' })],
+        [mk('t5', '군고구마빠', 1500, 'topping', ['달콤함', '간식']), mk('t6', '그릭요거트', 2400, 'topping', ['달콤함', '간식']), mk('t7', '우유크림모찌롤', 3600, 'topping', ['달콤함', '꿀조합', '간식']), mk('t8', '호빵맨 고구마 케이크', 2000, 'topping', ['달콤함', '간식'])],
+        [mk('t9', '우유생크림 크로아상', 2300, 'topping', ['달콤함', '간식']), mk('t10', '허쉬 쿠키앤크림 초콜릿', 2000, 'topping', ['달콤함', '간식'], { file: './허쉬)쿠키앤크림초콜릿.png' })]
+      ],
+      "김밥": [
+        [mk('g1', '계란마요김밥', 3200, 'microwave', ['든든함', '전자레인지']), mk('g2', '기본김밥', 2800, 'microwave', ['든든함', '전자레인지']), mk('g3', '날치알 묵은지 참치김밥', 3500, 'microwave', ['든든함', '전자레인지'])]
+      ],
+      "기타": [
+        [mk('e1', '맥스봉', 1800, 'microwave', ['든든함', '전자레인지']), mk('e2', '정통 프랑크', 2200, 'microwave', ['든든함', '전자레인지']), mk('e3', '치즈 후랑크', 2300, 'microwave', ['꿀조합', '든든함', '전자레인지']), mk('e4', '매콤 닭가슴살 닭꼬치', 2500, 'microwave', ['매움', '든든함', '전자레인지'])],
+        [mk('e5', '찐만두 6개입', 3500, 'microwave', ['든든함', '전자레인지']), mk('e6', '감동란', 1400, 'topping', ['간식', '든든함']), mk('e7', '스트링치즈', 1500, 'topping', ['간식'])]
+      ]
+    };
+    Object.entries(PRODUCTS).forEach(([cat, rows]) => rows.flat().forEach(p => { p.category = cat; }));
+    const ALL_PRODUCTS = Object.values(PRODUCTS).flat(2);
+    const nm = p => pn(p.name);
+
+    // ===== 미션별 100점 힌트 레시피 =====
+    const HINTS = {
+      1: ["신라면", "진라면 순한맛", "흰우유"],
+      2: ["불닭볶음탕면", "까르보 불닭", "틈새라면", "사이다"],
+      3: ["딸기우유", "바나나우유"],
+      4: ["신라면", "계란마요김밥", "사이다", "우유크림모찌롤"],
+      5: ["계란마요김밥", "바나나우유"],
+      6: ["불닭볶음면", "까르보 불닭", "딸기우유"],
+      7: ["불닭볶음탕면", "날치알 묵은지 참치김밥", "링티 제로", "카라멜커피"]
+    };
+
+    // ===== 샘플 랭킹 (Firebase에 데이터가 없을 때 / Firebase 미연결 시 표시) =====
+    const seedEntries = [
       {
-        id: "seed-1",
-        author: "편의점마스터",
-        isMine: false,
-        menus: ["까르보 불닭", "계란마요김밥", "바나나우유"],
-        comment: "매운 까르보 불닭 소스에 계란마요김밥 찍어 먹고 바나나우유로 마무리하면 극락!",
-        score: 91,
-        votes: 42,
-        trayHtml: `
-          <div class="placed-food" style="left:32%; top:48%; transform:translate(-50%,-50%);"><img src="./까르보 불닭.png"></div>
-          <div class="placed-food" style="left:66%; top:35%; transform:translate(-50%,-50%);"><img src="./계란마요김밥.png"></div>
-          <div class="placed-food" style="left:68%; top:72%; transform:translate(-50%,-50%);"><img src="./바나나우유.png"></div>
-        `
+        id: "seed-1", seed: true, author: "편의점마스터", name: "불닭 김밥 바나나 극락세트",
+        menus: ["까르보 불닭", "계란마요김밥", "바나나우유"], score: 91, votes: 42,
+        layout: [
+          { k: 'img', f: './완성된 컵라면.png', x: 32, y: 48 },
+          { k: 'img', f: './계란마요김밥.png', x: 66, y: 35 },
+          { k: 'img', f: './바나나우유.png', x: 68, y: 72 }
+        ]
       },
       {
-        id: "seed-2",
-        author: "새벽알바생",
-        isMine: false,
-        menus: ["사이다", "파워에이드", "얼음컵"],
-        comment: "파워에이드랑 사이다 1:1 비율에 얼음컵 부으면 시험기간 잠 확 깨는 블루레몬에이드 완성!",
-        score: 78,
-        votes: 35,
-        trayHtml: `
-          <div class="placed-food" style="left:38%; top:48%; transform:translate(-50%,-50%);">
-            <div class="mixed-drink-card-visual">
-              <div class="cup-straw"></div>
-              <div class="cup-body" style="background:linear-gradient(135deg, #00b0ff 35%, #e0f7fa 65%);"></div>
-              <span class="cup-label">스페셜 믹스!</span>
-            </div>
-          </div>
-          <div class="placed-food" style="left:72%; top:55%; transform:translate(-50%,-50%);"><img src="./얼음컵.png"></div>
-        `
+        id: "seed-2", seed: true, author: "새벽알바생", name: "시험기간 블루레몬에이드",
+        menus: ["사이다", "파워에이드"], score: 78, votes: 35,
+        layout: [
+          { k: 'mix', bg: 'linear-gradient(135deg, #00b0ff 35%, #e0f7fa 65%)', x: 38, y: 48 },
+          { k: 'img', f: './포카칩.png', x: 72, y: 55 }
+        ]
       },
       {
-        id: "seed-3",
-        author: "가성비헌터",
-        isMine: false,
-        menus: ["육개장", "기본김밥", "흰우유"],
-        comment: "5,200원으로 든든하게 배 채우는 정석 근본 조합! 국물에 김밥 말아먹으면 최고예요.",
-        score: 84,
-        votes: 28,
-        trayHtml: `
-          <div class="placed-food" style="left:34%; top:50%; transform:translate(-50%,-50%);"><img src="./육개장.png"></div>
-          <div class="placed-food" style="left:66%; top:58%; transform:translate(-50%,-50%);"><img src="./기본김밥.png"></div>
-          <div class="placed-food chopsticks-type" style="left:65%; top:24%; transform:translate(-50%,-50%);"><img src="./나무 젓가락.png"></div>
-        `
+        id: "seed-3", seed: true, author: "가성비헌터", name: "5천원 근본 한 상",
+        menus: ["육개장", "기본김밥", "흰우유"], score: 84, votes: 28,
+        layout: [
+          { k: 'img', f: './완성된 컵라면.png', x: 34, y: 50 },
+          { k: 'img', f: './기본김밥.png', x: 66, y: 58 },
+          { k: 'img', f: './나무 젓가락.png', x: 65, y: 24, c: 1 }
+        ]
       }
     ];
+    let rankingEntries = seedEntries.map(e => ({ ...e }));
 
     let currentState = {
       round: 1,
-      roundScores: [],
-      best: null,
+      roundResults: [],
       timeLeft: ROUND_TIME,
-      customer: null,
       mission: null,
       currentCategory: "라면",
       cart: [],
@@ -2091,13 +2405,13 @@
 
     function nextRound() {
       currentState.round++;
-      spawnRandomCustomer();
+      pickMission(false);
       goToScene('scene-order');
     }
 
     function updateSceneBgm(sceneId) {
       const bgm = document.getElementById('scene-bgm');
-      const shouldPlay = ['scene-title', 'scene-judge', 'scene-ranking'].includes(sceneId);
+      const shouldPlay = ['scene-title', 'scene-judge', 'scene-pick', 'scene-ranking'].includes(sceneId);
       if (!shouldPlay) {
         bgm.pause();
         bgm.currentTime = 0;
@@ -2122,6 +2436,7 @@
       const target = document.getElementById(sceneId);
       if (target) target.classList.add('active');
       document.getElementById('btn-home').style.display = (sceneId === 'scene-title') ? 'none' : 'block';
+      document.getElementById('btn-hint').style.display = ['scene-order', 'scene-shelf', 'scene-cook', 'scene-plating'].includes(sceneId) ? 'block' : 'none';
       if (sceneId === 'scene-title') stopTimer();
       updateSceneBgm(sceneId);
       updateHud();
@@ -2129,28 +2444,21 @@
 
     function startGame() {
       currentState.round = 1;
-      currentState.roundScores = [];
-      currentState.best = null;
+      currentState.roundResults = [];
+      currentState.mission = null;
       currentState.hasVotedThisPlay = false;
       currentState.votedEntryId = null;
       currentState.myEntryId = null;
 
-      spawnRandomCustomer();
+      pickMission(false);
       goToScene('scene-order');
     }
 
-    function spawnRandomCustomer() {
-      const pool = MISSIONS.filter(m => m.level === currentState.round);
-      const filteredPool = (pool.length > 1 && currentState.mission)
-        ? pool.filter(m => m.id !== currentState.mission.id)
-        : pool;
-      const randomMission = filteredPool[Math.floor(Math.random() * filteredPool.length)];
-
-      currentState.mission = randomMission;
-
-      document.getElementById('mission-badge').textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ${mTitle(randomMission)}`;
-      document.getElementById('mission-dialogue').textContent = `"${mText(randomMission)}"`;
-      document.getElementById('mission-budget').textContent = t('budget', won(randomMission.budget));
+    function renderMission(m) {
+      currentState.mission = m;
+      document.getElementById('mission-badge').textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ${mTitle(m)}`;
+      document.getElementById('mission-dialogue').textContent = `"${mText(m)}"`;
+      document.getElementById('mission-budget').textContent = t('budget', won(m.budget));
 
       const bubbleWrap = document.getElementById('bubble-container');
       bubbleWrap.style.display = 'block';
@@ -2159,8 +2467,16 @@
       bubbleWrap.style.animation = 'popUp 0.3s ease';
     }
 
+    function pickMission(excludeCurrent) {
+      const pool = MISSIONS.filter(m => m.level === currentState.round);
+      const filtered = (excludeCurrent && pool.length > 1 && currentState.mission)
+        ? pool.filter(m => m.id !== currentState.mission.id)
+        : pool;
+      renderMission(filtered[Math.floor(Math.random() * filtered.length)]);
+    }
+
     function rejectOrder() {
-      spawnRandomCustomer();
+      pickMission(true);
     }
 
     function acceptOrder() {
@@ -2177,8 +2493,39 @@
       goToScene('scene-shelf');
     }
 
-    const PAGE_SIZE = 12;
+    // 시간 초과 후 같은 미션으로 다시 도전
+    function retryRound() {
+      renderMission(currentState.mission);
+      goToScene('scene-order');
+    }
+
+    // ===== 힌트 =====
+    function openHint() {
+      const m = currentState.mission;
+      if (!m) return;
+      const items = (HINTS[m.id] || []).map(n => ALL_PRODUCTS.find(p => p.name === n)).filter(Boolean);
+      const total = items.reduce((s, p) => s + p.price, 0);
+      const needMix = [3, 7].includes(m.id);
+
+      document.getElementById('hint-body').innerHTML = `
+        <p class="hint-mission">${esc(mTitle(m))} · ${esc(t('budget', won(m.budget)))}</p>
+        <div class="hint-items">
+          ${items.map(p => `
+            <div class="hint-item">
+              <img src="${esc(p.file)}" alt="">
+              <span>${esc(nm(p))}</span>
+              <b>${esc(won(p.price))}</b>
+            </div>`).join('')}
+        </div>
+        <p class="hint-total">${esc(t('hintTotal', won(total)))}</p>
+        <p class="hint-tail">${needMix ? esc(t('hintMix')) + '<br>' : ''}${esc(t('hintTail'))}</p>
+      `;
+      document.getElementById('modal-hint').classList.add('open');
+    }
+
+    // ===== 매대 =====
     let shelfPage = 0;
+    const ROWS_PER_PAGE = 3;
 
     function selectCategory(category) {
       currentState.currentCategory = category;
@@ -2195,38 +2542,32 @@
     }
 
     function renderShelfItems(category) {
-      const all = PRODUCTS[category] || [];
-      const totalPages = Math.ceil(all.length / PAGE_SIZE);
+      const rows = PRODUCTS[category] || [];
+      const totalPages = Math.max(1, Math.ceil(rows.length / ROWS_PER_PAGE));
       if (shelfPage >= totalPages) shelfPage = totalPages - 1;
       if (shelfPage < 0) shelfPage = 0;
 
-      const items = all.slice(shelfPage * PAGE_SIZE, (shelfPage + 1) * PAGE_SIZE);
-      const row1 = document.getElementById('shelf-row-1');
-      const row2 = document.getElementById('shelf-row-2');
-      const row3 = document.getElementById('shelf-row-3');
+      const pageRows = rows.slice(shelfPage * ROWS_PER_PAGE, (shelfPage + 1) * ROWS_PER_PAGE);
 
-      row1.innerHTML = "";
-      row2.innerHTML = "";
-      row3.innerHTML = "";
+      ['shelf-row-1', 'shelf-row-2', 'shelf-row-3'].forEach((id, i) => {
+        const rowEl = document.getElementById(id);
+        rowEl.innerHTML = "";
+        const rowItems = pageRows[i] || [];
+        rowEl.style.gridTemplateColumns = `repeat(${Math.max(rowItems.length, 4)}, 1fr)`;
 
-      const perRow = Math.ceil(items.length / 3);
-
-      items.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'product-item';
-        card.innerHTML = `
-          <img src="${item.file}" alt="${item.name}">
-          <div class="product-label">${item.name}<span class="product-price">${won(item.price)}</span></div>
-        `;
-        card.onclick = () => addToCart(item);
-
-        if (index < perRow) row1.appendChild(card);
-        else if (index < perRow * 2) row2.appendChild(card);
-        else row3.appendChild(card);
+        rowItems.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'product-item';
+          card.innerHTML = `
+            <img src="${esc(item.file)}" alt="${esc(nm(item))}">
+            <div class="product-label">${esc(nm(item))}<span class="product-price">${esc(won(item.price))}</span></div>
+          `;
+          card.onclick = () => addToCart(item);
+          rowEl.appendChild(card);
+        });
       });
 
-      const nav = document.getElementById('page-nav');
-      nav.classList.toggle('show', totalPages > 1);
+      document.getElementById('page-nav').classList.toggle('show', totalPages > 1);
       document.getElementById('page-indicator').textContent = `${shelfPage + 1} / ${totalPages}`;
       document.getElementById('btn-page-prev').disabled = (shelfPage === 0);
       document.getElementById('btn-page-next').disabled = (shelfPage >= totalPages - 1);
@@ -2239,8 +2580,8 @@
       }
       currentState.cart.push({
         ...product,
-        category: currentState.currentCategory,
-        isCooked: false
+        isCooked: false,
+        isMixed: false
       });
       renderCart();
     }
@@ -2260,7 +2601,7 @@
 
         if (item) {
           slot.className = 'cart-slot filled';
-          slot.innerHTML = `<img src="${item.file}" alt="${item.name}"><span class="cart-remove-badge">✕</span>`;
+          slot.innerHTML = `<img src="${esc(item.file)}" alt="${esc(nm(item))}"><span class="cart-remove-badge">✕</span>`;
           slot.onclick = () => removeFromCart(i);
         } else {
           slot.className = 'cart-slot';
@@ -2285,6 +2626,7 @@
       }
     }
 
+    // ===== 조리 =====
     function goToCookScene() {
       currentState.selectedCookIdx = null;
       currentState.mixedDrinks = [];
@@ -2342,7 +2684,7 @@
 
         card.innerHTML = `
           <div class="hint-arrow">⬇️</div>
-          <img src="${item.file}" alt="${item.name}">
+          <img src="${esc(item.file)}" alt="${esc(nm(item))}">
           ${badgeHtml}
         `;
         card.onclick = () => selectCookItem(index);
@@ -2372,7 +2714,7 @@
       clearHints();
 
       const an = applianceNames();
-      document.getElementById('cook-guide-text').textContent = an[item.cookType] ? t('sel', item.name, an[item.cookType]) : t('noCook', item.name);
+      document.getElementById('cook-guide-text').textContent = an[item.cookType] ? t('sel', nm(item), an[item.cookType]) : t('noCook', nm(item));
       renderCookTray();
     }
 
@@ -2389,7 +2731,7 @@
 
       if (item.cookType !== appType) {
         const an = applianceNames();
-        showToast(an[item.cookType] ? t('wrong', item.name, an[item.cookType]) : t('noCook', item.name));
+        showToast(an[item.cookType] ? t('wrong', nm(item), an[item.cookType]) : t('noCook', nm(item)));
         recordMistake();
         return;
       }
@@ -2407,7 +2749,7 @@
           item.isCooked = true;
           currentState.selectedCookIdx = null;
           currentState.isBusyCooking = false;
-          showToast(t('cooked', item.name));
+          showToast(t('cooked', nm(item)));
           renderCookTray();
         }, 1800);
 
@@ -2421,7 +2763,7 @@
           item.isCooked = true;
           currentState.selectedCookIdx = null;
           currentState.isBusyCooking = false;
-          showToast(t('cooked', item.name));
+          showToast(t('cooked', nm(item)));
           renderCookTray();
         }, 3000);
 
@@ -2437,7 +2779,7 @@
         currentState.selectedCookIdx = null;
 
         updateMixedDrinkIcon();
-        showToast(t('mixAdd', item.name, currentState.mixedDrinks.length));
+        showToast(t('mixAdd', nm(item), currentState.mixedDrinks.length));
         renderCookTray();
       }
     }
@@ -2490,16 +2832,19 @@
       document.querySelectorAll('.hint-target').forEach(el => el.classList.remove('hint-target'));
     }
 
+    // ===== 플레이팅 =====
     function goToPlatingScene() {
-      const hasMixed = currentState.mixedDrinks.length > 0;
+      // 믹싱컵에 음료 2개를 섞었을 때만 스페셜 믹스로 합쳐서 보여주고,
+      // 섞지 않은 음료는 원래 모습 그대로 보여준다.
+      const mixPair = currentState.mixedDrinks.length >= 2;
 
-      // 믹싱컵에 섞은 음료는 제외하고, 고른 컵라면은 원래 이미지(item.file) 그대로 유지
       currentState.platingItems = currentState.cart
-        .filter(item => !item.isMixed)
+        .filter(item => !(mixPair && item.isMixed))
         .map((item, idx) => ({
           uid: `food-${idx}`,
-          name: item.ko || item.name,
-          file: item.file,
+          name: item.name,
+          // 물을 부어 조리한 컵라면은 완성된 컵라면 이미지로 교체
+          file: item.cookType === 'water' ? './완성된 컵라면.png' : item.file,
           isChopsticks: false,
           isMixedDrink: false,
           placed: false,
@@ -2507,8 +2852,7 @@
           yPercent: 50
         }));
 
-      // 믹싱컵에 섞은 음료가 있으면 스페셜 믹스 컵 아이템 추가
-      if (hasMixed) {
+      if (mixPair) {
         currentState.platingItems.push({
           uid: "item-mixed-drink",
           name: "스페셜 믹스!",
@@ -2541,10 +2885,32 @@
       return `
         <div class="mixed-drink-card-visual">
           <div class="cup-straw"></div>
-          <div class="cup-body" style="background: ${mixBg};"></div>
-          <span class="cup-label">${t('specialMix')}</span>
+          <div class="cup-body" style="background: ${esc(safeBg(mixBg))};"></div>
+          <span class="cup-label">${esc(t('specialMix'))}</span>
         </div>
       `;
+    }
+
+    // 식판 배치 정보 → 안전한 HTML (심사/내 조합 고르기/랭킹 공용)
+    function buildTrayHtml(layout) {
+      return (Array.isArray(layout) ? layout : []).map(it => {
+        const x = Math.max(0, Math.min(100, Number(it.x) || 50));
+        const y = Math.max(0, Math.min(100, Number(it.y) || 50));
+        const cls = 'placed-food' + (it.c ? ' chopsticks-type' : '');
+        const inner = it.k === 'mix'
+          ? buildMixedDrinkHtml(it.bg)
+          : `<img src="${esc(safeFile(it.f))}" alt="">`;
+        return `<div class="${cls}" style="left:${x}%; top:${y}%; transform:translate(-50%,-50%);">${inner}</div>`;
+      }).join('');
+    }
+
+    function captureLayout() {
+      return currentState.platingItems.filter(p => p.placed).map(p => {
+        const x = Math.round(p.xPercent * 10) / 10;
+        const y = Math.round(p.yPercent * 10) / 10;
+        if (p.isMixedDrink) return { k: 'mix', bg: p.mixBg, x, y };
+        return { k: 'img', f: p.file, c: p.isChopsticks ? 1 : 0, x, y };
+      });
     }
 
     function renderPlatingBoard() {
@@ -2564,12 +2930,12 @@
           if (pItem.isMixedDrink) {
             dockEl.innerHTML = `
               ${buildMixedDrinkHtml(pItem.mixBg)}
-              <span class="dock-food-tag">${t('specialMix')}</span>
+              <span class="dock-food-tag">${esc(t('specialMix'))}</span>
             `;
           } else {
             dockEl.innerHTML = `
-              <img src="${pItem.file}" alt="${pn(pItem.name)}">
-              <span class="dock-food-tag">${pn(pItem.name)}</span>
+              <img src="${esc(pItem.file)}" alt="${esc(pn(pItem.name))}">
+              <span class="dock-food-tag">${esc(pn(pItem.name))}</span>
             `;
           }
 
@@ -2589,7 +2955,7 @@
           if (pItem.isMixedDrink) {
             placedEl.innerHTML = buildMixedDrinkHtml(pItem.mixBg);
           } else {
-            placedEl.innerHTML = `<img src="${pItem.file}" alt="${pn(pItem.name)}">`;
+            placedEl.innerHTML = `<img src="${esc(pItem.file)}" alt="${esc(pn(pItem.name))}">`;
           }
 
           placedEl.addEventListener('pointerdown', (e) => startDragItem(e, pItem));
@@ -2616,7 +2982,7 @@
       } else {
         ghost.style.width = pItem.isChopsticks ? '245px' : '195px';
         ghost.style.height = pItem.isChopsticks ? '120px' : '195px';
-        ghost.innerHTML = `<img src="${pItem.file}" alt="">`;
+        ghost.innerHTML = `<img src="${esc(pItem.file)}" alt="">`;
       }
 
       ghost.style.left = `${e.clientX}px`;
@@ -2669,43 +3035,55 @@
       renderPlatingBoard();
     });
 
+    // ===== 심사 =====
+    function setJudgeButtons(mode) {
+      const show = (id, on) => { document.getElementById(id).style.display = on ? '' : 'none'; };
+      show('btn-go-ranking', mode === 'last');
+      show('btn-next-customer', mode === 'mid');
+      show('btn-back-title', mode === 'last' || mode === 'mid');
+      show('btn-retry', mode === 'fail');
+      show('btn-fail-ranking', mode === 'fail');
+    }
+
     function finishPlating(timedOut) {
       stopTimer();
 
-      const sourceTray = document.getElementById('tray-drop-zone');
-      document.getElementById('judge-tray-clone').innerHTML = sourceTray.innerHTML;
-
-      const cartTotal = currentState.cart.reduce((s, i) => s + i.price, 0);
-      const result = timedOut === true
-        ? { score: 20, comment: t('cTime'), totalPrice: cartTotal, hasChopsticks: false }
-        : evaluateOrder();
-      currentState.lastScore = result.score;
-      currentState.roundScores.push(result.score);
+      const layout = captureLayout();
+      document.getElementById('judge-tray-clone').innerHTML = buildTrayHtml(layout);
 
       const m = currentState.mission;
       const last = currentState.round === TOTAL_ROUNDS;
+
+      document.getElementById('judge-mission-tag').textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ${mTitle(m)}`;
+
+      // 시간 초과 → 실패 화면 (다시 도전하기 / 랭킹 보기)
+      if (timedOut === true) {
+        document.getElementById('judge-score-num').textContent = t('fail');
+        document.getElementById('judge-review-text').textContent = `"${t('cTime')}"`;
+        document.getElementById('judge-detail-sub').textContent = t('failSub');
+        setJudgeButtons('fail');
+        goToScene('scene-judge');
+        return;
+      }
+
+      const result = evaluateOrder();
+      currentState.lastScore = result.score;
+      currentState.roundResults.push({
+        round: currentState.round,
+        missionId: m.id,
+        score: result.score,
+        layout,
+        menus: currentState.cart.map(i => i.name)
+      });
+
       let sub = t('paid', won(result.totalPrice), won(m.budget)) + (result.hasChopsticks ? t('bonus') : '');
-      if (last) sub += ' · ' + t('total', currentState.roundScores.reduce((a, b) => a + b, 0));
+      if (last) sub += ' · ' + t('total', currentState.roundResults.reduce((a, r) => a + r.score, 0));
 
       document.getElementById('judge-score-num').textContent = `${result.score}${t('pts')}`;
-      document.getElementById('judge-mission-tag').textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ${mTitle(m)}`;
       document.getElementById('judge-review-text').textContent = `"${result.comment}"`;
       document.getElementById('judge-detail-sub').textContent = sub;
 
-      if (!currentState.best || result.score >= currentState.best.score) {
-        currentState.best = {
-          score: result.score,
-          trayHtml: sourceTray.innerHTML,
-          menus: currentState.cart.map(i => i.ko || i.name)
-        };
-      }
-      if (last) {
-        const b = currentState.best;
-        registerMyEntryToRanking(b.trayHtml, b.score, b.menus);
-      }
-
-      document.getElementById('btn-go-ranking').style.display = last ? '' : 'none';
-      document.getElementById('btn-next-customer').style.display = last ? 'none' : '';
+      setJudgeButtons(last ? 'last' : 'mid');
       goToScene('scene-judge');
     }
 
@@ -2751,8 +3129,7 @@
 
       const hasMeal = cart.some(i => i.category === "라면" || i.cookType === "microwave");
       const hasDrink = cart.some(i => i.category === "음료");
-      const hasIce = cart.some(i => i.cookType === "ice");
-      if (mission.id === 3 ? (hasDrink && hasIce) : (hasMeal && hasDrink)) score += 10;
+      if (mission.id === 3 ? hasDrink : (hasMeal && hasDrink)) score += 10;
 
       if (hasChopsticks) score += 5;
 
@@ -2767,46 +3144,103 @@
       return { score, comment, totalPrice, hasChopsticks };
     }
 
-    function registerMyEntryToRanking(trayHtml, score, menus) {
-      const newId = `my-${Date.now()}`;
-      rankingEntries.forEach(entry => { entry.isMine = false; });
-      rankingEntries.push({
-        id: newId,
-        author: t('me'),
-        isMine: true,
-        menus,
-        comment: t('defC', menus.map(pn).join(' + ')),
-        score,
-        votes: 1,
-        trayHtml
+    // ===== 내 조합 고르기 =====
+    let pickedIdx = null;
+    let submittingPick = false;
+
+    function openPickScene() {
+      pickedIdx = null;
+      const grid = document.getElementById('pick-grid');
+      grid.innerHTML = '';
+
+      currentState.roundResults.forEach((r, i) => {
+        const mission = MISSIONS.find(x => x.id === r.missionId);
+        const card = document.createElement('div');
+        card.className = 'pick-card';
+        card.innerHTML = `
+          <div class="pick-card-head">
+            <span class="pick-round">${esc(t('round', r.round, TOTAL_ROUNDS))}</span>
+            <span class="pick-score">${r.score}${esc(t('pts'))}</span>
+          </div>
+          <div class="pick-mission">${esc(mTitle(mission))}</div>
+          <div class="pick-tray">${buildTrayHtml(r.layout)}</div>
+          <div class="pick-menus">${esc(r.menus.map(pn).join(' · '))}</div>
+          <div class="pick-check">${esc(t('pickSelected'))}</div>
+        `;
+        card.addEventListener('click', () => {
+          pickedIdx = i;
+          grid.querySelectorAll('.pick-card').forEach((c, ci) => c.classList.toggle('selected', ci === i));
+        });
+        grid.appendChild(card);
       });
-      currentState.myEntryId = newId;
-      document.getElementById('my-recipe-comment-input').value = "";
+
+      document.getElementById('my-combo-name-input').value = '';
+      document.getElementById('btn-submit-pick').disabled = false;
+      goToScene('scene-pick');
     }
 
-    function openRankingScene() {
-      updateVoteHintText();
-      renderRankingList();
-      goToScene('scene-ranking');
-    }
-
-    function saveMyRecipeComment() {
-      const inputEl = document.getElementById('my-recipe-comment-input');
-      const text = inputEl.value.trim();
-      if (!text) {
-        showToast(t('cEmpty'));
+    async function submitPick() {
+      if (pickedIdx === null) {
+        showToast(t('pickFirst'));
         return;
       }
+      if (submittingPick) return;
+      submittingPick = true;
+      const btn = document.getElementById('btn-submit-pick');
+      btn.disabled = true;
 
-      const myEntry = rankingEntries.find(e => e.id === currentState.myEntryId);
-      if (myEntry) {
-        myEntry.comment = text;
-        showToast(t('cSaved'));
-        renderRankingList();
+      const r = currentState.roundResults[pickedIdx];
+      const typed = document.getElementById('my-combo-name-input').value.trim().slice(0, 20);
+      const name = typed || t('defName', r.menus.slice(0, 2).map(pn).join('+'));
+      const entry = { name, menus: r.menus, score: r.score, layout: r.layout, votes: 0 };
+
+      let id;
+      let local = false;
+      if (window.fbApi) {
+        try {
+          id = await window.fbApi.addEntry(entry);
+        } catch (err) {
+          console.error(err);
+          showToast(t('fbError'));
+          local = true;
+        }
+      } else {
+        local = true;
+      }
+      if (local) id = `local-${Date.now()}`;
+
+      rankingEntries.push({ ...entry, id, local, author: null });
+      currentState.myEntryId = id;
+
+      submittingPick = false;
+      btn.disabled = false;
+      await openRankingScene();
+    }
+
+    // ===== 랭킹 (Firebase) =====
+    async function loadRanking() {
+      const api = window.fbApi;
+      if (!api) return;
+      try {
+        const list = await api.getEntries();
+        const pendingLocal = rankingEntries.find(e => e.local && e.id === currentState.myEntryId);
+        rankingEntries = list.length ? list : seedEntries.map(e => ({ ...e }));
+        if (pendingLocal && !rankingEntries.some(e => e.id === pendingLocal.id)) rankingEntries.push(pendingLocal);
+      } catch (err) {
+        console.error(err);
+        showToast(t('fbError'));
       }
     }
 
-    function voteForEntry(entryId) {
+    async function openRankingScene() {
+      updateVoteHintText();
+      document.getElementById('ranking-list-container').innerHTML = `<div class="rank-loading">${esc(t('loading'))}</div>`;
+      goToScene('scene-ranking');
+      await loadRanking();
+      renderRankingList();
+    }
+
+    async function voteForEntry(entryId) {
       if (currentState.hasVotedThisPlay) {
         showToast(t('voteUsed'));
         return;
@@ -2815,13 +3249,25 @@
       const target = rankingEntries.find(e => e.id === entryId);
       if (!target) return;
 
-      target.votes += 1;
       currentState.hasVotedThisPlay = true;
+
+      if (window.fbApi && !target.seed && !target.local) {
+        try {
+          await window.fbApi.vote(entryId);
+        } catch (err) {
+          console.error(err);
+          currentState.hasVotedThisPlay = false;
+          showToast(t('fbError'));
+          return;
+        }
+      }
+
+      target.votes += 1;
       currentState.votedEntryId = entryId;
 
       updateVoteHintText();
       renderRankingList();
-      showToast(t('voted', target.author));
+      showToast(t('voted', target.name));
     }
 
     function updateVoteHintText() {
@@ -2849,32 +3295,33 @@
 
       sorted.forEach((entry, index) => {
         const rankNum = index + 1;
+        const isMine = entry.id === currentState.myEntryId;
         const isVotedByMe = (currentState.votedEntryId === entry.id);
+        const author = isMine ? t('me') : (entry.author || t('guest'));
+        const menus = Array.isArray(entry.menus) ? entry.menus : [];
 
         const card = document.createElement('div');
         card.className = 'rank-card';
         if (rankNum === 1) card.classList.add('top-1');
-        if (entry.isMine) card.classList.add('is-mine');
+        if (isMine) card.classList.add('is-mine');
 
         card.innerHTML = `
           <div class="rank-badge">${rankNum === 1 ? '👑1' : rankNum}</div>
-          <div class="mini-tray-preview">${entry.trayHtml}</div>
+          <div class="mini-tray-preview">${buildTrayHtml(entry.layout)}</div>
           <div class="rank-info">
-            <div class="rank-menu-chips">${t('rMenu', entry.menus.map(pn).join(' · '))}</div>
-            <div class="rank-user-comment">"${entry.comment}"</div>
-            <div class="rank-meta">${t('rMeta', entry.author, entry.score)}</div>
+            <div class="rank-combo-name">${esc(entry.name)}</div>
+            <div class="rank-menu-chips">${esc(t('rMenu', menus.map(pn).join(' · ')))}</div>
+            <div class="rank-meta">${t('rMeta', esc(author), esc(entry.score))}</div>
           </div>
           <div class="vote-action-box">
-            <button class="btn-heart-vote ${isVotedByMe ? 'voted' : ''}" title="하트 눌러 투표하기">
+            <button class="btn-heart-vote ${isVotedByMe ? 'voted' : ''}" title="♥">
               ${isVotedByMe ? '❤️' : '🤍'}
             </button>
-            <span class="vote-count-label">${t('votes', entry.votes)}</span>
+            <span class="vote-count-label">${esc(t('votes', entry.votes))}</span>
           </div>
         `;
 
-        const heartBtn = card.querySelector('.btn-heart-vote');
-        heartBtn.addEventListener('click', () => voteForEntry(entry.id));
-
+        card.querySelector('.btn-heart-vote').addEventListener('click', () => voteForEntry(entry.id));
         container.appendChild(card);
       });
     }
@@ -2894,7 +3341,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       document.addEventListener('click', (event) => {
-        if (event.target.closest('button, .product-item, .cart-slot.filled, .appliance-box, .cook-item-card, .dock-food-item, .placed-food, .btn-heart-vote')) {
+        if (event.target.closest('button, .product-item, .cart-slot.filled, .appliance-box, .cook-item-card, .dock-food-item, .placed-food, .btn-heart-vote, .pick-card')) {
           playClickSound();
         }
       });
@@ -2902,7 +3349,7 @@
       document.addEventListener('pointerdown', function unlockBgm() {
         const bgm = document.getElementById('scene-bgm');
         const activeScene = document.querySelector('.scene.active');
-        if (bgm && activeScene && ['scene-title', 'scene-judge', 'scene-ranking'].includes(activeScene.id)) {
+        if (bgm && activeScene && ['scene-title', 'scene-judge', 'scene-pick', 'scene-ranking'].includes(activeScene.id)) {
           bgm.volume = 0.35;
           bgm.play().catch(() => {});
         }
@@ -2913,6 +3360,12 @@
       document.getElementById('btn-modal-close').addEventListener('click', () => toggleHowToModal(false));
       document.getElementById('modal-howto').addEventListener('click', (e) => {
         if (e.target.id === 'modal-howto') toggleHowToModal(false);
+      });
+
+      document.getElementById('btn-hint').addEventListener('click', openHint);
+      document.getElementById('btn-hint-close').addEventListener('click', () => document.getElementById('modal-hint').classList.remove('open'));
+      document.getElementById('modal-hint').addEventListener('click', (e) => {
+        if (e.target.id === 'modal-hint') document.getElementById('modal-hint').classList.remove('open');
       });
 
       document.getElementById('btn-accept-order').addEventListener('click', acceptOrder);
@@ -2941,9 +3394,12 @@
       document.getElementById('btn-go-plating').addEventListener('click', goToPlatingScene);
       document.getElementById('btn-finish-plating').addEventListener('click', () => finishPlating(false));
 
-      document.getElementById('btn-go-ranking').addEventListener('click', openRankingScene);
+      document.getElementById('btn-go-ranking').addEventListener('click', openPickScene);
       document.getElementById('btn-next-customer').addEventListener('click', nextRound);
       document.getElementById('btn-back-title').addEventListener('click', () => goToScene('scene-title'));
+      document.getElementById('btn-retry').addEventListener('click', retryRound);
+      document.getElementById('btn-fail-ranking').addEventListener('click', openRankingScene);
+      document.getElementById('btn-submit-pick').addEventListener('click', submitPick);
 
       document.getElementById('sort-by-votes').addEventListener('click', () => {
         currentState.rankSortMode = "votes";
@@ -2959,7 +3415,6 @@
         renderRankingList();
       });
 
-      document.getElementById('btn-save-my-comment').addEventListener('click', saveMyRecipeComment);
       document.getElementById('btn-rank-play-again').addEventListener('click', startGame);
       document.getElementById('btn-rank-to-title').addEventListener('click', () => goToScene('scene-title'));
 
