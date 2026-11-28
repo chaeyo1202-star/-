@@ -15,7 +15,12 @@
       user-select: none;
     }
 
-body {
+html, body {
+      overscroll-behavior: none;
+      touch-action: none;
+    }
+
+    body {
       background-color: #1e1e24;
       display: flex;
       justify-content: center;
@@ -37,6 +42,9 @@ body {
       overflow: hidden;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
       transform-origin: center center;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
     
     .scene {
@@ -3444,12 +3452,14 @@ const firebaseConfig = {
         }
       });
     });
+window.gameScale = 1;
     function fitGameToScreen() {
       const container = document.getElementById('game-container');
       if (!container) return;
       const scaleX = window.innerWidth / 960;
       const scaleY = window.innerHeight / 720;
       const scale = Math.min(scaleX, scaleY);
+      window.gameScale = scale;
       container.style.transform = `scale(${scale})`;
     }
 
