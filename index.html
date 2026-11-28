@@ -15,6 +15,25 @@
       user-select: none;
     }
 
+    @keyframes hudUrgentBlink {
+      0%, 100% {
+        background-color: #d90429;
+        border-color: #ffccd5;
+        transform: translateX(-50%) scale(1);
+        box-shadow: 0 4px 12px rgba(217, 4, 41, 0.5);
+      }
+      50% {
+        background-color: #ff4d6d;
+        border-color: #ffffff;
+        transform: translateX(-50%) scale(1.08);
+        box-shadow: 0 0 20px rgba(255, 77, 109, 0.95);
+      }
+    }
+
+    #hud.warn {
+      animation: hudUrgentBlink 0.8s infinite ease-in-out;
+    }
+
 html, body {
       overscroll-behavior: none;
       touch-action: none;
@@ -1941,6 +1960,10 @@ html, body {
         <p id="pick-sub">3라운드 결과 중 가장 마음에 드는 조합을 고르고 이름을 붙여보세요.</p>
       </div>
 
+<div id="pick-nudge-banner" style="background: linear-gradient(90deg, #fff3cd, #ffe69c); border: 2.5px solid #ffc107; border-radius: 14px; padding: 9px 16px; text-align: center; font-size: 0.96rem; font-weight: 900; color: #856404; box-shadow: 0 3px 8px rgba(255, 193, 7, 0.22);">
+        지금 랭킹에 등록하면 편의점 출시 후보에 오를 수 있어요!
+      </div>
+      
       <div id="pick-grid" class="pick-grid"></div>
 
       <div class="my-comment-box pick-name-box">
@@ -2167,6 +2190,7 @@ const firebaseConfig = {
       '#btn-back-title, #btn-rank-to-title': ["Title", "タイトルへ", "返回标题"],
       '#pick-title': ["🏆 Pick one combo for the ranking!", "🏆 ランキングに載せる組み合わせを1つ選んでね!", "🏆 选一个搭配上传排名吧!"],
       '#pick-sub': ["Choose your best of the 3 rounds and give it a name.", "3ラウンドの中から1つ選んで名前をつけよう。", "从三轮作品中选一个并取个名字。"],
+      '#pick-nudge-banner': ["🔥 Post your combo now to get heart votes and compete for a real store launch!", "🔥 今すぐランキングに登録してハート投票を集め、実際の商品化を目指そう!", "🔥 立即上传搭配赢取爱心投票，冲刺真实便利店上市资格!"],
       '.pick-name-box > span': ["🏷️ Combo name:", "🏷️ 組み合わせ名:", "🏷️ 搭配名称:"],
       '#btn-submit-pick': ["Submit ▶", "登録 ▶", "提交 ▶"],
       '.rank-title-area h2': ["🏆 GS25 Modisumer Combo Ranking & Vote", "🏆 GS25 モディスーマー ランキング&投票", "🏆 GS25 创意搭配排名与投票"],
@@ -2410,7 +2434,7 @@ const firebaseConfig = {
       hud.style.display = (scene && ['scene-order', 'scene-shelf', 'scene-cook', 'scene-plating'].includes(scene.id)) ? 'block' : 'none';
       const tl = timerId ? currentState.timeLeft : ROUND_TIME;
       hud.textContent = `${t('round', currentState.round, TOTAL_ROUNDS)} · ⏱ ${Math.floor(tl / 60)}:${String(tl % 60).padStart(2, '0')}`;
-      hud.classList.toggle('warn', timerId !== null && tl <= 20);
+      hud.classList.toggle('warn', timerId !== null && tl <= 30);
     }
 
     function timeUp() {
